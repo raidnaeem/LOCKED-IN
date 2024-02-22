@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "ts-node": "^10.9.1"
+  },
+  "name": "locked-in",
+  "version": "1.0.0",
+  "description": "A productivity web application with a mobile component.",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raidnaeem/LOCKED-IN.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/raidnaeem/LOCKED-IN/issues"
+  },
+  "homepage": "https://github.com/raidnaeem/LOCKED-IN#readme"
+}
