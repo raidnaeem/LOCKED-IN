@@ -1,12 +1,13 @@
 {
   "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^8.2.0",
     "ts-node": "^10.9.1"
   },
   "name": "locked-in",
   "version": "1.0.0",
   "description": "A productivity web application with a mobile component.",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
