@@ -8,8 +8,8 @@ exports.setApp = function (app, client) {
     //sign up endpoint logic
     router.post('/signup', async (req, res, next) => {
         
-        const { firstName, lastName, login, password } = req.body;
-        const newUser = { FirstName: firstName, LastName: lastName, Login: login, Password: password };
+        const { firstName, lastName, email, login, password } = req.body;
+        const newUser = { FirstName: firstName, LastName: lastName, Email: email, Login: login, Password: password };
         let error = '';
         try {
             const db = client.db();
