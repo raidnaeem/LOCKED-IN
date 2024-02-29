@@ -25,4 +25,10 @@ app.use((req, res, next) =>
     next();
 });
 
+/*
+just adding in for api 
+const api = require('./api');
+api.setApp(app, client);
+*/
+
 app.listen(5000); // start Node + Express server on port 5000
