@@ -23,7 +23,9 @@ exports.setApp = function (app, client) {
         const { login, password } = req.body;
         try {
             const db = client.db();
+            console.log('Attempting to find user with login:', login); // trouble shooting
             const user = await db.collection('Users').findOne({ Login: login, Password: password });
+            console.log('User found:', user); // trouble shooting
             if (user) {
                 const { UserID, FirstName, LastName } = user;
                 res.status(200).json({ id: UserID, firstName: FirstName, lastName: LastName, error: '' });
