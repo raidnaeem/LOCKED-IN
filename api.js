@@ -1,51 +1,40 @@
 // demo api based off on db table, MERB C lab as ref
-const express = require('express');
-require('mongodb');
-const router = express.Router();
+require('express');
+require("mongodb");
 
 exports.setApp = function (app, client) {
 
 
     //sign up endpoint logic
-    router.post('/signup', async (req, res, next) => {
-        
+    app.post('/api/signup', async (req, res) => {
+        // incoming fN, lN, email, login, password
         const { firstName, lastName, email, login, password } = req.body;
         const newUser = { FirstName: firstName, LastName: lastName, Email: email, Login: login, Password: password };
-        let error = '';
         try {
             const db = client.db();
             const result = await db.collection('Users').insertOne(newUser);
-            const id = result.insertedId;
-            res.status(200).json({ id, error });
+            res.status(200).json({ id: result.insertedId, error: '' });
         } catch (e) {
-            error = e.toString();
-            res.status(500).json({ error });
+            res.status(500).json({ error: e.toString() });
         }
     });
     // login endpoint logic
-    router.post('/login', async (req, res, next) => {
-        // incoming: login, password
-        // outgoing: id, firstName, lastName, error
-        let error = '';
+    app.post('/api/login', async (req, res) => {
         const { login, password } = req.body;
         try {
             const db = client.db();
             const user = await db.collection('Users').findOne({ Login: login, Password: password });
             if (user) {
-                const { _id, FirstName, LastName } = user;
-                res.status(200).json({ id: _id, firstName: FirstName, lastName: LastName, error });
+                const { UserID, FirstName, LastName } = user;
+                res.status(200).json({ id: UserID, firstName: FirstName, lastName: LastName, error: '' });
             } else {
-                error = 'Invalid login credentials';
-                res.status(401).json({ error });
+                res.status(401).json({ error: 'Invalid login credentials' });
             }
         } catch (e) {
-            error = e.toString();
-            res.status(500).json({ error });
+            res.status(500).json({ error: e.toString() });
         }
     });
 
-
-    app.use('/api', router);
 }
 
 
