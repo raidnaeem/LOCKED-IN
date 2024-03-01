@@ -10,7 +10,13 @@ exports.setApp = function (app, client) {
             { $inc: { sequence_value: 1 } },
             { upsert: true, returnOriginal: false }
         );
-        return result.value.sequence_value;
+        if (result && result.value) {
+            return result.value.sequence_value;
+        } else {
+            // If the document does not exist, create it with an initial sequence_value
+            await db.collection("Users").insertOne({ _id: "userId", sequence_value: 1 });
+            return 1; // Return the initial sequence_value
+        }
     };
 
     //sign up endpoint logic
