@@ -14,7 +14,8 @@ exports.setApp = function (app, client) {
             const db = client.db();
             const result = await db.collection('Users').insertOne(newUser);
             const insertedId = result.insertedId
-            await db.collection('Users').updateOne({ _id: insertedId }, { $set: { UserID: insertedId } }); // Set UserID to the _id
+            const UserID = insertedId; // Assign _id to UserID
+            await db.collection('Users').updateOne({ _id: insertedId }, { $set: { UserID: UserID } }); // Set UserID to the _id
             res.status(200).json({ id: UserID, error: '' });
         } catch (e) {
             res.status(500).json({ error: e.toString() });
