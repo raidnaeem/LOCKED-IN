@@ -6,7 +6,8 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const url = 'mongodb+srv://locked-in:<password>@locked-in.iacd1hk.mongodb.net/?retryWrites=true&w=majority&appName=locked-in';
+require('dotenv').config();
+const url = process.env.MONGODB_URI;
 const MongoClient = require("mongodb").MongoClient;
 const client = new MongoClient(url);
 client.connect(console.log("mongodb connected"));
