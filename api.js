@@ -9,7 +9,7 @@ exports.setApp = function (app, client) {
     app.post('/api/signup', async (req, res) => {
         // incoming fN, lN, email, login, password
         const { firstName, lastName, email, login, password } = req.body;
-        const newUser = {FirstName: firstName, LastName: lastName, Email: email, Login: login, Password: password };
+        const newUser = {FirstName: firstName, LastName: lastName, Email: email, Password: password };
         try {
             const db = client.db();
             const result = await db.collection('Users').insertOne(newUser);
@@ -23,11 +23,11 @@ exports.setApp = function (app, client) {
     });
     // login endpoint logic
     app.post('/api/login', async (req, res) => {
-        const { login, password } = req.body;
+        const { email, password } = req.body;
         try {
             const db = client.db();
-            console.log('Attempting to find user with login:', login); // trouble shooting
-            const user = await db.collection('Users').findOne({ Login: login, Password: password });
+            console.log('Attempting to find user with login:', email); // trouble shooting
+            const user = await db.collection('Users').findOne({ Email:email, Password: password });
             console.log('User found:', user); // trouble shooting
             if (user) {
                 const { _id, FirstName, LastName } = user;
