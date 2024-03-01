@@ -3,54 +3,35 @@ require('express');
 require("mongodb");
 
 exports.setApp = function (app, client) {
-     // Function to fetch the next sequence value for UserID
-     const getNextSequenceValue = async (db) => {
-        const result = await db.collection("Users").findOneAndUpdate(
-            { _id: "userId" },
-            { $inc: { sequence_value: 1 } },
-            { upsert: true, returnOriginal: false }
-        );
-        if (result && result.value) {
-            return result.value.sequence_value;
-        } else {
-            // If the document does not exist, create it with an initial sequence_value
-            await db.collection("Users").insertOne({ _id: "userId", sequence_value: 1 });
-            return 1; // Return the initial sequence_value
-        }
-    };
-
-    //sign up endpoint logic
-    app.post('/api/signup', async (req, res) => {
-        // incoming fN, lN, email, login, password
-        const { firstName, lastName, email, password } = req.body;
+    
+    app.post('/api/login', async (req, res, next) => {
+        // incoming: email, password
+        // outgoing: id, firstName, lastName, error
+    
+        var error = '';
+        const { email, password } = req.body; // Use email instead of login
+    
         try {
-            const db = client.db();
-            const userID = await getNextSequenceValue(db);
-            const newUser = { FirstName: firstName, LastName: lastName, Email: email, Password: password };
-            await db.collection('Users').insertOne(newUser);
-            res.status(200).json({ id: insertedId.toString(), error: '' });
-        } catch (e) {
-            res.status(500).json({ error: e.toString() });
+          const db = client.db(); // Use the default database. Adjust if you have a specific db name
+          const results = await db.collection('Users').find({ Email: email, Password: password }).toArray();
+          
+          var id = -1;
+          var fn = '';
+          var ln = '';
+          
+          if (results.length > 0) {
+            id = results[0].UserID;
+            fn = results[0].FirstName;
+            ln = results[0].LastName;
+          } else {
+            error = 'User not found or password incorrect';
+          }
+          
+          var ret = { id: id, firstName: fn, lastName: ln, error: error };
+          res.status(200).json(ret);
+        } catch (err) {
+          console.error("Error during database query", err);
+          res.status(500).json({ id: -1, firstName: '', lastName: '', error: 'Internal server error' });
         }
-    });
-
-    // login endpoint logic
-    app.post('/api/login', async (req, res) => {
-        const { email, password } = req.body;
-        try {
-            const db = client.db();
-            console.log('Attempting to find user with email:', email); // trouble shooting
-            const user = await db.collection('Users').findOne({ Email: email, Password: password });
-            console.log('User found:', user); // trouble shooting
-            if (user) {
-                const { UserID, FirstName, LastName } = user;
-                res.status(200).json({ id: UserID, firstName: FirstName, lastName: LastName, error: '' });
-            } else {
-                res.status(401).json({ error: 'Invalid login credentials' });
-            }
-        } catch (e) {
-            res.status(500).json({ error: e.toString() });
-        }
-    });
-
+      });
 }
