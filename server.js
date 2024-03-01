@@ -7,6 +7,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 require('dotenv').config();
+//troubleshooting
+//console.log("MONGODB_URI from .env:", process.env.MONGODB_URI);
 const url = process.env.MONGODB_URI;
 const MongoClient = require("mongodb").MongoClient;
 const client = new MongoClient(url);
