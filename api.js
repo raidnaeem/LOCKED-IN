@@ -13,7 +13,8 @@ exports.setApp = function (app, client) {
         try {
             const db = client.db();
             const result = await db.collection('Users').insertOne(newUser);
-            res.status(200).json({ id: result.insertedId, error: '' });
+            const UserID = result.insertedId // need to store the object id into UserID
+            res.status(200).json({ id: UserID, error: '' });
         } catch (e) {
             res.status(500).json({ error: e.toString() });
         }
