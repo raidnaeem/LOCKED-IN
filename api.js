@@ -1,5 +1,6 @@
 // demo api based off on db table, MERB C lab as ref
 const express = require('express');
+require('mongodb');
 const router = express.Router();
 
 exports.setApp = function (app, client) {
