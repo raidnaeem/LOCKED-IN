@@ -9,13 +9,12 @@ exports.setApp = function (app, client) {
     app.post('/api/signup', async (req, res) => {
         // incoming fN, lN, email, login, password
         const { firstName, lastName, email, login, password } = req.body;
+        const newUser = {FirstName: firstName, LastName: lastName, Email: email, Login: login, Password: password };
         try {
             const db = client.db();
-            const newUser = { UserID: null, FirstName: firstName, LastName: lastName, Email: email, Login: login, Password: password };
             const result = await db.collection('Users').insertOne(newUser);
             const insertedId = result.insertedId
-            const {UserID} = result.ops[0]; // Get the generated UserID from the inserted doc
-            await db.collection('Users').updateOne({ _id: insertedId }, { $set: { UserID: UserID } });
+            await db.collection('Users').updateOne({ _id: insertedId }, { $set: { UserID: insertedId } }); // Set UserID to the _id
             res.status(200).json({ id: UserID, error: '' });
         } catch (e) {
             res.status(500).json({ error: e.toString() });
