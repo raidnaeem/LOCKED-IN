@@ -2,9 +2,6 @@
 const express = require("express");
 const mongodb = require("mongodb");
 const bcrypt = require("bcryptjs");
-// Removed bcryptjs import since it's not used in this simplified version
-
-//function: for creating
 
 exports.setApp = function (app, client) {
   app.post("/api/login", async (req, res) => {
