@@ -30,7 +30,7 @@ app.use((req, res, next) =>
 
 
 // just adding in for api 
-const api = require('./api.js');
+var api = require('./api.js');
 api.setApp(app, client);
 
 
