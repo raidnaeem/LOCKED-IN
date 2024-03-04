@@ -2,6 +2,7 @@
 const express = require("express");
 const mongodb = require("mongodb");
 const bcrypt = require("bcryptjs");
+const jwtHelpers = require("./createJWT.js");
 
 exports.setApp = function (app, client) {
   app.post("/api/login", async (req, res) => {
@@ -23,10 +24,16 @@ exports.setApp = function (app, client) {
         // Compare the provided password with the hashed password
         const validPassword = await bcrypt.compare(Password, user.Password);
         if (validPassword) {
+          // Create JWT for the user
+          const token = jwtHelpers.createToken( user.FirstName,user.LastName,user.UserID);
+          if (token.error) {
+            return res.status(500).json({ error: "Failed to generate authentication token." });
+          }
           res.status(200).json({
             UserID: user.UserID,
             FirstName: user.FirstName,
             LastName: user.LastName,
+            AccessToken: token.accessToken,
             error: "",
           });
         } else {
