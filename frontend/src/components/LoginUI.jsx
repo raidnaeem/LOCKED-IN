@@ -7,7 +7,7 @@ const LoginUI = () => {
     };
 
     return (
-        <div style={{ position: 'absolute', left: '30%', top: '20%', transform: 'translate(-50%, -50%)' }}>
+        <div style={{ position: 'absolute', left: '20%', top: '10%', transform: 'translate(-50%, -50%)' }}>
             <div style={{ width: '80%', maxWidth: '600px', position: 'relative' }}>
                 <div style={{ width: 584, height: 247, left: 0, top: 99, position: 'absolute', background: '#EDF2F7' }} />
                 <div style={{ width: 490.61, height: 542.47, left: 78.50, top: 130.53, position: 'absolute', background: '#667EEA', boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.12)' }} />
@@ -20,7 +20,7 @@ const LoginUI = () => {
                 <div style={{ width: 439.37, height: 53.50, left: 92.67, top: 466.50, position: 'absolute', background: '#667EEA' }} />
                 <div style={{ width: 439.37, height: 53.50, left: 90.49, top: 576.70, position: 'absolute', background: 'white', border: '1px #4A5568 solid' }} />
                 <div style={{ width: 439.37, height: 1.07, left: 92.67, top: 370.20, position: 'absolute', background: 'rgba(102, 126, 234, 0.50)' }} />
-                <div style={{ left: 180, top: 539, position: 'absolute', color: 'black', fontSize: 16, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word' }}>Forgot password? Click here to reset</div>
+                <div style={{ left: 180, top: 539, position: 'absolute', color: 'black', fontSize: 16, fontFamily: 'Roboto', fontWeight: '400', overflowWrap: 'break-word' }}>Forgot password? Click here to reset</div>
                 <div style={{ width: 439.37, height: 1.07, left: 92.67, top: 441.89, position: 'absolute', background: 'rgba(102, 126, 234, 0.50)' }} />
                 <div style={{ width: 89.40, height: 22.47, left: 147.18, top: 332.76, position: 'absolute', color: 'rgba(0, 0, 0, 0.50)', fontSize: 18, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word' }}>Email</div>
                 <div style={{ width: 100, height: 100, left: 238, top: 301, position: 'absolute' }} />
@@ -29,7 +29,7 @@ const LoginUI = () => {
                 <div style={{ width: 202.79, height: 53.50, left: 691.21, top: 0, position: 'absolute', background: '#667EEA' }} />
                 <div style={{ width: 202.79, height: 53.50, left: 467.71, top: 0, position: 'absolute', background: '#4A5568' }} />
                 <div style={{ width: 103.57, height: 22.47, left: 751, top: 13, position: 'absolute', color: 'white', fontSize: 24, fontFamily: 'Roboto', fontWeight: '500', wordWrap: 'break-word' }}>Register</div>
-                <div style={{ left: 493, top: 13, position: 'absolute', color: 'white', fontSize: 24, fontFamily: 'Roboto', fontWeight: '500', wordWrap: 'break-word' }}>Back to Home</div>
+                <div style={{ left: 493, top: 13, position: 'absolute', color: 'white', fontSize: 24, fontFamily: 'Roboto', fontWeight: '500', overflowWrap: 'break-word' }}>Back to Home</div>
                 <div style={{ ...commonTextStyle, fontSize: 18, color: '#4A5568', fontWeight: '500', width: 195.15, height: 22.47, left: 213.69, top: 592.75, position: 'absolute' }}>Register New Account</div>
                 <div style={{ width: 23.99, height: 23.54, left: 110.11, top: 404.44, position: 'absolute' }}>
                     <div style={{ width: 16.35, height: 16.05, left: 1.64, top: 3.21, position: 'absolute' }}>
