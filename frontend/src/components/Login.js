@@ -24,17 +24,17 @@ function Login()
 
             var res = JSON.parse(await response.text());
 
-            if( res.id == 400 )
-            {
-                setMessage('User/Password combination incorrect');
-            }
-            else if(res.id == 200)
+            if( res.status == 200)
             {
                 var user = {firstName:res.firstName,lastName:res.lastName,id:res.id}
                 localStorage.setItem('user_data', JSON.stringify(user));
 
                 setMessage('');
                 window.location.href = '/cards';
+            }
+            else if( res.status == 400 )
+            {
+                setMessage('User/Password combination incorrect');
             }
             else
             {
