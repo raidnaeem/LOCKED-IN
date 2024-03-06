@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useJwt } from "react-jwt";
+var bp = require('./Path.js');
+
 
 function Login()
 {
@@ -6,20 +9,6 @@ function Login()
     var loginPassword;
 
     const [message,setMessage] = useState('');
-
-    const app_name = 'locked-in-561ee2a901c9'
-    function buildPath(route)
-    {
-        if (process.env.NODE_ENV === 'production') 
-        {
-            return 'https://' + app_name +  '.herokuapp.com/' + route;
-        }
-        else
-        {        
-            return 'http://localhost:5000/' + route;
-        }
-    }
-
 
     const doLogin = async event => 
     {
@@ -30,22 +19,26 @@ function Login()
 
         try
         {    
-            const response = await fetch(buildPath('api/login'),
+            const response = await fetch(bp.buildPath('api/login'),
                 {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
             var res = JSON.parse(await response.text());
 
-            if( res.id <= 0 )
+            if( res.id == 400 )
             {
                 setMessage('User/Password combination incorrect');
             }
-            else
+            else if(res.id = 200)
             {
                 var user = {firstName:res.firstName,lastName:res.lastName,id:res.id}
                 localStorage.setItem('user_data', JSON.stringify(user));
 
                 setMessage('');
                 window.location.href = '/cards';
+            }
+            else
+            {
+                setMessage(res);
             }
         }
         catch(e)

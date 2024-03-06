@@ -11,7 +11,7 @@ _createToken = function ( fn, ln, id )
     try
     {
       const expiration = new Date();
-      const user = {userId:id,firstName:fn,lastName:ln};
+      const user = {FirstName:fn,LastName:ln,UserID:id};
 
       const accessToken =  jwt.sign( user, process.env.ACCESS_TOKEN_SECRET);
 
@@ -56,9 +56,9 @@ exports.refresh = function( token )
 {
   var ud = jwt.decode(token,{complete:true});
 
-  var userId = ud.payload.id;
-  var firstName = ud.payload.firstName;
-  var lastName = ud.payload.lastName;
+  var UserID = ud.payload.UserID;
+  var FirstName = ud.payload.FirstName;
+  var LastName = ud.payload.LastName;
 
-  return _createToken( firstName, lastName, userId );
+  return _createToken( FirstName, LastName, UserID );
 }
