@@ -32,13 +32,9 @@ function Login()
                 setMessage('');
                 window.location.href = '/cards';
             }
-            else if( res.status == 400 )
-            {
-                setMessage('User/Password combination incorrect');
-            }
             else
             {
-                setMessage(res);
+                setMessage(res.error);
             }
         }
         catch(e)
