@@ -8,7 +8,7 @@ function Login()
     var loginEmail;
     var loginPassword;
 
-    const [message,setMessage] = useState('');
+    const [loginMessage,setMessage] = useState('');
 
     const doLogin = async event => 
     {
@@ -26,11 +26,11 @@ function Login()
 
             if( res.status == 200)
             {
-                var user = {firstName:res.firstName,lastName:res.lastName,id:res.id}
+                var user = {FirstName:res.FirstName,LastName:res.LastName,UserID:res.UserID}
                 localStorage.setItem('user_data', JSON.stringify(user));
 
                 setMessage('');
-                window.location.href = '/cards';
+                window.location.href = '/planner';
             }
             else
             {
@@ -56,7 +56,7 @@ function Login()
         <input type="submit" id="loginButton" class="buttons" value = "Do It"
           onClick={doLogin} />
         </form>
-        <span id="loginResult">{message}</span>
+        <span id="loginResult">{loginMessage}</span>
      </div>
     );
 };

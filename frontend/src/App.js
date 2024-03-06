@@ -11,7 +11,7 @@ function App() {
     <BrowserRouter>
     <Routes>
       <Route path="/" index element={<LoginPage />} />
-      <Route path="/cards" index element={<CardPage />} />
+      <Route path="/planner" index element={<CardPage />} />
     </Routes>
   </BrowserRouter>
 );
