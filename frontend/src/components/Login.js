@@ -28,7 +28,7 @@ function Login()
             {
                 setMessage('User/Password combination incorrect');
             }
-            else if(res.id = 200)
+            else if(res.id == 200)
             {
                 var user = {firstName:res.firstName,lastName:res.lastName,id:res.id}
                 localStorage.setItem('user_data', JSON.stringify(user));
