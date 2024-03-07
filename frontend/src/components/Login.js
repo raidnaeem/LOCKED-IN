@@ -7,33 +7,42 @@ function Login() {
     var loginEmail;
     var loginPassword;
 
-    const [message, setMessage] = useState('');
+    const [loginMessage, setMessage] = useState('');
 
     const doLogin = async (event) => {
         event.preventDefault();
 
-        var obj = { Email: loginEmail.value, Password: loginPassword.value };
-        var js = JSON.stringify(obj);
+        var obj_login = 
+        { 
+          Email: loginEmail.value, 
+          Password: loginPassword.value 
+        };
+        var js_login = JSON.stringify(obj_login);
 
         try {
+            //Login API endpoint call
             const response = await fetch(bp.buildPath('api/login'), {
                 method: 'POST',
-                body: js,
+                body: js_login,
                 headers: { 'Content-Type': 'application/json' },
             });
 
             var res = JSON.parse(await response.text());
 
-            if (res.id === 400) {
-                setMessage('User/Password combination incorrect');
-            } else if (res.id === 200) {
-                var user = { firstName: res.firstName, lastName: res.lastName, id: res.id };
-                localStorage.setItem('user_data', JSON.stringify(user));
+            //Success
+            if (response.status === 200) {
+              var user =
+              { 
+                FirstName: res.FirstName, 
+                LastName: res.LastName, 
+                //UserID: res.UserID 
+              };
+              localStorage.setItem('user_data', JSON.stringify(user));
 
-                setMessage('');
-                window.location.href = '/cards';
+              setMessage('');
+              window.location.href = '/planner';
             } else {
-                setMessage(res);
+                setMessage(res.error);
             }
         } catch (e) {
             alert(e.toString());
@@ -67,11 +76,11 @@ function Login() {
                     type="submit"
                     id="loginButton"
                     className="buttons"
-                    value="Do It"
+                    value="Login"
                     onClick={doLogin}
                 />
             </form>
-            <span id="loginResult">{message}</span>
+            <span id="loginResult">{loginMessage}</span>
         </div>
     );
 }

@@ -87,18 +87,18 @@ exports.setApp = function (app, client) {
       // Insert the new user with the new UserID
       await db.collection("Users").insertOne({
         UserID: newUserID,
-        Email,
+        Email: Email,
         Password: hashedPassword, // store hashed password
-        FirstName,
-        LastName,
+        FirstName: FirstName,
+        LastName: LastName
       });
 
       // success message
       res.status(200).json({
         message: "User registered successfully",
         UserID: newUserID,
-        FirstName,
-        LastName,
+        FirstName: FirstName,
+        LastName: LastName
       });
     } catch (err) {
       // errors
