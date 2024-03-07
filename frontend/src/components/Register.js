@@ -64,6 +64,7 @@ function Register()
     return(
       <div id="registerDIV">
             {/* Use the RegisterUI component here */}
+            <RegisterUI/>
 
             <form onSubmit={doRegister}>
                 <span id="inner-title">PLEASE SIGN UP</span>

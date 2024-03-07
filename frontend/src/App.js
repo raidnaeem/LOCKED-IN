@@ -4,6 +4,7 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './components/Register';
 import PlannerPage from './pages/PlannerPage';
 
 function App() {
@@ -11,7 +12,9 @@ function App() {
     <BrowserRouter>
     <Routes>
       <Route path="/" index element={<LoginPage />} />
+      <Route path="/register" index element={<RegisterPage />} />
       <Route path="/planner" index element={<PlannerPage />} />
+
     </Routes>
   </BrowserRouter>
 );

@@ -1,4 +1,5 @@
 import React from 'react';
+const logo = require('../assets/locked-in-logo.png')
 
 const LoginUI = ({ doLogin, loginEmail, setLoginEmail, loginPassword, setLoginPassword }) => {
     const commonTextStyle = {
@@ -14,9 +15,9 @@ const LoginUI = ({ doLogin, loginEmail, setLoginEmail, loginPassword, setLoginPa
                 <div style={{ width: 490.61, height: 542.47, left: 67.60, top: 119.83, position: 'absolute', background: 'white', boxShadow: '6px 0px 12px rgba(0, 0, 0, 0.12)' }} />
 
                 {/*Heading*/}
-                <img style={{ width: 79.59, height: 53.50, left: 270.38, top: 153, position: 'absolute' }} src="../assets/locked-in-logo.png" alt='logo'/>
+                <img style={{ width: 80, height: 80, left: 270.38, top: 140, position: 'absolute' }} src={logo} alt='logo'/>
                 <div style={{ ...commonTextStyle, fontSize: 36, color: '#667EEA', fontWeight: '700', width: 99.21, height: 44.94, left: 261.66, top: 219.34, position: 'absolute' }}>Login</div>
-                <div style={{ ...commonTextStyle, fontSize: 18, color: '#4A5568', fontWeight: '400', width: 199.51, height: 22.47, left: 211.51, top: 267.49, position: 'absolute' }}>Sign in to your account</div>
+                <div style={{ ...commonTextStyle, fontSize: 18, color: '#4A5568', fontWeight: '400', width: 199.51, height: 22.47, left: 220.0, top: 267.49, position: 'absolute' }}>Sign in to your account</div>
 
                 {/*Login Form*/}
                 <form onSubmit={doLogin}>
@@ -29,7 +30,7 @@ const LoginUI = ({ doLogin, loginEmail, setLoginEmail, loginPassword, setLoginPa
                             onChange={(e) => setLoginEmail(e.target.value)}
                         />
                     </div>
-
+                    <div style={{ width: 439.37, height: 1.07, left: 92.67, top: 370.20, position: 'absolute', background: 'rgba(102, 126, 234, 0.50)' }} />
                     <div style={{ width: 439.37, height: 53.50, left: 92.67, top: 388.39, position: 'absolute', background: '#EDF2F7' }}>
                         <input
                             type="password"
@@ -39,7 +40,7 @@ const LoginUI = ({ doLogin, loginEmail, setLoginEmail, loginPassword, setLoginPa
                             onChange={(e) => setLoginPassword(e.target.value)}
                         />
                     </div>
-
+                    <div style={{ width: 439.37, height: 1.07, left: 92.67, top: 441.89, position: 'absolute', background: 'rgba(102, 126, 234, 0.50)' }} />
                     <div style={{ width: 439.37, height: 53.50, left: 92.67, top: 466.50, position: 'absolute', background: '#667EEA' }}>
                         <input
                             type="submit"
@@ -65,11 +66,9 @@ const LoginUI = ({ doLogin, loginEmail, setLoginEmail, loginPassword, setLoginPa
                 </div>
 
                 <div style={{ width: 439.37, height: 53.50, left: 90.49, top: 576.70, position: 'absolute', background: 'white', border: '1px #4A5568 solid' }} />
-                <div style={{ ...commonTextStyle, fontSize: 18, color: '#4A5568', fontWeight: '500', width: 195.15, height: 22.47, left: 213.69, top: 592.75, position: 'absolute' }}>Register New Account</div>
+                <div style={{ ...commonTextStyle, fontSize: 18, color: '#4A5568', fontWeight: '500', width: 195.15, height: 22.47, left: 230, top: 592.75, position: 'absolute' }}>Register New Account</div>
 
-                <div style={{ width: 439.37, height: 1.07, left: 92.67, top: 370.20, position: 'absolute', background: 'rgba(102, 126, 234, 0.50)' }} />
                 <div style={{ left: 180, top: 539, position: 'absolute', color: 'black', fontSize: 16, fontFamily: 'Roboto', fontWeight: '400', width: '300px' }}>Forgot password? Click here to reset</div>
-                <div style={{ width: 439.37, height: 1.07, left: 92.67, top: 441.89, position: 'absolute', background: 'rgba(102, 126, 234, 0.50)' }} />
                 <div style={{ width: 100, height: 100, left: 238, top: 301, position: 'absolute' }} />
                 <div style={{ width: 202.79, height: 53.50, left: 691.21, top: 0, position: 'absolute', background: '#667EEA' }} />
                 <div style={{ width: 202.79, height: 53.50, left: 467.71, top: 0, position: 'absolute', background: '#4A5568' }} />
