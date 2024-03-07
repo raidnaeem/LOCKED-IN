@@ -4,9 +4,9 @@ import LoginUI from './LoginUI'; // Import the LoginUI component
 var bp = require('./Path.js');
 
 function Login() {
-    var loginEmail;
-    var loginPassword;
 
+    const [loginEmail, setLoginEmail] = useState('');
+    const [loginPassword, setLoginPassword] = useState('');
     const [loginMessage, setMessage] = useState('');
 
     const doLogin = async (event) => {
@@ -14,8 +14,8 @@ function Login() {
 
         var obj_login = 
         { 
-          Email: loginEmail.value, 
-          Password: loginPassword.value 
+          Email: loginEmail, 
+          Password: loginPassword
         };
         var js_login = JSON.stringify(obj_login);
 
@@ -53,33 +53,14 @@ function Login() {
     return (
         <div id="loginDiv">
             {/* Use the LoginUI component here */}
-            <LoginUI />
+            <LoginUI
+                doLogin={doLogin}
+                loginEmail={loginEmail}
+                setLoginEmail={setLoginEmail}
+                loginPassword={loginPassword}
+                setLoginPassword={setLoginPassword}
+            />
 
-            <form onSubmit={doLogin}>
-                <span id="inner-title">PLEASE LOG IN</span>
-                <br />
-                <input
-                    type="text"
-                    id="loginEmail"
-                    placeholder="Email"
-                    ref={(c) => (loginEmail = c)}
-                />
-                <br />
-                <input
-                    type="password"
-                    id="loginPassword"
-                    placeholder="Password"
-                    ref={(c) => (loginPassword = c)}
-                />
-                <br />
-                <input
-                    type="submit"
-                    id="loginButton"
-                    className="buttons"
-                    value="Login"
-                    onClick={doLogin}
-                />
-            </form>
             <span id="loginResult">{loginMessage}</span>
         </div>
     );

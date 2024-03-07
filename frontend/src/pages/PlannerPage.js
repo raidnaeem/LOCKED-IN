@@ -3,7 +3,7 @@ import React from 'react';
 import PageTitle from '../components/PageTitle';
 import LoggedInName from '../components/LoggedInName';
 
-const CardPage = () =>
+const PlannerPage = () =>
 {
     return(
         <div>
@@ -13,4 +13,4 @@ const CardPage = () =>
     );
 }
 
-export default CardPage;
+export default PlannerPage;

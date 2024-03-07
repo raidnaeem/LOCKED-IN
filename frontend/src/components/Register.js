@@ -3,7 +3,6 @@ import { useJwt } from "react-jwt";
 import RegisterUI from './RegisterUI';
 var bp = require('./Path.js');
 
-//Not complete, just basically copied format for login
 function Register()
 {
     var registerFName;

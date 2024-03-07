@@ -11,7 +11,7 @@ const LoginPage = () =>
       <div>
         <PageTitle />
         <Login />
-        <Register />
+        {/*<Register />*/}
       </div>
     );
 };
