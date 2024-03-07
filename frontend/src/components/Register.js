@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useJwt } from "react-jwt";
-var bp = require('./Path.js');
 import RegisterUI from './RegisterUI';
+var bp = require('./Path.js');
 
 //Not complete, just basically copied format for login
 function Register()
