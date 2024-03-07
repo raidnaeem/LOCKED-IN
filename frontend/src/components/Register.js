@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useJwt } from "react-jwt";
 var bp = require('./Path.js');
+import RegisterUI from './RegisterUI';
 
 //Not complete, just basically copied format for login
 function Register()
@@ -64,7 +65,7 @@ function Register()
     return(
       <div id="registerDIV">
             {/* Use the RegisterUI component here */}
-            
+            <RegisterUI />
 
             <form onSubmit={doRegister}>
                 <span id="inner-title">PLEASE SIGN UP</span>
