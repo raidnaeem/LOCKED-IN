@@ -64,7 +64,7 @@ const LoginUI = ({ doLogin, loginEmail, setLoginEmail, loginPassword, setLoginPa
                     </div>
                 </div>
 
-                <div style={{ width: 439.37, height: 53.50, left: 90.49, top: 575, position: 'absolute', background: 'white', border: '1px #4A5568 solid' }} />
+                <div style={{ width: 439.37, height: 53.50, left: 90.49, top: 576.70, position: 'absolute', background: 'white', border: '1px #4A5568 solid' }} />
                 <div style={{width: 195.15, height: 22.47, left: 215, top: 619, position: 'absolute', color: '#4A5568', fontSize: 18, fontFamily: 'Roboto', fontWeight: '500', wordWrap: 'break-word'}}>Register New Account</div>
 
                 <div style={{ width: 439.37, height: 1.07, left: 92.67, top: 370.20, position: 'absolute', background: 'rgba(102, 126, 234, 0.50)' }} />
