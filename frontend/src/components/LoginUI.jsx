@@ -7,7 +7,7 @@ const LoginUI = () => {
     };
 
     return (
-        <div style={{ position: 'absolute', left: '20%', top: '10%', transform: 'translate(-50%, -50%)' }}>
+        <div style={{ position: 'absolute', left: '20%', top: '5%', transform: 'translate(-50%, -50%)' }}>
             <div style={{ width: '80%', maxWidth: '600px', position: 'relative' }}>
                 <div style={{ width: 584, height: 247, left: 0, top: 99, position: 'absolute', background: '#EDF2F7' }} />
                 <div style={{ width: 490.61, height: 542.47, left: 78.50, top: 130.53, position: 'absolute', background: '#667EEA', boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.12)' }} />
