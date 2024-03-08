@@ -3,7 +3,16 @@ import React from 'react';
 function PageTitle()
 {
    return(
-     <h1 id="title">Locked In</h1>
+    <h2 
+      id="title"
+      style={{
+        fontStyle: 'italic',
+        fontSize: 40,
+        paddingLeft: 50
+      }}
+    >
+       Locked In
+    </h2>
    );
 };
 

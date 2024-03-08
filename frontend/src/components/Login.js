@@ -55,13 +55,10 @@ function Login() {
             {/* Use the LoginUI component here */}
             <LoginUI
                 doLogin={doLogin}
-                loginEmail={loginEmail}
                 setLoginEmail={setLoginEmail}
-                loginPassword={loginPassword}
                 setLoginPassword={setLoginPassword}
+                loginMessage={loginMessage}
             />
-
-            <span id="loginResult" style={{ position: 'absolute', top: 570, left: 500, color: 'red', fontSize: '16px' }}>{loginMessage}</span>
         </div>
     );
 }

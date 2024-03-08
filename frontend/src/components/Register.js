@@ -3,13 +3,12 @@ import { useJwt } from "react-jwt";
 import RegisterUI from './RegisterUI';
 var bp = require('./Path.js');
 
-function Register()
-{
-    var registerFName;
-    var registerLName;
-    var registerEmail;
-    var registerPassword;
+function Register() {
 
+    const [registerFName,setRegisterFName] = useState('');
+    const [registerLName,setRegisterLName] = useState('');
+    const [registerEmail,setRegisterEmail] = useState('');
+    const [registerPassword,setRegisterPassword] = useState('');
     const [registerMessage,setMessage] = useState('');
 
     const doRegister = async event => 
@@ -64,48 +63,14 @@ function Register()
     return(
       <div id="registerDIV">
             {/* Use the RegisterUI component here */}
-            <RegisterUI/>
-
-            <form onSubmit={doRegister}>
-                <span id="inner-title">PLEASE SIGN UP</span>
-                <br />
-                <input
-                    type="text"
-                    id="registerFName"
-                    placeholder="First Name"
-                    ref={(c) => (registerFName = c)}
-                />
-                <br />
-                <input
-                    type="text"
-                    id="registerLName"
-                    placeholder="Last Name"
-                    ref={(c) => (registerLName = c)}
-                />
-                <br />
-                <input
-                    type="text"
-                    id="registerEmail"
-                    placeholder="Email"
-                    ref={(c) => (registerEmail = c)}
-                />
-                <br />
-                <input
-                    type="password"
-                    id="registerPassword"
-                    placeholder="Password"
-                    ref={(c) => (registerPassword = c)}
-                />
-                <br />
-                <input
-                    type="submit"
-                    id="registerButton"
-                    className="buttons"
-                    value="Register"
-                    onClick={doRegister}
-                />
-            </form>
-            <span id="registerResult">{registerMessage}</span>
+            <RegisterUI
+                doRegister={doRegister}
+                setRegisterFName={setRegisterFName}
+                setRegisterLName={setRegisterLName}
+                setRegisterEmail={setRegisterEmail}
+                setRegisterPassword={setRegisterPassword}
+                registerMessage={registerMessage}
+            />
         </div>
     );
 };
