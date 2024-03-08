@@ -70,7 +70,7 @@ const LoginUI = ({ doLogin, setLoginEmail, setLoginPassword, loginMessage }) => 
                 </form>
                 {/* Icons for form fields*/}
                 <img style={{ width: 14.17, height: 17.12, left: 111.20, top: 334.90, position: 'absolute' }} src={userIcon} alt='userIcon'/>
-                <img style={{ width: 23.96, height: 23.54, left: 109.11, top: 404.44, position: 'absolute' }} src={passwordIcon} alt='passwordIcon'/>
+                <img style={{ width: 23.96, height: 23.54, left: 107.11, top: 404.44, position: 'absolute' }} src={passwordIcon} alt='passwordIcon'/>
                 {/*}
                 <div style={{ width: 23.99, height: 23.54, left: 110.11, top: 404.44, position: 'absolute' }}>
                     <div style={{ width: 16.35, height: 16.05, left: 1.64, top: 3.21, position: 'absolute' }}>
