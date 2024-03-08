@@ -1,5 +1,8 @@
 import React from 'react';
 const logo = require('../assets/locked-in-logo.png')
+const userIcon = require('../assets/user-icon.png')
+const passwordIcon = require('../assets/password-icon.png')
+const emailIcon = require('../assets/email-icon.png')
 
 const LoginUI = ({ doLogin, setLoginEmail, setLoginPassword, loginMessage }) => {
     const commonTextStyle = {
