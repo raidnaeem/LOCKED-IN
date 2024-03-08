@@ -61,7 +61,7 @@ function Login() {
                 setLoginPassword={setLoginPassword}
             />
 
-            <span id="loginResult" style={{ position: 'absolute', top: 600, left: 180, color: 'red', fontSize: '16px' }}>{loginMessage}</span>
+            <span id="loginResult" style={{ position: 'absolute', top: 590, left: 250, color: 'red', fontSize: '16px' }}>{loginMessage}</span>
         </div>
     );
 }
