@@ -100,7 +100,7 @@ const RegisterUI = ({doRegister, setRegisterFName, setRegisterLName, setRegister
                 {/*Icons for form fields*/}
                 <img style={{ width: 14.17, height: 17.12, left: 392, top: 266, position: 'absolute' }} src={userIcon} alt='userIcon'/>
                 <img style={{ width: 14.17, height: 17.12, left: 392, top: 337, position: 'absolute' }} src={userIcon} alt='userIcon'/>
-                <img style={{ width: 27, height: 19.8, left: 384, top: 409, position: 'absolute' }} src={emailIcon} alt='emailIcon'/>
+                <img style={{ width: 24, height: 17.6, left: 384, top: 409, position: 'absolute' }} src={emailIcon} alt='emailIcon'/>
                 <img style={{ width: 23.99, height: 23.54, left: 387, top: 484, position: 'absolute' }} src={passwordIcon} alt='passwordIcon'/>
 
                 { /*
