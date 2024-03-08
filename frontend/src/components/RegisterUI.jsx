@@ -1,5 +1,8 @@
 import React from 'react';
 const logo = require('../assets/locked-in-logo.png')
+const userIcon = require('../assets/user-icon.png')
+const passwordIcon = require('../assets/password-icon.png')
+const emailIcon = require('../assets/email-icon.png')
 
 const RegisterUI = ({doRegister, setRegisterFName, setRegisterLName, setRegisterEmail, setRegisterPassword, registerMessage}) => {
     const commonTextStyle = {
@@ -95,6 +98,12 @@ const RegisterUI = ({doRegister, setRegisterFName, setRegisterLName, setRegister
                 <div id="registerResult" style={{ position: 'absolute', width:400, height:40, top: 530, left: 400, color: 'red', fontSize: '16px', textAlign: 'center'}}>{registerMessage}</div>
 
                 {/*Icons for form fields*/}
+                <img style={{ width: 14.17, height: 17.12, left: 392, top: 266, position: 'absolute' }} src={userIcon} alt='userIcon'/>
+                <img style={{ width: 14.17, height: 17.12, left: 392, top: 337, position: 'absolute' }} src={userIcon} alt='userIcon'/>
+                <img style={{ width: 30, height: 22, left: 384, top: 409, position: 'absolute' }} src={emailIcon} alt='emailIcon'/>
+                <img style={{ width: 23.99, height: 23.54, left: 387, top: 484, position: 'absolute' }} src={passwordIcon} alt='passwordIcon'/>
+                
+                { /*
                 <div style={{width: 14.17, height: 17.12, left: 392, top: 266, position: 'absolute'}}>
                     <div style={{width: 14.17, height: 17.12, left: 0, top: 0, position: 'absolute'}}>
                         <div style={{width: 8.10, height: 8.56, left: 3.04, top: -0, position: 'absolute', opacity: 0.40, background: 'rgba(0, 0, 0, 0.50)'}}></div>
@@ -112,6 +121,7 @@ const RegisterUI = ({doRegister, setRegisterFName, setRegisterLName, setRegister
                         <div style={{width: 11.24, height: 11.03, left: 5.11, top: 0, position: 'absolute', background: 'rgba(0, 0, 0, 0.50)'}}></div>
                     </div>
                 </div>
+                */}   
 
                 {/*Navigate to LoginPage*/}
                 <button 

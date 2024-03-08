@@ -2,7 +2,6 @@ import React from 'react';
 const logo = require('../assets/locked-in-logo.png')
 const userIcon = require('../assets/user-icon.png')
 const passwordIcon = require('../assets/password-icon.png')
-const emailIcon = require('../assets/email-icon.png')
 
 const LoginUI = ({ doLogin, setLoginEmail, setLoginPassword, loginMessage }) => {
     const commonTextStyle = {
@@ -71,7 +70,7 @@ const LoginUI = ({ doLogin, setLoginEmail, setLoginPassword, loginMessage }) => 
                 </form>
                 {/* Icons for form fields*/}
                 <img style={{ width: 14.17, height: 17.12, left: 111.20, top: 334.90, position: 'absolute' }} src={userIcon} alt='userIcon'/>
-                <img style={{ width: 23.96, height: 23.54, left: 110.11, top: 404.44, position: 'absolute' }} src={passwordIcon} alt='passwordIcon'/>
+                <img style={{ width: 23.96, height: 23.54, left: 109.11, top: 404.44, position: 'absolute' }} src={passwordIcon} alt='passwordIcon'/>
                 {/*}
                 <div style={{ width: 23.99, height: 23.54, left: 110.11, top: 404.44, position: 'absolute' }}>
                     <div style={{ width: 16.35, height: 16.05, left: 1.64, top: 3.21, position: 'absolute' }}>
@@ -84,7 +83,8 @@ const LoginUI = ({ doLogin, setLoginEmail, setLoginPassword, loginMessage }) => 
                         <div style={{ width: 8.10, height: 8.56, left: 3.04, top: -0, position: 'absolute', opacity: 0.40, background: 'rgba(0, 0, 0, 0.50)' }}></div>
                         <div style={{ width: 14.17, height: 7.49, left: 0, top: 9.63, position: 'absolute', background: 'rgba(0, 0, 0, 0.50)' }}></div>
                     </div>
-                        </div> */}
+                        </div> 
+                */}
 
                 {/*Login Feedback Message*/}
                 <div id="loginResult" style={{ position: 'absolute', width:200, height:40, top: 530, left: 220, color: 'red', fontSize: '16px' }}>{loginMessage}</div>
