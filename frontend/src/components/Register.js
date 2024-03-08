@@ -17,10 +17,10 @@ function Register() {
 
         var obj_register = 
         {
-          Email: registerEmail.value, 
-          Password: registerPassword.value, 
-          FirstName: registerFName.value, 
-          LastName: registerLName.value
+          Email: registerEmail, 
+          Password: registerPassword, 
+          FirstName: registerFName, 
+          LastName: registerLName
         };
         var js_register = JSON.stringify(obj_register);
 
@@ -44,7 +44,7 @@ function Register() {
                 };
                 localStorage.setItem('user_data', JSON.stringify(user));
 
-                setMessage(res.message);
+                setMessage('');
                 window.location.href = '/planner';
             }
             else

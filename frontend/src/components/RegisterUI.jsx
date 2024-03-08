@@ -1,7 +1,7 @@
 import React from 'react';
 const logo = require('../assets/locked-in-logo.png')
 
-const RegisterUI = (doRegister, setRegisterFName, setRegisterLName, setRegisterEmail, setRegisterPassword, registerMessage) => {
+const RegisterUI = ({doRegister, setRegisterFName, setRegisterLName, setRegisterEmail, setRegisterPassword, registerMessage}) => {
     const commonTextStyle = {
         fontFamily: 'Roboto',
         wordWrap: 'break-word',
@@ -19,32 +19,81 @@ const RegisterUI = (doRegister, setRegisterFName, setRegisterLName, setRegisterE
                 <div style={{...commonTextStyle, left: 527, top: 180, position: 'absolute', color: '#667EEA', fontSize: 36, fontWeight: '700', width: 200}}>Register</div>
                 <div style={{...commonTextStyle, left: 510, top: 226, position: 'absolute', color: '#4A5568', fontSize: 18, fontWeight: '400', width: 200}}>Register your account today</div>
 
+                {/*Form Fields*/}
+                <form onSubmit={doRegister}>
+                    <div style={{width: 439.37, height: 53.50, left: 372, top: 248, position: 'absolute', background: '#EDF2F7'}}>
+                        <input
+                            type="text"
+                            style={{ width: 350, height: 53, left: 0, top: 0, paddingLeft: 45, paddingRight: 45, position: 'relative', color: 'rgba(0, 0, 0, 0.80)', background: '#EDF2F7', fontSize: 18, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word', border:0 }}
+                            id="registerFName"
+                            placeholder="First Name"
+                            onChange={(e) => setRegisterFName(e.target.value)}
+                        />
+                    </div>
+                    <div style={{width: 439, height: 2, left: 375, top: 302.11, position: 'absolute', background: 'rgba(102, 126, 234, 0.50)'}}></div>
 
-                <div style={{width: 439.37, height: 53.50, left: 372, top: 248, position: 'absolute', background: '#EDF2F7'}} />
-                <div style={{width: 439.37, height: 53.50, left: 372, top: 466, position: 'absolute', background: '#EDF2F7'}} />
-                <div style={{width: 439.37, height: 2, left: 372, top: 519.07, position: 'absolute', background: 'rgba(102, 126, 234, 0.50)'}} />
-                <div style={{width: 439.37, height: 53.50, left: 372, top: 572, position: 'absolute', background: '#667EEA'}} />
-                <div style={{width: 439.37, height: 53.50, left: 375, top: 642, position: 'absolute', background: 'white', border: '1px #4A5568 solid'}} />
-                <div style={{width: 439, height: 2, left: 375, top: 302.11, position: 'absolute', background: 'rgba(102, 126, 234, 0.50)'}}></div>
-                <div style={{width: 89.40, height: 22.47, left: 429, top: 264, position: 'absolute', color: 'rgba(0, 0, 0, 0.50)', fontSize: 18, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word'}}>First Name</div>
-                <div style={{width: 100, height: 100, left: 520, top: 301, position: 'absolute'}} />
-                <div style={{width: 87.22, height: 22.47, left: 429, top: 484, position: 'absolute', color: 'rgba(0, 0, 0, 0.50)', fontSize: 18, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word'}}>Password</div>
-                <div style={{left: 547, top: 585, position: 'absolute', color: 'white', fontSize: 24, fontFamily: 'Roboto', fontWeight: '500', wordWrap: 'break-word'}}>Register</div>
-                <div style={{width: 202.79, height: 53.50, left: 973.21, top: 0, position: 'absolute', background: '#667EEA'}} />
-                <div style={{width: 202.79, height: 53.50, left: 749.71, top: 0, position: 'absolute', background: '#4A5568'}} />
-                <div style={{width: 439, height: 2, left: 372, top: 374, position: 'absolute', background: 'rgba(102, 126, 234, 0.50)'}} />
-                <div style={{width: 439.37, height: 53.50, left: 374, top: 319, position: 'absolute', background: '#EDF2F7'}} />
-                <div style={{width: 89.40, height: 22.47, left: 431, top: 335, position: 'absolute', color: 'rgba(0, 0, 0, 0.50)', fontSize: 18, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word'}}>Last Name</div>
-                <div style={{width: 60, left: 1045, top: 11, position: 'absolute', textAlign: 'center', color: 'white', fontSize: 24, fontFamily: 'Roboto', fontWeight: '500', wordWrap: 'break-word'}}>Login</div>
-                <div style={{width: 200, left: 775, top: 13, position: 'absolute', color: 'white', fontSize: 24, fontFamily: 'Roboto', fontWeight: '500', wordWrap: 'break-word'}}>Back to Home</div>
-                <div style={{width: 439, left: 460, top: 656, position: 'absolute', color: '#4A5568', fontSize: 24, fontFamily: 'Roboto', fontWeight: '500', wordWrap: 'break-word'}}>Have an account? Sign in</div>
-                <div style={{width: 439, height: 2, left: 372, top: 302, position: 'absolute', background: 'rgba(102, 126, 234, 0.50)'}} />
-                <div style={{width: 439.37, height: 2, left: 374, top: 448, position: 'absolute', background: 'rgba(102, 126, 234, 0.50)'}} />
-                <div style={{width: 439.37, height: 53.50, left: 374, top: 393, position: 'absolute', background: '#EDF2F7'}} />
-                <div style={{width: 54, height: 22, left: 429, top: 409, position: 'absolute', color: 'rgba(0, 0, 0, 0.50)', fontSize: 18, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word'}}>Email</div>
-                <div style={{width: 65, height: 68, left: 0, top: 583, position: 'absolute'}} />
-                <div style={{width: 14.17, height: 17.12, left: 394, top: 341, position: 'absolute'}} />
-                
+                    <div style={{width: 439.37, height: 53.50, left: 374, top: 319, position: 'absolute', background: '#EDF2F7'}}>
+                        <input
+                            type="text"
+                            style={{ width: 350, height: 53, left: 0, top: 0, paddingLeft: 45, paddingRight: 45, position: 'relative', color: 'rgba(0, 0, 0, 0.80)', background: '#EDF2F7', fontSize: 18, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word', border:0 }}
+                            id="registerLName"
+                            placeholder="Last Name"
+                            onChange={(e) => setRegisterLName(e.target.value)}
+                        />
+                    </div>
+                    <div style={{width: 439, height: 2, left: 372, top: 374, position: 'absolute', background: 'rgba(102, 126, 234, 0.50)'}} />
+
+                    <div style={{width: 439.37, height: 53.50, left: 374, top: 393, position: 'absolute', background: '#EDF2F7'}}>
+                        <input
+                            type="text"
+                            style={{ width: 350, height: 53, left: 0, top: 0, paddingLeft: 45, paddingRight: 45, position: 'relative', color: 'rgba(0, 0, 0, 0.80)', background: '#EDF2F7', fontSize: 18, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word', border:0 }}
+                            id="registerEmail"
+                            placeholder="Email"
+                            onChange={(e) => setRegisterEmail(e.target.value)}
+                        />
+                    </div>
+                    <div style={{width: 439.37, height: 2, left: 374, top: 448, position: 'absolute', background: 'rgba(102, 126, 234, 0.50)'}} />
+
+                    <div style={{width: 439.37, height: 53.50, left: 372, top: 466, position: 'absolute', background: '#EDF2F7'}}>
+                        <input
+                            type="password"
+                            style={{ width: 350, height: 53, left: 0, top: 0, paddingLeft: 45, paddingRight: 45, position: 'relative', color: 'rgba(0, 0, 0, 0.80)', background: '#EDF2F7', fontSize: 18, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word', border:0 }}
+                            id="registerPassword"
+                            placeholder="Password"
+                            onChange={(e) => setRegisterPassword(e.target.value)}
+                        />
+                    </div>
+                    <div style={{width: 439.37, height: 2, left: 372, top: 519.07, position: 'absolute', background: 'rgba(102, 126, 234, 0.50)'}} />
+
+                    <div style={{width: 439.37, height: 53.50, left: 372, top: 572, position: 'absolute', background: '#667EEA'}}>
+                        <input
+                            type="submit"
+                            style={{
+                                width: 439.37, height: 53.30, background: '#667EEA', position: 'absolute', color: 'white', fontSize: 24, fontFamily: 'Roboto', fontWeight: '500', wordWrap: 'break-word',
+                                borderWidth:0
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.backgroundColor = '#2f55fa';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.backgroundColor = '#667EEA';
+                            }}
+                            onMouseDown={(e) => {
+                                e.target.style.backgroundColor = '#203dbd';
+                            }}
+                            onMouseUp={(e) => {
+                                e.target.style.backgroundColor = '#2f55fa';
+                            }}
+                            id="loginButton"
+                            className="buttons"
+                            value="Register"
+                        />
+                    </div>
+                </form>
+
+                {/*Login Feedback Message*/}
+                <div id="registerResult" style={{ position: 'absolute', width:400, height:40, top: 530, left: 400, color: 'red', fontSize: '16px', textAlign: 'center'}}>{registerMessage}</div>
+
                 {/*Icons for form fields*/}
                 <div style={{width: 14.17, height: 17.12, left: 392, top: 266, position: 'absolute'}}>
                     <div style={{width: 14.17, height: 17.12, left: 0, top: 0, position: 'absolute'}}>
@@ -64,6 +113,41 @@ const RegisterUI = (doRegister, setRegisterFName, setRegisterLName, setRegisterE
                     </div>
                 </div>
 
+                {/*Navigate to LoginPage*/}
+                <button 
+                    style={{ width: 439.37, height: 53.50, left: 375, top: 642, position: 'absolute', background: 'white', border: '1px #4A5568 solid', ...commonTextStyle, fontSize: 24, color: '#4A5568', fontWeight: '500'}}
+                    onClick={() => window.location.href = './'}
+                    onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = '#4a5568';
+                        e.target.style.color = 'white';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = 'white';
+                        e.target.style.color = '#4a5568';
+                    }}
+                    onMouseDown={(e) => {
+                        e.target.style.backgroundColor = 'black';
+                        e.target.style.color = 'white';
+                    }}
+                    onMouseUp={(e) => {
+                        e.target.style.backgroundColor = '#4a5568';
+                        e.target.style.color = 'white';
+                    }}
+                >
+                    Have an account? Sign in
+                </button>
+
+                {/*Misc*/}
+                <div style={{width: 100, height: 100, left: 520, top: 301, position: 'absolute'}} />
+                <div style={{width: 202.79, height: 53.50, left: 973.21, top: 0, position: 'absolute', background: '#667EEA'}} />
+                <div style={{width: 202.79, height: 53.50, left: 749.71, top: 0, position: 'absolute', background: '#4A5568'}} />
+
+
+                <div style={{width: 60, left: 1045, top: 11, position: 'absolute', textAlign: 'center', color: 'white', fontSize: 24, fontFamily: 'Roboto', fontWeight: '500', wordWrap: 'break-word'}}>Login</div>
+                <div style={{width: 200, left: 775, top: 13, position: 'absolute', color: 'white', fontSize: 24, fontFamily: 'Roboto', fontWeight: '500', wordWrap: 'break-word'}}>Back to Home</div>
+                <div style={{width: 439, height: 2, left: 372, top: 302, position: 'absolute', background: 'rgba(102, 126, 234, 0.50)'}} />
+                <div style={{width: 65, height: 68, left: 0, top: 583, position: 'absolute'}} />
+                <div style={{width: 14.17, height: 17.12, left: 394, top: 341, position: 'absolute'}} />
             </div>
         </div>
     );

@@ -45,7 +45,7 @@ const LoginUI = ({ doLogin, setLoginEmail, setLoginPassword, loginMessage }) => 
                         <input
                             type="submit"
                             style={{
-                                width: 439.37, height: 53.30, background: '#667EEA', position: 'absolute', color: 'white', fontSize: 18, fontFamily: 'Roboto', fontWeight: '500', wordWrap: 'break-word',
+                                width: 439.37, height: 53.30, background: '#667EEA', position: 'absolute', color: 'white', fontSize: 24, fontFamily: 'Roboto', fontWeight: '500', wordWrap: 'break-word',
                                 borderWidth:0
                             }}
                             onMouseEnter={(e) => {
@@ -85,8 +85,8 @@ const LoginUI = ({ doLogin, setLoginEmail, setLoginPassword, loginMessage }) => 
 
                 {/*Navigate to RegisterPage*/}
                 <button 
-                    style={{ width: 439.37, height: 53.50, left: 90.49, top: 595.70, position: 'absolute', background: 'white', border: '1px #4A5568 solid', ...commonTextStyle, fontSize: 18, color: '#4A5568', fontWeight: '500'}}
-                    onClick={() => window.location.href = '/register'}
+                    style={{ width: 439.37, height: 53.50, left: 90.49, top: 595.70, position: 'absolute', background: 'white', border: '1px #4A5568 solid', ...commonTextStyle, fontSize: 24, color: '#4A5568', fontWeight: '500'}}
+                    onClick={() => window.location.href = './register'}
                     onMouseEnter={(e) => {
                         e.target.style.backgroundColor = '#4a5568';
                         e.target.style.color = 'white';
