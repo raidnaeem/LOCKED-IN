@@ -98,10 +98,10 @@ const RegisterUI = ({doRegister, setRegisterFName, setRegisterLName, setRegister
                 <div id="registerResult" style={{ position: 'absolute', width:400, height:40, top: 530, left: 400, color: 'red', fontSize: '16px', textAlign: 'center'}}>{registerMessage}</div>
 
                 {/*Icons for form fields*/}
-                <img style={{ width: 14.17, height: 17.12, left: 392, top: 266, position: 'absolute' }} src={userIcon} alt='userIcon'/>
-                <img style={{ width: 14.17, height: 17.12, left: 392, top: 337, position: 'absolute' }} src={userIcon} alt='userIcon'/>
+                <img style={{ width: 14.17, height: 17.12, left: 390, top: 266, position: 'absolute' }} src={userIcon} alt='userIcon'/>
+                <img style={{ width: 14.17, height: 17.12, left: 390, top: 337, position: 'absolute' }} src={userIcon} alt='userIcon'/>
                 <img style={{ width: 24, height: 17.6, left: 386, top: 411, position: 'absolute' }} src={emailIcon} alt='emailIcon'/>
-                <img style={{ width: 23.99, height: 23.54, left: 387, top: 484, position: 'absolute' }} src={passwordIcon} alt='passwordIcon'/>
+                <img style={{ width: 23.99, height: 23.54, left: 385, top: 484, position: 'absolute' }} src={passwordIcon} alt='passwordIcon'/>
 
                 { /*
                 <div style={{width: 14.17, height: 17.12, left: 392, top: 266, position: 'absolute'}}>
