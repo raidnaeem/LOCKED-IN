@@ -26,17 +26,17 @@ const LoginUI = ({ doLogin, setLoginEmail, setLoginPassword, loginMessage }) => 
                     <div style={{ width: 439.37, height: 53.50, left: 92.67, top: 316.71, position: 'absolute', background: '#EDF2F7' }}>
                         <input
                             type="text"
-                            style={{ width: 360, height: 53, left: 0, top: 0, paddingLeft: 40, paddingRight: 40, position: 'relative', color: 'rgba(0, 0, 0, 0.50)', background: '#EDF2F7', fontSize: 18, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word', border:0 }}
+                            style={{ width: 360, height: 53, left: 0, top: 0, paddingLeft: 40, paddingRight: 40, position: 'relative', color: 'rgba(0, 0, 0, 0.80)', background: '#EDF2F7', fontSize: 18, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word', border:0 }}
                             id="loginEmail"
                             placeholder="Email"
                             onChange={(e) => setLoginEmail(e.target.value)}
                         />
                     </div>
-                    <div style={{ width: 439.37, height: 1.07, left: 92.67, top: 370.20, position: 'absolute', background: 'rgba(102, 126, 234, 0.50)' }} />
+                    <div style={{ width: 439.37, height: 1.07, left: 92.67, top: 370.20, position: 'absolute', background: 'rgba(102, 126, 234, 0.70)' }} />
                     <div style={{ width: 439.37, height: 53.50, left: 92.67, top: 388.39, position: 'absolute', background: '#EDF2F7' }}>
                         <input
                             type="password"
-                            style={{ width: 360, height: 53, left: 0, top: 0, paddingLeft: 40, paddingRight: 40, position: 'relative', color: 'rgba(0, 0, 0, 0.50)', background: '#EDF2F7', fontSize: 18, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word', border:0 }}
+                            style={{ width: 360, height: 53, left: 0, top: 0, paddingLeft: 40, paddingRight: 40, position: 'relative', color: 'rgba(0, 0, 0, 0.80)', background: '#EDF2F7', fontSize: 18, fontFamily: 'Roboto', fontWeight: '400', wordWrap: 'break-word', border:0 }}
                             id="loginPassword"
                             placeholder="Password"
                             onChange={(e) => setLoginPassword(e.target.value)}

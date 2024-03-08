@@ -4,6 +4,12 @@ function LoggedInName()
 {
 	
     var _ud = localStorage.getItem('user_data');
+
+    //If no local user data, then redirect user to login page
+    if(_ud == null) {
+      window.location.href = '/';
+    }
+
     var ud = JSON.parse(_ud);
     //var userId = ud.UserID;
     var firstName = ud.FirstName;
