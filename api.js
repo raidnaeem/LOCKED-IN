@@ -1,7 +1,11 @@
 // demo api based off on db table, MERB C lab as ref
+require("dotenv").config();
 const express = require("express");
 const mongodb = require("mongodb");
 const bcrypt = require("bcryptjs");
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const { v4: uuidv4 } = require("uuid");
 const jwtHelpers = require("./createJWT.js");
 
 exports.setApp = function (app, client) {
@@ -25,9 +29,15 @@ exports.setApp = function (app, client) {
         const validPassword = await bcrypt.compare(Password, user.Password);
         if (validPassword) {
           // Create JWT for the user
-          const token = jwtHelpers.createToken( user.FirstName,user.LastName,user.UserID);
+          const token = jwtHelpers.createToken(
+            user.FirstName,
+            user.LastName,
+            user.UserID
+          );
           if (token.error) {
-            return res.status(500).json({ error: "Failed to generate authentication token." });
+            return res
+              .status(500)
+              .json({ error: "Failed to generate authentication token." });
           }
           res.status(200).json({
             UserID: user.UserID,
@@ -67,6 +77,12 @@ exports.setApp = function (app, client) {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(Password, salt);
 
+      // Generate a verification token
+      const verificationToken = uuidv4();
+      console.log(
+        `Verification token stored for ${Email}: ${verificationToken}`
+      );
+
       // Increment & retrieve new UserID
       const updateResult = await db.collection("Counters").findOneAndUpdate(
         { _id: "userIdCounter" },
@@ -90,15 +106,20 @@ exports.setApp = function (app, client) {
         Email: Email,
         Password: hashedPassword, // store hashed password
         FirstName: FirstName,
-        LastName: LastName
+        LastName: LastName,
+        verificationToken,
+        passwordResetToken: "", // Empty initially
+        verified: false,
       });
+
+      await sendVerificationEmail(Email, verificationToken);
 
       // success message
       res.status(200).json({
         message: "User registered successfully",
         UserID: newUserID,
         FirstName: FirstName,
-        LastName: LastName
+        LastName: LastName,
       });
     } catch (err) {
       // errors
@@ -106,4 +127,67 @@ exports.setApp = function (app, client) {
       res.status(500).json({ error: "An error occurred during registration." });
     }
   });
+
+  // Email Verification Endpoint
+  app.get("/api/verify-email/:verificationToken", async (req, res) => {
+    const { verificationToken } = req.params;
+    console.log(`Verification token received: ${verificationToken}`);
+
+    const db = client.db("locked-in");
+
+    try {
+      // Find the user by the verificationToken
+      const user = await db.collection("Users").findOne({ verificationToken });
+      console.log(`User found with verification token: `, user);
+
+      if (!user) {
+          console.error("No user found with the provided verification token.");
+          return res.status(404).send("The link is invalid or expired.");
+      }
+
+      // Attempt to verify user
+      console.log(`Attempting to verify user with token: ${verificationToken}`);
+      const update = await db.collection("Users").updateOne(
+          { verificationToken },
+          {
+              $set: { verified: true },
+              $unset: { verificationToken: "" } // Properly unset the field
+          }
+      );
+
+      if (update.matchedCount === 1 && update.modifiedCount === 1) {
+          console.log("User verified successfully.");
+          res.status(200).send("Email verified successfully!");
+      } else {
+          console.log("Failed to verify user. User might already be verified.");
+          res.status(400).send("Unable to verify email. User might already be verified.");
+      }
+  } catch (error) {
+      console.error("Verification error: ", error);
+      res.status(500).send("An error occurred during email verification.");
+  }
+  });
+};
+
+// Send Email Function
+const sendVerificationEmail = async (email, verificationToken) => {
+  const verificationUrl = `http://localhost:5001/api/verify-email/${verificationToken}`;
+  const message = {
+    to: email,
+    from: "lockedin123@myyahoo.com", // email verified with SendGrid
+    subject: "Verify Your Email Address",
+    html: `Please verify your email by clicking on the link: <a href="${verificationUrl}">${verificationUrl}</a>`,
+  };
+
+  console.log(process.env.SENDGRID_API_KEY);
+  try {
+    await sgMail.send(message);
+    console.log("Verification email sent successfully");
+  } catch (error) {
+    console.error("Error sending verification email:", error);
+    if (error.response) {
+      console.error(error.response.body); // This will log the detailed error message from SendGrid
+    }
+    throw new Error("Failed to send verification email");
+  }
 };
