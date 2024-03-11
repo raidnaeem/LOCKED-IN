@@ -141,32 +141,100 @@ exports.setApp = function (app, client) {
       console.log(`User found with verification token: `, user);
 
       if (!user) {
-          console.error("No user found with the provided verification token.");
-          return res.status(404).send("The link is invalid or expired.");
+        console.error("No user found with the provided verification token.");
+        return res.status(404).send("The link is invalid or expired.");
       }
 
       // Attempt to verify user
       console.log(`Attempting to verify user with token: ${verificationToken}`);
       const update = await db.collection("Users").updateOne(
-          { verificationToken },
-          {
-              $set: { verified: true },
-              $unset: { verificationToken: "" } // Properly unset the field
-          }
+        { verificationToken },
+        {
+          $set: { verified: true },
+          $unset: { verificationToken: "" }, // Properly unset the field
+        }
       );
 
       if (update.matchedCount === 1 && update.modifiedCount === 1) {
-          console.log("User verified successfully.");
-          res.status(200).send("Email verified successfully!");
+        console.log("User verified successfully.");
+        res.status(200).send("Email verified successfully!");
       } else {
-          console.log("Failed to verify user. User might already be verified.");
-          res.status(400).send("Unable to verify email. User might already be verified.");
+        console.log("Failed to verify user. User might already be verified.");
+        res
+          .status(400)
+          .send("Unable to verify email. User might already be verified.");
       }
-  } catch (error) {
+    } catch (error) {
       console.error("Verification error: ", error);
       res.status(500).send("An error occurred during email verification.");
-  }
+    }
   });
+
+  // Password reset functionality
+  app.post("/api/request-password-reset", async (req, res) => {
+    const { Email } = req.body;
+    const db = client.db("locked-in");
+
+    try {
+      const user = await db.collection("Users").findOne({ Email: Email });
+      if (!user) {
+        return res.status(404).send("User not found.");
+      }
+
+      const passwordResetToken = uuidv4();
+      await db.collection("Users").updateOne(
+        { Email: Email },
+        {
+          $set: { passwordResetToken: passwordResetToken },
+        }
+      );
+
+      // Sending the password reset email
+      const resetUrl = `http://localhost:5001/api/reset-password/${passwordResetToken}`;
+      const message = {
+        to: Email,
+        from: "lockedin123@myyahoo.com",
+        subject: "Password Reset Request",
+        html: `Please click on the following link to reset your password: <a href="${resetUrl}">${resetUrl}</a>`,
+      };
+
+      await sgMail.send(message);
+      res.status(200).send("Password reset email sent.");
+    } catch (error) {
+      console.error("Password reset request error:", error);
+      res.status(500).send("Error in password reset request.");
+    }
+  });
+
+  // actual handles passworrd reset 
+  app.post("/api/reset-password/:passwordResetToken", async (req, res) => {
+    const { passwordResetToken } = req.params;
+    const { newPassword } = req.body;
+    const db = client.db("locked-in");
+
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        const result = await db.collection("Users").findOneAndUpdate(
+            { passwordResetToken: passwordResetToken },
+            {
+                $set: { Password: hashedPassword },
+                $unset: { passwordResetToken: "" }
+            },
+            { returnDocument: 'after' }
+        );
+
+        if (!result.value) {
+            return res.status(400).send("Password reset token is invalid or has expired.");
+        }
+
+        res.status(200).send("Password has been reset successfully.");
+    } catch (error) {
+        console.error("Password reset error:", error);
+        res.status(500).send("Error resetting password.");
+    }
+});
 };
 
 // Send Email Function
