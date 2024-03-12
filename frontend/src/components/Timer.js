@@ -1,10 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 const MoveableTimer = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const timerRef = useRef(null);
-  const [time, setTime] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [time, setTime] = useState({ totalSeconds: 0 });
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
@@ -27,9 +27,28 @@ const MoveableTimer = () => {
     document.removeEventListener('mouseup', handleMouseUp);
   };
 
-  const handleInputChange = (e, unit) => {
+  const handleInputChange = (e) => {
     const value = parseInt(e.target.value) || 0;
-    setTime((prevTime) => ({ ...prevTime, [unit]: value }));
+    setTime({ totalSeconds: value });
+  };
+
+  useEffect(() => {
+    let interval;
+
+    if (time.totalSeconds > 0) {
+      interval = setInterval(() => {
+        setTime((prevTime) => ({ totalSeconds: prevTime.totalSeconds - 1 }));
+      }, 1000);
+    }
+
+    return () => clearInterval(interval);
+  }, [time.totalSeconds]);
+
+  const formatTime = (seconds) => {
+    const pad = (num) => String(num).padStart(2, '0');
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${pad(minutes)}:${pad(remainingSeconds)}`;
   };
 
   return (
@@ -44,20 +63,12 @@ const MoveableTimer = () => {
       onMouseDown={handleMouseDown}
     >
       <div>
-        <label>Days:</label>
-        <input type="number" value={time.days} onChange={(e) => handleInputChange(e, 'days')} />
+        <label>Time (seconds):</label>
+        <input type="number" value={time.totalSeconds} onChange={handleInputChange} />
       </div>
       <div>
-        <label>Hours:</label>
-        <input type="number" value={time.hours} onChange={(e) => handleInputChange(e, 'hours')} />
-      </div>
-      <div>
-        <label>Minutes:</label>
-        <input type="number" value={time.minutes} onChange={(e) => handleInputChange(e, 'minutes')} />
-      </div>
-      <div>
-        <label>Seconds:</label>
-        <input type="number" value={time.seconds} onChange={(e) => handleInputChange(e, 'seconds')} />
+        <label>Countdown:</label>
+        <div>{formatTime(time.totalSeconds)}</div>
       </div>
     </div>
   );
