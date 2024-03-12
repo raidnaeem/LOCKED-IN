@@ -32,10 +32,6 @@ const MoveableTimer = () => {
     setIsEditing(true);
   };
 
-  const handleBlur = () => {
-    setIsEditing(false);
-  };
-
   const handleInputChange = (e) => {
     const newTime = parseInt(e.target.value, 10);
     if (!isNaN(newTime) && newTime >= 0) {
@@ -77,13 +73,13 @@ const MoveableTimer = () => {
       }}
       onMouseDown={handleMouseDown}
       onDoubleClick={handleDoubleClick}
-      onBlur={handleBlur}
     >
       {isEditing ? (
         <input
           type="number"
           value={time}
           onChange={handleInputChange}
+          onBlur={() => setIsEditing(false)}  {/* Updated here to prevent interference */}
           style={{ width: '40px', textAlign: 'center' }}
         />
       ) : (
