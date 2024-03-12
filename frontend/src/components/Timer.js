@@ -79,7 +79,7 @@ const MoveableTimer = () => {
           type="number"
           value={time}
           onChange={handleInputChange}
-          onBlur={() => setIsEditing(false)}  {/* Updated here to prevent interference */}
+          onBlur={() => setIsEditing(false)}
           style={{ width: '40px', textAlign: 'center' }}
         />
       ) : (
