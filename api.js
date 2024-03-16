@@ -23,7 +23,7 @@ exports.setApp = function (app, client) {
       // Debugging statements to log the retrieved user and provided credentials
       console.log("User from DB:", user);
       console.log("Provided Email:", Email, "Provided Password:", Password);
-
+ 
       if (user) {
         // Compare the provided password with the hashed password
         const validPassword = await bcrypt.compare(Password, user.Password);
@@ -235,6 +235,49 @@ exports.setApp = function (app, client) {
         res.status(500).send("Error resetting password.");
     }
 });
+
+// To DO LISt.... 
+app.post("/api/task/add", async (req, res) => {
+  const { Task, TaskImage, Done, UserID } = req.body; // TaskImage should include 'FileName' and 'ContentType'
+  const db = client.db("locked-in"); // Ensure this is your correct DB name
+
+  try {
+      const newTask = {
+          TaskID: new mongodb.ObjectId(), // Generates a unique identifier
+          Task,
+          TaskImage, // Ensure this object is structured correctly
+          Done,
+          UserID
+      };
+
+      await db.collection("To-Do").insertOne(newTask);
+      res.status(200).json({ message: "Task added successfully", TaskID: newTask.TaskID });
+  } catch (error) {
+      console.error("Error adding task:", error);
+      res.status(500).json({ error: "An error occurred while adding the task." });
+  }
+});
+
+// delete task 
+app.delete("/api/task/delete/:TaskID", async (req, res) => {
+  const TaskID = req.params.TaskID; 
+  console.log("Attempting to delete task with ID:", TaskID); // Debug log
+  const db = client.db("locked-in");
+
+  try {
+    const result = await db.collection("To-Do").deleteOne({ _id: new mongodb.ObjectId(TaskID) });
+    console.log("Delete result:", result); // Debug log
+    if (result.deletedCount === 1) {
+      res.status(200).json({ message: "Task deleted successfully" });
+    } else {
+      res.status(404).json({ error: "Task not found" });
+    }
+  } catch (error) {
+    console.error("Error deleting task:", error);
+    res.status(500).json({ error: "An error occurred while deleting the task." });
+  }
+});
+
 };
 
 // Send Email Function
