@@ -278,6 +278,108 @@ app.delete("/api/task/delete/:TaskID", async (req, res) => {
   }
 });
 
+// markDone
+app.put("/api/task/markDone/:TaskID", async (req, res) => {
+  const { TaskID } = req.params;
+  const db = client.db("locked-in");
+
+  try{
+    const result = await db.collection("To-Do").updateOne(
+      { _id: new mongodb.ObjectId(TaskID) },
+      { $set: {Done: true } }
+    );
+    if(result.modifiedCount === 1) {
+      res.status(200).json({ message: "Task marked as done successfully "});
+    } else {
+      res.status(404).json({ error: "Task not found or already marked as done" });
+    }
+  } catch (error) {
+    console.error("Error marking task as done:", error);
+    res.status(500).json({ error: "An error occurred while marking the task as done." });
+  }
+});
+
+//Create 
+app.post("/api/calendar/create", async (req, res) => {
+  const { Event, StartTime, StartDate, EndTime, EndDate, UserID } = req.body;
+  const db = client.db("locked-in");
+
+  try {
+      await db.collection("Calendar").insertOne({
+          Event,
+          StartTime,
+          StartDate,
+          EndTime,
+          EndDate,
+          UserID
+      });
+      res.status(200).json({ message: "Event created successfully" });
+  } catch (error) {
+      console.error("Error creating event:", error);
+      res.status(500).json({ error: "An error occurred while creating the event." });
+  }
+});
+
+//Fetch 
+app.get("/api/calendar/events/:UserID", async (req, res) => {
+  const UserID = parseInt(req.params.UserID);
+  const db = client.db("locked-in");
+
+  try {
+      const events = await db.collection("Calendar").find({ UserID }).toArray();
+      res.status(200).json(events);
+  } catch (error) {
+      console.error("Error fetching events:", error);
+      res.status(500).json({ error: "An error occurred while fetching events." });
+  }
+});
+
+//Update 
+app.put("/api/event/update/:EventID", async (req, res) => {
+  const EventID = req.params.EventID;
+  const updateFields = req.body; // Object containing fields to update
+  const db = client.db("locked-in");
+
+  // Ensure updateFields does not contain _id to avoid conflicts
+  if(updateFields._id) delete updateFields._id;
+
+  try {
+      const result = await db.collection("Calendar").updateOne(
+          { _id: new mongodb.ObjectId(EventID) },
+          { $set: updateFields }
+      );
+
+      if (result.matchedCount === 0) {
+          res.status(404).json({ message: "Event not found" });
+      } else if (result.modifiedCount === 0) {
+          res.status(200).json({ message: "No changes made to the event" });
+      } else {
+          res.status(200).json({ message: "Event updated successfully" });
+      }
+  } catch (error) {
+      console.error("Error updating event:", error);
+      res.status(500).json({ error: "An error occurred while updating the event." });
+  }
+});
+
+// Delete 
+app.delete("/api/calendar/delete/:EventID", async (req, res) => {
+  const EventID = req.params.EventID;
+  const db = client.db("locked-in");
+
+  try {
+      const result = await db.collection("Calendar").deleteOne({ _id: new mongodb.ObjectId(EventID) });
+      if (result.deletedCount === 1) {
+          res.status(200).json({ message: "Event deleted successfully" });
+      } else {
+          res.status(404).json({ error: "Event not found" });
+      }
+  } catch (error) {
+      console.error("Error deleting event:", error);
+      res.status(500).json({ error: "An error occurred while deleting the event." });
+  }
+});
+
 };
 
 // Send Email Function
