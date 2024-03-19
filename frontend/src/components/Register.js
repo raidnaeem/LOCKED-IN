@@ -9,11 +9,19 @@ function Register() {
     const [registerLName,setRegisterLName] = useState('');
     const [registerEmail,setRegisterEmail] = useState('');
     const [registerPassword,setRegisterPassword] = useState('');
+    const [confirmPassword,setConfirmPassword] = useState('');
     const [registerMessage,setMessage] = useState('');
 
     const doRegister = async event => 
     {
         event.preventDefault();
+        
+        //Form validation goes here, for now only password matching check
+        if(registerPassword !== confirmPassword)
+        {
+            setMessage('Password do not match!');
+            return;
+        }
 
         var obj_register = 
         {
@@ -61,7 +69,7 @@ function Register() {
 
 
     return(
-      <div id="registerDIV">
+        <div id="registerDIV">
             {/* Use the RegisterUI component here */}
             <RegisterUI
                 doRegister={doRegister}
@@ -69,6 +77,7 @@ function Register() {
                 setRegisterLName={setRegisterLName}
                 setRegisterEmail={setRegisterEmail}
                 setRegisterPassword={setRegisterPassword}
+                setConfirmPassword={setConfirmPassword}
                 registerMessage={registerMessage}
             />
         </div>
