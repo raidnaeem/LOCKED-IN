@@ -29,11 +29,6 @@ const MoveableTimer = () => {
     document.removeEventListener('mouseup', handleMouseUp);
   };
 
-  const handleInputChange = (e) => {
-    const value = parseInt(e.target.value) || 0;
-    setTime({ totalSeconds: value });
-  };
-
   const handleStartStop = () => {
     if (isRunning) {
       setIsRunning(false);
@@ -78,14 +73,7 @@ const MoveableTimer = () => {
       }}
       onMouseDown={handleMouseDown}
     >
-      <div>
-        <label>Time (seconds):</label>
-        <input type="number" value={time.totalSeconds} onChange={handleInputChange} />
-      </div>
-      <div>
-        <label>Countdown:</label>
-        <div>{formatTime(time.totalSeconds)}</div>
-      </div>
+      <div>{formatTime(time.totalSeconds)}</div>
       <div>
         <button onClick={handleStartStop}>{isRunning ? 'Pause' : 'Start'}</button>
         <button onClick={() => setTime({ totalSeconds: 0 })}>Reset</button>
