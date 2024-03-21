@@ -7,7 +7,7 @@ const Timer = () => {
   const [time, setTime] = useState({ totalSeconds: 0 });
   const [isRunning, setIsRunning] = useState(false);
   const [pausedAt, setPausedAt] = useState(null);
-  const [inputTime, setInputTime] = useState(0); // State to hold input time
+  const [inputValue, setInputValue] = useState(''); // State to hold input value
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
@@ -40,6 +40,22 @@ const Timer = () => {
         const elapsedSeconds = Math.floor((new Date() - pausedAt) / 1000);
         setTime((prevTime) => ({ totalSeconds: prevTime.totalSeconds + elapsedSeconds }));
         setPausedAt(null);
+      } else if (inputValue.trim()) {
+        const inputParts = inputValue.split(' '); // Split input by spaces
+        let totalSeconds = 0;
+        inputParts.forEach(part => {
+          const value = parseInt(part);
+          if (!isNaN(value)) {
+            if (part.includes('h')) {
+              totalSeconds += value * 3600; // Convert hours to seconds
+            } else if (part.includes('m')) {
+              totalSeconds += value * 60; // Convert minutes to seconds
+            } else if (part.includes('s')) {
+              totalSeconds += value; // Seconds
+            }
+          }
+        });
+        setTime({ totalSeconds });
       }
     }
   };
@@ -58,19 +74,14 @@ const Timer = () => {
 
   const formatTime = (seconds) => {
     const pad = (num) => String(num).padStart(2, '0');
-    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-    return `${pad(minutes)}:${pad(remainingSeconds)}`;
+    return `${pad(hours)}h ${pad(minutes)}m ${pad(remainingSeconds)}s`;
   };
 
-  // Function to handle input time change
   const handleInputChange = (e) => {
-    setInputTime(parseInt(e.target.value)); // Convert input value to integer
-  };
-
-  // Function to set timer to the input time
-  const setTimerToInputTime = () => {
-    setTime({ totalSeconds: inputTime });
+    setInputValue(e.target.value);
   };
 
   return (
@@ -79,24 +90,31 @@ const Timer = () => {
       style={{
         position: 'absolute',
         left: position.x + 'px',
-        top: '100px',
+        top: '50%',
+        transform: 'translate(-50%, -50%)',
         cursor: isDragging ? 'grabbing' : 'grab',
+        border: '4px solid black', // Thick black border
+        padding: '10px',
       }}
       onMouseDown={handleMouseDown}
     >
-      <div>{formatTime(time.totalSeconds)}</div>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div>
-          <button onClick={handleStartStop}>{isRunning ? 'Pause' : 'Start'}</button>
-        </div>
-        <div>
-          <button onClick={() => setTime({ totalSeconds: 0 })}>Reset</button>
-        </div>
+      <div
+        style={{
+          cursor: 'text', // Change cursor to text when clicking inside the timer
+        }}
+        contentEditable={true} // Allow editing the timer content
+        suppressContentEditableWarning={true}
+        onBlur={(e) => setInputValue(e.target.innerText)} // Update input value on blur
+      >
+        {formatTime(time.totalSeconds)}
+      </div>
+      <div>
+        <button onClick={handleStartStop}>{isRunning ? 'Pause' : 'Start'}</button>
+        <button onClick={() => setTime({ totalSeconds: 0 })}>Reset</button>
       </div>
       {/* Input field for setting specific time */}
       <div>
-        <input type="number" value={inputTime} onChange={handleInputChange} />
-        <button onClick={setTimerToInputTime}>Set Time</button>
+        <input type="text" value={inputValue} onChange={handleInputChange} />
       </div>
     </div>
   );
