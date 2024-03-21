@@ -4,7 +4,7 @@ const Timer = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const timerRef = useRef(null);
-  const [time, setTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [time, setTime] = useState({ hours: 0, minutes: 5, seconds: 0 });
   const [isRunning, setIsRunning] = useState(false);
   const [pausedAt, setPausedAt] = useState(null);
   const [isEditable, setIsEditable] = useState(false); // State to manage edit mode
