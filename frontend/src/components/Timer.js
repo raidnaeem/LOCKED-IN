@@ -9,14 +9,42 @@ const Timer = () => {
   const [pausedAt, setPausedAt] = useState(null);
   const [inputValue, setInputValue] = useState(''); // State to hold input value
 
-  const handleMouseDown = (e) => {
-    e.preventDefault();
-    setIsDragging(true);
-    const rect = timerRef.current.getBoundingClientRect();
-    const offsetX = e.clientX - rect.left;
-    const offsetY = e.clientY - rect.top;
-    setPosition({ x: rect.left, y: rect.top });
-  };
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (isDragging) {
+        setPosition({
+          x: e.clientX - offsetX,
+          y: e.clientY - offsetY,
+        });
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    let offsetX = 0, offsetY = 0;
+
+    const handleMouseDown = (e) => {
+      e.preventDefault();
+      setIsDragging(true);
+      const rect = timerRef.current.getBoundingClientRect();
+      offsetX = e.clientX - rect.left;
+      offsetY = e.clientY - rect.top;
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleStartStop = () => {
     if (isRunning) {
@@ -85,7 +113,7 @@ const Timer = () => {
         minWidth: '200px', // Ensure the timer is wide enough
         textAlign: 'center', // Center the timer horizontally
       }}
-      onMouseDown={handleMouseDown}
+      onMouseDown={(e) => setIsDragging(true)}
     >
       <div
         style={{
