@@ -114,11 +114,6 @@ const Timer = () => {
 
   const handleBlur = () => {
     setIsEditable(false);
-    setTime({
-      hours: parseInt(inputHours),
-      minutes: parseInt(inputMinutes),
-      seconds: parseInt(inputSeconds)
-    });
   };
 
   const handleKeyDown = (e) => {
