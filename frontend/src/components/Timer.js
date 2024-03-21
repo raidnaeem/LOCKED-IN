@@ -160,38 +160,39 @@ const Timer = () => {
         onClick={handleEditClick}
       >
         {isEditable ? (
-          <>
-            <input
-              type="text"
-              value={inputHours}
-              onChange={(e) => handleInputChange(e, 'hours')}
-              onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
-              style={{ width: '30px', marginRight: '5px', textAlign: 'center' }}
-              autoFocus
-            />
-            h
-            <input
-              type="text"
-              value={inputMinutes}
-              onChange={(e) => handleInputChange(e, 'minutes')}
-              onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
-              style={{ width: '30px', marginLeft: '5px', marginRight: '5px', textAlign: 'center' }}
-            />
-            m
-            <input
-              type="text"
-              value={inputSeconds}
-              onChange={(e) => handleInputChange(e, 'seconds')}
-              onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
-              style={{ width: '30px', marginLeft: '5px', textAlign: 'center' }}
-            />
-            s
-          </>
-        ) : (
-          `${time.hours}h ${time.minutes}m ${time.seconds}s`
+        <>
+          <input
+            type="text"
+            value={inputHours}
+            onChange={(e) => handleInputChange(e, 'hours')}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
+            style={{ width: '30px', marginRight: '5px', textAlign: 'center' }}
+            autoFocus
+          />
+          h
+          <input
+            type="text"
+            value={inputMinutes}
+            onChange={(e) => handleInputChange(e, 'minutes')}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
+            style={{ width: '30px', margin: '0 5px', textAlign: 'center' }}
+          />
+          m
+          <input
+            type="text"
+            value={inputSeconds}
+            onChange={(e) => handleInputChange(e, 'seconds')}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
+            style={{ width: '30px', marginLeft: '5px', textAlign: 'center' }}
+          />
+          s
+        </>
+      ) : (
+        `${time.hours}h ${time.minutes}m ${time.seconds}s`
+
         )}
       </div>
       <div style={{ marginTop: '10px' }}>
