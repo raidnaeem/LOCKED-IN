@@ -4,11 +4,13 @@ const Timer = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const timerRef = useRef(null);
-  const [time, setTime] = useState({ totalSeconds: 0 });
+  const [time, setTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
   const [isRunning, setIsRunning] = useState(false);
   const [pausedAt, setPausedAt] = useState(null);
-  const [inputValue, setInputValue] = useState(''); // State to hold input value
   const [isEditable, setIsEditable] = useState(false); // State to manage edit mode
+  const [inputHours, setInputHours] = useState('');
+  const [inputMinutes, setInputMinutes] = useState('');
+  const [inputSeconds, setInputSeconds] = useState('');
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -55,24 +57,13 @@ const Timer = () => {
       setIsRunning(true);
       if (pausedAt) {
         const elapsedSeconds = Math.floor((new Date() - pausedAt) / 1000);
-        setTime((prevTime) => ({ totalSeconds: prevTime.totalSeconds + elapsedSeconds }));
+        setTime((prevTime) => ({ ...prevTime, seconds: prevTime.seconds + elapsedSeconds }));
         setPausedAt(null);
-      } else if (inputValue.trim()) {
-        const inputParts = inputValue.split(' '); // Split input by spaces
-        let totalSeconds = 0;
-        inputParts.forEach(part => {
-          const value = parseInt(part);
-          if (!isNaN(value)) {
-            if (part.includes('h')) {
-              totalSeconds += value * 3600; // Convert hours to seconds
-            } else if (part.includes('m')) {
-              totalSeconds += value * 60; // Convert minutes to seconds
-            } else if (part.includes('s')) {
-              totalSeconds += value; // Seconds
-            }
-          }
-        });
-        setTime({ totalSeconds });
+      } else if (inputHours.trim() || inputMinutes.trim() || inputSeconds.trim()) {
+        const hours = inputHours ? parseInt(inputHours) : 0;
+        const minutes = inputMinutes ? parseInt(inputMinutes) : 0;
+        const seconds = inputSeconds ? parseInt(inputSeconds) : 0;
+        setTime({ hours, minutes, seconds });
       }
     }
   };
@@ -80,25 +71,44 @@ const Timer = () => {
   useEffect(() => {
     let interval;
 
-    if (isRunning && time.totalSeconds > 0) {
+    if (isRunning) {
       interval = setInterval(() => {
-        setTime((prevTime) => ({ totalSeconds: prevTime.totalSeconds - 1 }));
+        setTime((prevTime) => {
+          let newSeconds = prevTime.seconds - 1;
+          let newMinutes = prevTime.minutes;
+          let newHours = prevTime.hours;
+
+          if (newSeconds < 0) {
+            newSeconds = 59;
+            newMinutes -= 1;
+          }
+
+          if (newMinutes < 0) {
+            newMinutes = 59;
+            newHours -= 1;
+          }
+
+          if (newHours < 0) {
+            newHours = 0;
+            newMinutes = 0;
+            newSeconds = 0;
+            setIsRunning(false);
+          }
+
+          return { hours: newHours, minutes: newMinutes, seconds: newSeconds };
+        });
       }, 1000);
     }
 
     return () => clearInterval(interval);
-  }, [isRunning, time.totalSeconds]);
+  }, [isRunning]);
 
-  const formatTime = (seconds) => {
-    const pad = (num) => String(num).padStart(2, '0');
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = seconds % 60;
-    return `${pad(hours)}h ${pad(minutes)}m ${pad(remainingSeconds)}s`;
-  };
+  const handleInputChange = (e, type) => {
+    const value = e.target.value;
 
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
+    if (type === 'hours') setInputHours(value);
+    if (type === 'minutes') setInputMinutes(value);
+    if (type === 'seconds') setInputSeconds(value);
   };
 
   const handleEditClick = () => {
@@ -125,7 +135,7 @@ const Timer = () => {
         cursor: isDragging ? 'grabbing' : 'grab',
         border: '4px solid black', // Thick black border
         padding: '10px',
-        minWidth: '200px', // Ensure the timer is wide enough
+        minWidth: '300px', // Ensure the timer is wide enough
         textAlign: 'center', // Center the timer horizontally
       }}
       onMouseDown={(e) => setIsDragging(true)}
@@ -143,21 +153,43 @@ const Timer = () => {
         onClick={handleEditClick}
       >
         {isEditable ? (
-          <input
-            type="text"
-            value={inputValue}
-            onChange={handleInputChange}
-            onBlur={handleBlur}
-            onKeyDown={handleKeyDown}
-            autoFocus
-          />
+          <>
+            <input
+              type="text"
+              value={inputHours}
+              onChange={(e) => handleInputChange(e, 'hours')}
+              onBlur={handleBlur}
+              onKeyDown={handleKeyDown}
+              style={{ width: '30px', marginRight: '5px', textAlign: 'center' }}
+              autoFocus
+            />
+            h
+            <input
+              type="text"
+              value={inputMinutes}
+              onChange={(e) => handleInputChange(e, 'minutes')}
+              onBlur={handleBlur}
+              onKeyDown={handleKeyDown}
+              style={{ width: '30px', marginLeft: '5px', marginRight: '5px', textAlign: 'center' }}
+            />
+            m
+            <input
+              type="text"
+              value={inputSeconds}
+              onChange={(e) => handleInputChange(e, 'seconds')}
+              onBlur={handleBlur}
+              onKeyDown={handleKeyDown}
+              style={{ width: '30px', marginLeft: '5px', textAlign: 'center' }}
+            />
+            s
+          </>
         ) : (
-          formatTime(time.totalSeconds)
+          `${time.hours}h ${time.minutes}m ${time.seconds}s`
         )}
       </div>
       <div style={{ marginTop: '10px' }}>
         <button style={{ marginRight: '10px', marginBottom: '10px' }} onClick={handleStartStop}>{isRunning ? 'Pause' : 'Start'}</button>
-        <button style={{ marginLeft: '10px', marginBottom: '10px' }} onClick={() => setTime({ totalSeconds: 0 })}>Reset</button>
+        <button style={{ marginLeft: '10px', marginBottom: '10px' }} onClick={() => setTime({ hours: 0, minutes: 0, seconds: 0 })}>Reset</button>
       </div>
     </div>
   );
