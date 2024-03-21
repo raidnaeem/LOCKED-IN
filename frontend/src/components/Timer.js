@@ -7,6 +7,7 @@ const Timer = () => {
   const [time, setTime] = useState({ totalSeconds: 0 });
   const [isRunning, setIsRunning] = useState(false);
   const [pausedAt, setPausedAt] = useState(null);
+  const [inputTime, setInputTime] = useState(0); // State to hold input time
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
@@ -62,21 +63,40 @@ const Timer = () => {
     return `${pad(minutes)}:${pad(remainingSeconds)}`;
   };
 
+  // Function to handle input time change
+  const handleInputChange = (e) => {
+    setInputTime(parseInt(e.target.value)); // Convert input value to integer
+  };
+
+  // Function to set timer to the input time
+  const setTimerToInputTime = () => {
+    setTime({ totalSeconds: inputTime });
+  };
+
   return (
     <div
       ref={timerRef}
       style={{
         position: 'absolute',
         left: position.x + 'px',
-        top: position.y + 'px',
+        top: '100px',
         cursor: isDragging ? 'grabbing' : 'grab',
       }}
       onMouseDown={handleMouseDown}
     >
       <div>{formatTime(time.totalSeconds)}</div>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div>
+          <button onClick={handleStartStop}>{isRunning ? 'Pause' : 'Start'}</button>
+        </div>
+        <div>
+          <button onClick={() => setTime({ totalSeconds: 0 })}>Reset</button>
+        </div>
+      </div>
+      {/* Input field for setting specific time */}
       <div>
-        <button onClick={handleStartStop}>{isRunning ? 'Pause' : 'Start'}</button>
-        <button onClick={() => setTime({ totalSeconds: 0 })}>Reset</button>
+        <input type="number" value={inputTime} onChange={handleInputChange} />
+        <button onClick={setTimerToInputTime}>Set Time</button>
       </div>
     </div>
   );
