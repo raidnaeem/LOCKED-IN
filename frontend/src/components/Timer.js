@@ -119,11 +119,6 @@ const Timer = () => {
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       setIsEditable(false);
-      setTime({
-        hours: parseInt(inputHours),
-        minutes: parseInt(inputMinutes),
-        seconds: parseInt(inputSeconds)
-      });
     }
   };
 
