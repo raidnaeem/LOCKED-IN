@@ -31,11 +31,13 @@ const Timer = () => {
     let offsetX = 0, offsetY = 0;
 
     const handleMouseDown = (e) => {
-      e.preventDefault();
-      setIsDragging(true);
-      const rect = timerRef.current.getBoundingClientRect();
-      offsetX = e.clientX - rect.left;
-      offsetY = e.clientY - rect.top;
+      if (e.target === timerRef.current) {
+        e.preventDefault();
+        setIsDragging(true);
+        const rect = timerRef.current.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+      }
     };
 
     if (isDragging) {
@@ -138,7 +140,7 @@ const Timer = () => {
         minWidth: '300px', // Ensure the timer is wide enough
         textAlign: 'center', // Center the timer horizontally
       }}
-      onMouseDown={(e) => setIsDragging(true)}
+      onMouseDown={handleMouseDown}
     >
       <div
         style={{
