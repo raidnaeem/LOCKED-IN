@@ -9,25 +9,40 @@ const Timer = () => {
   const [pausedAt, setPausedAt] = useState(null);
   const [inputValue, setInputValue] = useState(''); // State to hold input value
 
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-  };
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (isDragging) {
+        setPosition({
+          x: e.clientX - offsetX,
+          y: e.clientY - offsetY,
+        });
+      }
+    };
 
-  const handleMouseMove = (e) => {
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
     if (isDragging) {
-      setPosition({
-        x: e.clientX - timerRef.current.clientWidth / 2,
-        y: e.clientY - timerRef.current.clientHeight / 2,
-      });
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
     }
-  };
 
-  const handleMouseUp = () => {
-    setIsDragging(false);
-    document.removeEventListener('mousemove', handleMouseMove);
-    document.removeEventListener('mouseup', handleMouseUp);
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleMouseDown = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+    const rect = timerRef.current.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left;
+    const offsetY = e.clientY - rect.top;
+    setPosition({ x: rect.left, y: rect.top });
   };
 
   const handleStartStop = () => {
@@ -88,10 +103,9 @@ const Timer = () => {
     <div
       ref={timerRef}
       style={{
-        position: 'fixed',
-        left: '50%',
-        top: '50%',
-        transform: 'translate(-50%, -50%)',
+        position: 'absolute',
+        left: position.x + 'px',
+        top: position.y + 'px',
         cursor: isDragging ? 'grabbing' : 'grab',
         border: '4px solid black', // Thick black border
         padding: '10px',
@@ -103,6 +117,12 @@ const Timer = () => {
       <div
         style={{
           cursor: 'text', // Change cursor to text when clicking inside the timer
+          fontSize: '24px', // Increase font size
+          lineHeight: '1.5', // Set line height
+          minHeight: '50px', // Ensure vertical centering
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
         contentEditable={true} // Allow editing the timer content
         suppressContentEditableWarning={true}
@@ -110,12 +130,12 @@ const Timer = () => {
       >
         {formatTime(time.totalSeconds)}
       </div>
-      <div>
-        <button onClick={handleStartStop}>{isRunning ? 'Pause' : 'Start'}</button>
-        <button onClick={() => setTime({ totalSeconds: 0 })}>Reset</button>
+      <div style={{ marginTop: '10px' }}>
+        <button style={{ marginRight: '10px' }} onClick={handleStartStop}>{isRunning ? 'Pause' : 'Start'}</button>
+        <button style={{ marginLeft: '10px' }} onClick={() => setTime({ totalSeconds: 0 })}>Reset</button>
       </div>
       {/* Input field for setting specific time */}
-      <div>
+      <div style={{ marginTop: '10px' }}>
         <input type="text" value={inputValue} onChange={handleInputChange} />
       </div>
     </div>
