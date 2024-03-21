@@ -1,21 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const MoveableTimer = () => {
+const Timer = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const timerRef = useRef(null);
   const [time, setTime] = useState({ totalSeconds: 0 });
   const [isRunning, setIsRunning] = useState(false);
   const [pausedAt, setPausedAt] = useState(null);
 
   const handleMouseDown = (e) => {
-    const boundingRect = timerRef.current.getBoundingClientRect();
     setIsDragging(true);
-    setDragOffset({
-      x: e.clientX - boundingRect.left,
-      y: e.clientY - boundingRect.top,
-    });
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   };
@@ -23,8 +17,8 @@ const MoveableTimer = () => {
   const handleMouseMove = (e) => {
     if (isDragging) {
       setPosition({
-        x: e.clientX - dragOffset.x,
-        y: e.clientY - dragOffset.y,
+        x: e.clientX - timerRef.current.clientWidth / 2,
+        y: e.clientY - timerRef.current.clientHeight / 2,
       });
     }
   };
@@ -75,7 +69,6 @@ const MoveableTimer = () => {
         position: 'absolute',
         left: position.x + 'px',
         top: position.y + 'px',
-        transform: 'translate(-50%, -50%)', // Center the timer component
         cursor: isDragging ? 'grabbing' : 'grab',
       }}
       onMouseDown={handleMouseDown}
@@ -89,4 +82,4 @@ const MoveableTimer = () => {
   );
 };
 
-export default MoveableTimer;
+export default Timer;
