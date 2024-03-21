@@ -8,9 +8,6 @@ const Timer = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [pausedAt, setPausedAt] = useState(null);
   const [isEditable, setIsEditable] = useState(false); // State to manage edit mode
-  const [inputHours, setInputHours] = useState('');
-  const [inputMinutes, setInputMinutes] = useState('');
-  const [inputSeconds, setInputSeconds] = useState('');
 
   const handleMouseDown = (e) => {
     if (e.target === timerRef.current) {
@@ -56,11 +53,6 @@ const Timer = () => {
         const elapsedSeconds = Math.floor((new Date() - pausedAt) / 1000);
         setTime((prevTime) => ({ ...prevTime, seconds: prevTime.seconds + elapsedSeconds }));
         setPausedAt(null);
-      } else if (inputHours.trim() || inputMinutes.trim() || inputSeconds.trim()) {
-        const hours = inputHours ? parseInt(inputHours) : 0;
-        const minutes = inputMinutes ? parseInt(inputMinutes) : 0;
-        const seconds = inputSeconds ? parseInt(inputSeconds) : 0;
-        setTime({ hours, minutes, seconds });
       }
     }
   };
@@ -100,26 +92,26 @@ const Timer = () => {
     return () => clearInterval(interval);
   }, [isRunning]);
 
-  const handleInputChange = (e, type) => {
-    const value = e.target.value;
-
-    if (type === 'hours') setInputHours(value);
-    if (type === 'minutes') setInputMinutes(value);
-    if (type === 'seconds') setInputSeconds(value);
-  };
-
   const handleEditClick = () => {
     setIsEditable(true);
   };
 
   const handleBlur = () => {
     setIsEditable(false);
+    // Update time when exiting edit mode
+    setTime({
+      hours: parseInt(time.hours),
+      minutes: parseInt(time.minutes),
+      seconds: parseInt(time.seconds)
+    });
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      setIsEditable(false);
-    }
+  const handleInputChange = (e, type) => {
+    const value = e.target.value;
+
+    if (type === 'hours') setTime({ ...time, hours: value });
+    if (type === 'minutes') setTime({ ...time, minutes: value });
+    if (type === 'seconds') setTime({ ...time, seconds: value });
   };
 
   return (
@@ -153,29 +145,26 @@ const Timer = () => {
           <>
             <input
               type="text"
-              value={inputHours}
+              value={time.hours}
               onChange={(e) => handleInputChange(e, 'hours')}
               onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
               style={{ width: '30px', marginRight: '5px', textAlign: 'center' }}
               autoFocus
             />
             h
             <input
               type="text"
-              value={inputMinutes}
+              value={time.minutes}
               onChange={(e) => handleInputChange(e, 'minutes')}
               onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
               style={{ width: '30px', marginLeft: '5px', marginRight: '5px', textAlign: 'center' }}
             />
             m
             <input
               type="text"
-              value={inputSeconds}
+              value={time.seconds}
               onChange={(e) => handleInputChange(e, 'seconds')}
               onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
               style={{ width: '30px', marginLeft: '5px', textAlign: 'center' }}
             />
             s
