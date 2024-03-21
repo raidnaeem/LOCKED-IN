@@ -12,6 +12,17 @@ const Timer = () => {
   const [inputMinutes, setInputMinutes] = useState('');
   const [inputSeconds, setInputSeconds] = useState('');
 
+  const handleMouseDown = (e) => {
+    if (e.target === timerRef.current) {
+      e.preventDefault();
+      setIsDragging(true);
+      const rect = timerRef.current.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const offsetY = e.clientY - rect.top;
+      setPosition({ x: rect.left, y: rect.top });
+    }
+  };
+
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (isDragging) {
@@ -29,16 +40,6 @@ const Timer = () => {
     };
 
     let offsetX = 0, offsetY = 0;
-
-    const handleMouseDown = (e) => {
-      if (e.target === timerRef.current) {
-        e.preventDefault();
-        setIsDragging(true);
-        const rect = timerRef.current.getBoundingClientRect();
-        offsetX = e.clientX - rect.left;
-        offsetY = e.clientY - rect.top;
-      }
-    };
 
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove);
