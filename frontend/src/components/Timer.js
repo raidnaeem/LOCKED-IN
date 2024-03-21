@@ -17,7 +17,7 @@ const Timer = () => {
       e.preventDefault();
       setIsDragging(true);
       const rect = timerRef.current.getBoundingClientRect();
-      setPosition({ x: rect.left, y: rect.top });
+      setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
     }
   };
 
