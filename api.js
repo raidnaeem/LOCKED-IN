@@ -299,6 +299,29 @@ app.put("/api/task/markDone/:TaskID", async (req, res) => {
   }
 });
 
+// Search Todo
+app.get("/api/todo/search", async (req, res) => {
+  const { query, userID } = req.query;
+  const db = client.db("locked-in");
+
+  try {
+      const regex = new RegExp(query, 'i'); // the 'i' allows for case-insensitive
+      const todos = await db.collection("To-Do")
+                             .find({
+                                 UserID: parseInt(userID),
+                                 Task: { $regex: regex }
+                             })
+                             .limit(5) // limiting the reponse to be quick 
+                             .toArray();
+      res.status(200).json(todos);
+  } catch (error) {
+      console.error("Error searching todos:", error);
+      res.status(500).json({ error: "An error occurred during the search." });
+  }
+});
+
+//--Calendar Sectioin--//
+
 //Create 
 app.post("/api/calendar/create", async (req, res) => {
   const { Event, StartTime, StartDate, EndTime, EndDate, UserID } = req.body;
@@ -377,6 +400,27 @@ app.delete("/api/calendar/delete/:EventID", async (req, res) => {
   } catch (error) {
       console.error("Error deleting event:", error);
       res.status(500).json({ error: "An error occurred while deleting the event." });
+  }
+});
+
+//Search 
+app.get("/api/calendar/search", async (req, res) => {
+  const { query, userID } = req.query;
+  const db = client.db("locked-in");
+
+  try {
+      const regex = new RegExp(query, 'i');
+      const events = await db.collection("Calendar")
+                              .find({
+                                  UserID: parseInt(userID),
+                                  Event: { $regex: regex }
+                              })
+                              .limit(5)
+                              .toArray();
+      res.status(200).json(events);
+  } catch (error) {
+      console.error("Error searching events:", error);
+      res.status(500).json({ error: "An error occurred during the search." });
   }
 });
 
