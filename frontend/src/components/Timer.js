@@ -17,8 +17,6 @@ const Timer = () => {
       e.preventDefault();
       setIsDragging(true);
       const rect = timerRef.current.getBoundingClientRect();
-      const offsetX = e.clientX - rect.left;
-      const offsetY = e.clientY - rect.top;
       setPosition({ x: rect.left, y: rect.top });
     }
   };
@@ -27,19 +25,15 @@ const Timer = () => {
     const handleMouseMove = (e) => {
       if (isDragging) {
         setPosition({
-          x: e.clientX - offsetX,
-          y: e.clientY - offsetY,
+          x: e.clientX,
+          y: e.clientY,
         });
       }
     };
 
     const handleMouseUp = () => {
       setIsDragging(false);
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
     };
-
-    let offsetX = 0, offsetY = 0;
 
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove);
@@ -50,7 +44,7 @@ const Timer = () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isDragging]);
 
   const handleStartStop = () => {
     if (isRunning) {
