@@ -100,12 +100,22 @@ const Timer = () => {
     return () => clearInterval(interval);
   }, [isRunning]);
 
-  const handleInputChange = (e, type) => {
-    const value = e.target.value;
+  const handleInputChange = (e, type) => 
+  {
+      const value = e.target.value;
 
-    if (type === 'hours') setInputHours(value);
-    if (type === 'minutes') setInputMinutes(value);
-    if (type === 'seconds') setInputSeconds(value);
+      if (type === 'hours') 
+      {
+        setInputHours(value);
+      }
+      elif (type === 'minutes') 
+      {
+        setInputMinutes(value);
+      }
+      elif (type === 'seconds') 
+      {
+        setInputSeconds(value);
+      }
   };
 
   const handleEditClick = () => {
