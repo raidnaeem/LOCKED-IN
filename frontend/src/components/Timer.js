@@ -108,11 +108,11 @@ const Timer = () => {
       {
         setInputHours(value);
       }
-      elif (type === 'minutes') 
+      else if (type === 'minutes') 
       {
         setInputMinutes(value);
       }
-      elif (type === 'seconds') 
+      else if (type === 'seconds') 
       {
         setInputSeconds(value);
       }
