@@ -131,8 +131,8 @@ const Timer = () => {
         {formatTime(time.totalSeconds)}
       </div>
       <div style={{ marginTop: '10px' }}>
-        <button style={{ marginRight: '10px' }} onClick={handleStartStop}>{isRunning ? 'Pause' : 'Start'}</button>
-        <button style={{ marginLeft: '10px' }} onClick={() => setTime({ totalSeconds: 0 })}>Reset</button>
+        <button style={{ marginRight: '10px', marginBottom: '10px' }} onClick={handleStartStop}>{isRunning ? 'Pause' : 'Start'}</button>
+        <button style={{ marginLeft: '10px', marginBottom: '10px' }} onClick={() => setTime({ totalSeconds: 0 })}>Reset</button>
       </div>
       {/* Input field for setting specific time */}
       <div style={{ marginTop: '10px' }}>
