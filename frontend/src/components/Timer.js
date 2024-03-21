@@ -88,13 +88,15 @@ const Timer = () => {
     <div
       ref={timerRef}
       style={{
-        position: 'absolute',
-        left: position.x + 'px',
+        position: 'fixed',
+        left: '50%',
         top: '50%',
         transform: 'translate(-50%, -50%)',
         cursor: isDragging ? 'grabbing' : 'grab',
         border: '4px solid black', // Thick black border
         padding: '10px',
+        minWidth: '200px', // Ensure the timer is wide enough
+        textAlign: 'center', // Center the timer horizontally
       }}
       onMouseDown={handleMouseDown}
     >
