@@ -8,6 +8,7 @@ const Timer = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [pausedAt, setPausedAt] = useState(null);
   const [inputValue, setInputValue] = useState(''); // State to hold input value
+  const [isEditable, setIsEditable] = useState(false); // State to manage edit mode
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -100,6 +101,20 @@ const Timer = () => {
     setInputValue(e.target.value);
   };
 
+  const handleEditClick = () => {
+    setIsEditable(true);
+  };
+
+  const handleBlur = () => {
+    setIsEditable(false);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      setIsEditable(false);
+    }
+  };
+
   return (
     <div
       ref={timerRef}
@@ -125,19 +140,24 @@ const Timer = () => {
           alignItems: 'center',
           justifyContent: 'center',
         }}
-        contentEditable={true} // Allow editing the timer content
-        suppressContentEditableWarning={true}
-        onBlur={(e) => setInputValue(e.target.innerText)} // Update input value on blur
+        onClick={handleEditClick}
       >
-        {formatTime(time.totalSeconds)}
+        {isEditable ? (
+          <input
+            type="text"
+            value={inputValue}
+            onChange={handleInputChange}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
+            autoFocus
+          />
+        ) : (
+          formatTime(time.totalSeconds)
+        )}
       </div>
       <div style={{ marginTop: '10px' }}>
         <button style={{ marginRight: '10px', marginBottom: '10px' }} onClick={handleStartStop}>{isRunning ? 'Pause' : 'Start'}</button>
         <button style={{ marginLeft: '10px', marginBottom: '10px' }} onClick={() => setTime({ totalSeconds: 0 })}>Reset</button>
-      </div>
-      {/* Input field for setting specific time */}
-      <div style={{ marginTop: '10px' }}>
-        <input type="text" value={inputValue} onChange={handleInputChange} />
       </div>
     </div>
   );
