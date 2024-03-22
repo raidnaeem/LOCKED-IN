@@ -55,9 +55,12 @@ const Timer = () => {
         const elapsedSeconds = Math.floor((new Date() - pausedAt) / 1000);
         setTime((prevTime) => ({ ...prevTime, seconds: prevTime.seconds + elapsedSeconds }));
         setPausedAt(null);
+      } else {
+        setTime({ minutes: 0, seconds: 0 }); // Reset timer if it was not paused
       }
     }
   };
+  
 
   useEffect(() => {
     let interval;
