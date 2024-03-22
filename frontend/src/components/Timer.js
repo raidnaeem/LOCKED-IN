@@ -8,6 +8,7 @@ const Timer = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [pausedAt, setPausedAt] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
+  const [inputMinutes, setInputMinutes] = useState('');
   const [inputSeconds, setInputSeconds] = useState('');
 
   const handleMouseDown = (e) => {
@@ -88,21 +89,33 @@ const Timer = () => {
     return () => clearInterval(interval);
   }, [isRunning]);
 
+  const handleInputChange = (e, type) => {
+    const value = e.target.value;
+
+    if (type === 'minutes') {
+      setInputMinutes(value);
+    } else if (type === 'seconds') {
+      setInputSeconds(value);
+    }
+  };
+
   const handleEditClick = () => {
     setIsEditable(true);
   };
 
   const handleBlur = () => {
     setIsEditable(false);
+    const minutes = inputMinutes ? parseInt(inputMinutes) : 0;
     const seconds = inputSeconds ? parseInt(inputSeconds) : 0;
-    setTime((prevTime) => ({ ...prevTime, seconds }));
+    setTime({ minutes, seconds });
   };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       setIsEditable(false);
+      const minutes = inputMinutes ? parseInt(inputMinutes) : 0;
       const seconds = inputSeconds ? parseInt(inputSeconds) : 0;
-      setTime((prevTime) => ({ ...prevTime, seconds }));
+      setTime({ minutes, seconds });
     }
   };
 
@@ -137,12 +150,21 @@ const Timer = () => {
           <>
             <input
               type="text"
+              value={inputMinutes}
+              onChange={(e) => setInputMinutes(e.target.value)}
+              onBlur={handleBlur}
+              onKeyDown={handleKeyDown}
+              style={{ width: '30px', marginRight: '5px', textAlign: 'center' }}
+              autoFocus
+            />
+            m
+            <input
+              type="text"
               value={inputSeconds}
               onChange={(e) => setInputSeconds(e.target.value)}
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
-              style={{ width: '30px', textAlign: 'center' }}
-              autoFocus
+              style={{ width: '30px', marginLeft: '5px', textAlign: 'center' }}
             />
             s
           </>
@@ -151,11 +173,23 @@ const Timer = () => {
             <span
               style={{
                 cursor: 'text',
+                marginRight: '5px',
               }}
               onClick={() => setIsEditable(true)}
             >
-              {time.minutes}:{time.seconds < 10 ? `0${time.seconds}` : time.seconds}
+              {time.minutes}
             </span>
+            m
+            <span
+              style={{
+                cursor: 'text',
+                marginLeft: '5px',
+              }}
+              onClick={() => setIsEditable(true)}
+            >
+              {time.seconds}
+            </span>
+            s
           </>
         )}
       </div>
