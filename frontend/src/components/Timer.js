@@ -105,12 +105,22 @@ const Timer = () => {
     setIsEditable(true);
   };
 
-  const handleBlur = () => {
+  const handleBlur = (type) => {
+    if (type === 'minutes') {
+      setInputMinutes('');
+    } else if (type === 'seconds') {
+      setInputSeconds('');
+    }
     setIsEditable(false);
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e, type) => {
     if (e.key === 'Enter') {
+      if (type === 'minutes') {
+        setInputMinutes('');
+      } else if (type === 'seconds') {
+        setInputSeconds('');
+      }
       setIsEditable(false);
     }
   };
@@ -148,8 +158,8 @@ const Timer = () => {
               type="text"
               value={inputMinutes}
               onChange={(e) => handleInputChange(e, 'minutes')}
-              onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
+              onBlur={() => handleBlur('minutes')}
+              onKeyDown={(e) => handleKeyDown(e, 'minutes')}
               style={{ width: '30px', marginRight: '5px', textAlign: 'center' }}
               autoFocus
             />
@@ -158,8 +168,8 @@ const Timer = () => {
               type="text"
               value={inputSeconds}
               onChange={(e) => handleInputChange(e, 'seconds')}
-              onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
+              onBlur={() => handleBlur('seconds')}
+              onKeyDown={(e) => handleKeyDown(e, 'seconds')}
               style={{ width: '30px', marginLeft: '5px', textAlign: 'center' }}
             />
             s
