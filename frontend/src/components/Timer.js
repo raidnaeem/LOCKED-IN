@@ -165,7 +165,28 @@ const Timer = () => {
             s
           </>
         ) : (
-          `${time.minutes}m ${time.seconds}s`
+          <>
+            <span
+              style={{
+                cursor: 'text',
+                marginRight: '5px',
+              }}
+              onClick={() => setIsEditable(true)}
+            >
+              {time.minutes}
+            </span>
+            m
+            <span
+              style={{
+                cursor: 'text',
+                marginLeft: '5px',
+              }}
+              onClick={() => setIsEditable(true)}
+            >
+              {time.seconds}
+            </span>
+            s
+          </>
         )}
       </div>
       <div style={{ marginTop: '10px' }}>
