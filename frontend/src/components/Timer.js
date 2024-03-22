@@ -86,10 +86,14 @@ const Timer = () => {
           return { minutes: newMinutes, seconds: newSeconds };
         });
       }, 1000);
+    } else {
+      clearInterval(interval); // Clear interval if not running
     }
   
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); // Cleanup function
+  
   }, [isRunning]);
+  
 
   const handleInputChange = (e, type) => {
     const value = e.target.value;
