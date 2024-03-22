@@ -55,45 +55,39 @@ const Timer = () => {
         const elapsedSeconds = Math.floor((new Date() - pausedAt) / 1000);
         setTime((prevTime) => ({ ...prevTime, seconds: prevTime.seconds + elapsedSeconds }));
         setPausedAt(null);
-      } else if (inputMinutes.trim() || inputSeconds.trim()) {
-        const minutes = inputMinutes ? parseInt(inputMinutes) : 0;
-        const seconds = inputSeconds ? parseInt(inputSeconds) : 0;
-        setTime({ minutes, seconds });
       }
     }
   };
 
   useEffect(() => {
     let interval;
-  
+
     if (isRunning) {
       interval = setInterval(() => {
         setTime((prevTime) => {
           let newSeconds = prevTime.seconds - 1;
           let newMinutes = prevTime.minutes;
-  
+
           if (newSeconds < 0) {
             newSeconds = 59;
             newMinutes -= 1;
           }
-  
+
           if (newMinutes < 0) {
             newMinutes = 0;
             newSeconds = 0;
             setIsRunning(false);
           }
-  
+
           return { minutes: newMinutes, seconds: newSeconds };
         });
       }, 1000);
     } else {
-      clearInterval(interval); // Clear interval if not running
+      clearInterval(interval);
     }
-  
-    return () => clearInterval(interval); // Cleanup function
-  
+
+    return () => clearInterval(interval);
   }, [isRunning]);
-  
 
   const handleInputChange = (e, type) => {
     const value = e.target.value;
