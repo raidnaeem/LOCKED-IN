@@ -65,29 +65,29 @@ const Timer = () => {
 
   useEffect(() => {
     let interval;
-
+  
     if (isRunning) {
       interval = setInterval(() => {
         setTime((prevTime) => {
           let newSeconds = prevTime.seconds - 1;
           let newMinutes = prevTime.minutes;
-
+  
           if (newSeconds < 0) {
             newSeconds = 59;
             newMinutes -= 1;
           }
-
+  
           if (newMinutes < 0) {
             newMinutes = 0;
             newSeconds = 0;
             setIsRunning(false);
           }
-
+  
           return { minutes: newMinutes, seconds: newSeconds };
         });
       }, 1000);
     }
-
+  
     return () => clearInterval(interval);
   }, [isRunning]);
 
