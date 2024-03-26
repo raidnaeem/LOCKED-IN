@@ -44,6 +44,7 @@ exports.setApp = function (app, client) {
             FirstName: user.FirstName,
             LastName: user.LastName,
             AccessToken: token.accessToken,
+            verified: user.verified,
             error: "",
           });
         } else {
@@ -120,6 +121,7 @@ exports.setApp = function (app, client) {
         UserID: newUserID,
         FirstName: FirstName,
         LastName: LastName,
+        verified: false,
       });
     } catch (err) {
       // errors

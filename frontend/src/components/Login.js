@@ -31,16 +31,24 @@ function Login() {
 
             //Success
             if (response.status === 200) {
-              var user =
-              { 
-                FirstName: res.FirstName, 
-                LastName: res.LastName, 
-                //UserID: res.UserID 
-              };
-              localStorage.setItem('user_data', JSON.stringify(user));
+                //If email verified, navigate to Planner page
+                console.log(res);
+                if(res.verified == true) {
+                    var user =
+                    { 
+                        FirstName: res.FirstName, 
+                        LastName: res.LastName, 
+                        //UserID: res.UserID 
+                    };
+                    localStorage.setItem('user_data', JSON.stringify(user));
 
-              setMessage('');
-              window.location.href = '/planner';
+                    setMessage('');
+                    window.location.href = '/planner';
+                }
+                else
+                {
+                    setMessage('Please verify your email to login!');
+                }
             } else {
                 setMessage(res.error);
             }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useJwt } from "react-jwt";
 import RegisterUI from './RegisterUI';
+import VerificationPopup from './VerificationPopup.jsx';
 var bp = require('./Path.js');
 
 function Register() {
@@ -25,10 +26,10 @@ function Register() {
 
         var obj_register = 
         {
-          Email: registerEmail, 
-          Password: registerPassword, 
-          FirstName: registerFName, 
-          LastName: registerLName
+            Email: registerEmail, 
+            Password: registerPassword, 
+            FirstName: registerFName, 
+            LastName: registerLName
         };
         var js_register = JSON.stringify(obj_register);
 
@@ -53,7 +54,9 @@ function Register() {
                 localStorage.setItem('user_data', JSON.stringify(user));
 
                 setMessage('');
-                window.location.href = '/planner';
+                //Alert user to check email for verification
+                const verifyNotif = document.getElementById("verifyNotification");
+                verifyNotif.style.display = 'block';
             }
             else
             {
@@ -70,6 +73,7 @@ function Register() {
 
     return(
         <div id="registerDIV">
+            <VerificationPopup/>
             {/* Use the RegisterUI component here */}
             <RegisterUI
                 doRegister={doRegister}
