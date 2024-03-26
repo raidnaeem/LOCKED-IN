@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ResetRequest from './pages/ResetRequest';
 import PlannerPage from './pages/PlannerPage';
+import API from '.../api.js'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/passwordReset" index element={<ResetRequest />} />
         <Route path="/register" index element={<RegisterPage />} />
         <Route path="/planner" index element={<PlannerPage />} />
+        <Route path="/api/verify-email/:verificationToken" index element={<API/>} />
       </Routes>
     </BrowserRouter>
     </ChakraProvider>
