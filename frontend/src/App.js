@@ -6,7 +6,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import PasswordReset from './pages/PasswordReset';
+import ResetRequest from './pages/ResetRequest';
 import PlannerPage from './pages/PlannerPage';
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" index element={<LoginPage />} />
-        <Route path="/passwordReset" index element={<PasswordReset />} />
+        <Route path="/passwordReset" index element={<ResetRequest />} />
         <Route path="/register" index element={<RegisterPage />} />
         <Route path="/planner" index element={<PlannerPage />} />
       </Routes>

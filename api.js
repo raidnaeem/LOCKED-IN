@@ -7,6 +7,7 @@ const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const { v4: uuidv4 } = require("uuid");
 const jwtHelpers = require("./createJWT.js");
+const bp = require('./frontend/src/components/Path.js');
 
 exports.setApp = function (app, client) {
   app.post("/api/login", async (req, res) => {
@@ -192,7 +193,8 @@ exports.setApp = function (app, client) {
       );
 
       // Sending the password reset email
-      const resetUrl = `http://localhost:5001/api/reset-password/${passwordResetToken}`;
+      //const resetUrl = `http://localhost:5001/api/reset-password/${passwordResetToken}`;
+      const resetUrl = bp.buildPath(`api/reset-password/${passwordResetToken}`);
       const message = {
         to: Email,
         from: "lockedin123@myyahoo.com",
@@ -430,7 +432,8 @@ app.get("/api/calendar/search", async (req, res) => {
 
 // Send Email Function
 const sendVerificationEmail = async (email, verificationToken) => {
-  const verificationUrl = `http://localhost:5001/api/verify-email/${verificationToken}`;
+  //const verificationUrl = `http://localhost:5001/api/verify-email/${verificationToken}`;
+  const verificationUrl = bp.buildPath(`api/verify-email/${verificationToken}`);
   const message = {
     to: email,
     from: "lockedin123@myyahoo.com", // email verified with SendGrid
