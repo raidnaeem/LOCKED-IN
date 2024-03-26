@@ -74,7 +74,7 @@ function Register() {
                 setMessage('');
                 // Send verification email
                 await sendVerificationEmail(registerEmail, verificationToken);
-
+                
                 //Alert user to check email for verification
                 const verifyNotif = document.getElementById("verifyNotification");
                 verifyNotif.style.display = 'block';
@@ -90,6 +90,7 @@ function Register() {
             return;
         }    
     };
+
 
     return(
         <div id="registerDIV">
