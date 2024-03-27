@@ -1,8 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const path = require('path');  
-const MongoClient = require("mongodb").MongoClient;         
+const path = require('path');           
 const PORT = process.env.PORT || 5001;  
 const app = express();
 
@@ -15,8 +14,23 @@ require('dotenv').config();
 //troubleshooting
 //console.log("MONGODB_URI from .env:", process.env.MONGODB_URI);
 const url = process.env.MONGODB_URI;
+const MongoClient = require("mongodb").MongoClient;
 const client = new MongoClient(url);
 client.connect(console.log("mongodb connected"));
+
+app.use((req, res, next) =>
+{
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    res.setHeader(
+        'Access-Control-Allow-Methods',
+        'GET, POST, PATCH, DELETE, OPTIONS'
+    );
+    next();
+});
 
 // just adding in for api 
 var api = require('./api.js');
@@ -33,21 +47,6 @@ if (process.env.NODE_ENV === 'production')
     res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
   });
 }
-
-
-app.use((req, res, next) =>
-{
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader(
-        'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-    );
-    res.setHeader(
-        'Access-Control-Allow-Methods',
-        'GET, POST, PATCH, DELETE, OPTIONS'
-    );
-    next();
-});
 
 app.listen(PORT, () => 
 {
