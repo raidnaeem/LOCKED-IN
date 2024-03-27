@@ -8,7 +8,7 @@ function EmailVerification({ verificationToken }) {
         const verifyEmail = async () => {
             try {
                 // Verify Email Endpoint Call
-                const response = await fetch(bp.buildPath(`api/verify-email/${verificationToken}`), {
+                const response = await fetch(bp.buildPath(`api/verify-email-endpoint/${verificationToken}`), {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' },
                 });
@@ -33,11 +33,8 @@ function EmailVerification({ verificationToken }) {
     }, []); // Empty dependency array ensures this effect runs only once when the component mounts
 
     return (
-        <div id="verifyStatus">
+        <div className='flex justify-center' id="verifyStatus">
             {verifyMessage}
-
-            <br />
-            test {verificationToken}
         </div>
     );
 }
