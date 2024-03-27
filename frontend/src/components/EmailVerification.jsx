@@ -35,6 +35,9 @@ function EmailVerification({ verificationToken }) {
     return (
         <div id="verifyStatus">
             {verifyMessage}
+
+            <br />
+            test {verificationToken}
         </div>
     );
 }
