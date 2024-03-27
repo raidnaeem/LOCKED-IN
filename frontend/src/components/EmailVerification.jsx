@@ -14,7 +14,7 @@ function EmailVerification({ verificationToken }) {
                 try {
                     // Verify Email Endpoint Call
                     const response = await fetch(bp.buildPath(`api/verify-email/${verificationToken}`), {
-                        method: 'GET',
+                        method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                     });
 
