@@ -19,7 +19,7 @@ function App() {
         <Route path="/passwordReset" index element={<ResetRequest />} />
         <Route path="/register" index element={<RegisterPage />} />
         <Route path="/planner" index element={<PlannerPage />} />
-        <Route path="/api/verify-email/:verificationToken"/>
+        <Route path="/verify-email/:verificationToken" index element={<EmailVerificationPage />} />
       </Routes>
     </BrowserRouter>
     </ChakraProvider>

@@ -194,7 +194,7 @@ exports.setApp = function (app, client) {
 
       // Sending the password reset email
       //const resetUrl = `http://localhost:5001/api/reset-password/${passwordResetToken}`;
-      const resetUrl = bp.buildPath(`api/reset-password/${passwordResetToken}`);
+      const resetUrl = bp.buildFrontPath(`reset-password/${passwordResetToken}`);
       const message = {
         to: Email,
         from: "lockedin123@myyahoo.com",
@@ -433,7 +433,7 @@ app.get("/api/calendar/search", async (req, res) => {
 // Send Email Function
 const sendVerificationEmail = async (email, verificationToken) => {
   //const verificationUrl = `http://localhost:5001/api/verify-email/${verificationToken}`;
-  const verificationUrl = bp.buildPath(`api/verify-email/${verificationToken}`);
+  const verificationUrl = bp.buildFrontPath(`verify-email/${verificationToken}`);
   const message = {
     to: email,
     from: "lockedin123@myyahoo.com", // email verified with SendGrid
