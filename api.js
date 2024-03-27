@@ -132,7 +132,7 @@ exports.setApp = function (app, client) {
   });
 
   // Email Verification Endpoint
-  app.get("/api/verify-email-endpoint/:verificationToken", async (req, res) => {
+  app.get("/api/verify-email/:verificationToken", async (req, res) => {
     const { verificationToken } = req.params;
     console.log(`Verification token received: ${verificationToken}`);
 

@@ -8,7 +8,7 @@ function EmailVerification({ verificationToken }) {
         const verifyEmail = async () => {
             try {
                 // Verify Email Endpoint Call
-                const response = await fetch(bp.buildPath(`api/verify-email-endpoint/${verificationToken}`), {
+                const response = await fetch(bp.buildPath(`api/verify-email/${verificationToken}`), {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' },
                 });
@@ -17,7 +17,6 @@ function EmailVerification({ verificationToken }) {
 
                 // Success
                 if (response.status === 200) {
-                    // If email verified, navigate to Planner page
                     setMessage(res);
                 } else {
                     setMessage(res);
