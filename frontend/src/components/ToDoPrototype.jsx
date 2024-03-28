@@ -20,7 +20,7 @@ function ToDoPrototype()
 
     const fetchTasks = async () => {
         try {
-            const response = await fetch(bp.buildPath(`api/todo/search?query=&userID=${ud}`), {
+            const response = await fetch(bp.buildPath(`api/todo/search?query=&userID=${ud.UserID}`), {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
             });
