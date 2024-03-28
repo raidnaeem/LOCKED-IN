@@ -1,6 +1,6 @@
 import React from 'react';
 import { Input, InputLeftElement, InputGroup, Stack, InputRightElement, Button} from '@chakra-ui/react';
-const logo = require('../assets/locked-in-logo.png')
+const logo = require('../assets/lock-logo.png')
 const userIcon = require('../assets/user-icon.png')
 const passwordIcon = require('../assets/password-icon.png')
 const emailIcon = require('../assets/email-icon.png')
