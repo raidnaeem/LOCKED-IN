@@ -161,7 +161,7 @@ const Timer = () => {
             <input
               type="text"
               value={inputMinutes}
-              onChange={(e) => setInputMinutes(e.target.value)}
+              onChange={(e) => handleInputChange(e, 'minutes')}
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
               style={{ width: '30px', marginRight: '5px', textAlign: 'center' }}
@@ -171,7 +171,7 @@ const Timer = () => {
             <input
               type="text"
               value={inputSeconds}
-              onChange={(e) => setInputSeconds(e.target.value)}
+              onChange={(e) => handleInputChange(e, 'seconds')}
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
               style={{ width: '30px', marginLeft: '5px', textAlign: 'center' }}
