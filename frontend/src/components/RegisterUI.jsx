@@ -24,7 +24,7 @@ const RegisterUI = ({doRegister, setRegisterFName, setRegisterLName, setRegister
         <div className="bg-white relative z-10 bottom-3 right-3 h-[620px] max-w-lg flex flex-col justify-start items-center" style={{boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.12)' }}>
 
         {/*Heading*/}
-        <img className="w-[80px] h-[110px] relative z-20 -top-5" src={logo} alt='logo'/>
+        <img className="w-[80px] h-[120px] relative z-20 -top-5" src={logo} alt='logo'/>
         <div className="text-blue w-full text-center text-4xl pb-2 font-bold" style={{ commonTextStyle}}>Register</div>
         <div className="text-slate-600 w-full text-center text-lg pb-6" style={{commonTextStyle}}>Register your account today</div>
 
