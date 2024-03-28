@@ -1,19 +1,13 @@
-import 'package:flutter_app/routes/routes.dart';
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(MyApp());
+import 'package:flutter_app/screens/LoginScreen.dart';
+import 'package:flutter_app/screens/CardsScreen.dart';
+class Routes {
+static const String LOGINSCREEN = '/login';
+static const String CARDSSCREEN = '/cards';
+// routes of pages in the app
+static Map<String, Widget Function(BuildContext)> get getroutes => {
+'/': (context) => LoginScreen(),
+LOGINSCREEN: (context) => LoginScreen(),
+CARDSSCREEN: (context) => CardsScreen(),
+};
 }
-
-class MyApp extends StatelessWidget {
-// This widget is the root of your application.
-    @override
-    Widget build(BuildContext context) {
-      return MaterialApp(
-        title: '',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(),
-        routes: Routes.getroutes,
-      );
-    }
-  }
