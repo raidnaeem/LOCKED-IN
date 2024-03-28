@@ -20,7 +20,7 @@ function ToDoPrototype()
 
     const fetchTasks = async () => {
         try {
-            const response = await fetch(bp.buildPath('api/todo/search?query=&userID=64'), {
+            const response = await fetch(bp.buildPath(`api/todo/search?query=&userID=${ud}`), {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -64,7 +64,7 @@ function ToDoPrototype()
             //Success
             if(response.ok){
                 console.log(res);
-                setTasks([...tasks, res]); // Add newly created task to tasks state
+                setTasks([tasks, res]); // Add newly created task to tasks state
                 //setTaskName(''); // Clear task name input
 
             } else {
