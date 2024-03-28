@@ -2,11 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 const Sound = require('../assets/TimesUp.mp3')
 
 const Timer = () => {
-<<<<<<< HEAD
   const [position, setPosition] = useState({ x: 50, y: 100 });
-=======
-  const [position, setPosition] = useState({ x: 0, y: 75 });
->>>>>>> 6787f6b45acc85d4e2d1e9d5b08f54618299a6b3
   const [isDragging, setIsDragging] = useState(false);
   const timerRef = useRef(null);
   const [time, setTime] = useState({ minutes: 25, seconds: 0 });
