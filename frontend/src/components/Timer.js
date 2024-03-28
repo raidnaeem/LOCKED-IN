@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 const Timer = () => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState({ x: 50, y: 100 });
   const [isDragging, setIsDragging] = useState(false);
   const timerRef = useRef(null);
   const [time, setTime] = useState({ minutes: 0, seconds: 0 });

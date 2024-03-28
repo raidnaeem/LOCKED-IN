@@ -16,7 +16,7 @@ function GeneralBackground()
             <Button 
                   className='absolute m-10 p-6'
                   style={{background: 'white', border: '1px #4A5568 solid', fontSize: 24}}
-                  onClick={() => window.location.href = ''}
+                  onClick={() => window.location.href = '/'}
                   onMouseEnter={(e) => {
                      e.target.style.backgroundColor = '#4a5568';
                      e.target.style.color = 'white';

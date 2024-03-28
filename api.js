@@ -229,7 +229,7 @@ exports.setApp = function (app, client) {
             { returnDocument: 'after' }
         );
 
-        if (!result.value) {
+        if (!result) {
             return res.status(400).send("Password reset token is invalid or has expired.");
         }
 
@@ -315,7 +315,7 @@ app.get("/api/todo/search", async (req, res) => {
                                  UserID: parseInt(userID),
                                  Task: { $regex: regex }
                              })
-                             .limit(5) // limiting the reponse to be quick 
+                             .limit(10) // limiting the reponse to be quick 
                              .toArray();
       res.status(200).json(todos);
   } catch (error) {

@@ -32,13 +32,13 @@ function ResetPasswordRedirect ({ passwordResetToken }) {
         { 
             newPassword: password
         };
-        obj_passwordReset = JSON.stringify(obj_passwordReset);
+        var js_passwordReset = JSON.stringify(obj_passwordReset);
 
         try {
             //Calls Reset Password Endpoint
             const response = await fetch(bp.buildPath(`api/reset-password/${passwordResetToken}`), {
                 method: 'POST',
-                body: obj_passwordReset,
+                body: js_passwordReset,
                 headers:{'Content-Type': 'application/json'}
             });
 
