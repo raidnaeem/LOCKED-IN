@@ -1,15 +1,28 @@
 import React, { useState, useRef, useEffect } from 'react';
+const Sound = require('../assets/TimesUp.mp3')
 
 const Timer = () => {
+<<<<<<< HEAD
   const [position, setPosition] = useState({ x: 50, y: 100 });
+=======
+  const [position, setPosition] = useState({ x: 0, y: 75 });
+>>>>>>> 6787f6b45acc85d4e2d1e9d5b08f54618299a6b3
   const [isDragging, setIsDragging] = useState(false);
   const timerRef = useRef(null);
-  const [time, setTime] = useState({ minutes: 0, seconds: 0 });
+  const [time, setTime] = useState({ minutes: 25, seconds: 0 });
   const [isRunning, setIsRunning] = useState(false);
   const [pausedAt, setPausedAt] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
   const [inputMinutes, setInputMinutes] = useState('');
   const [inputSeconds, setInputSeconds] = useState('');
+
+  const audioRef = useRef(null);
+
+  const playSound = () => {
+    if (audioRef.current) {
+      audioRef.current.play();
+    }
+  };
 
   const handleMouseDown = (e) => {
     if (e.target === timerRef.current) {
@@ -77,6 +90,7 @@ const Timer = () => {
             newMinutes = 0;
             newSeconds = 0;
             setIsRunning(false);
+            playSound();
           }
 
           return { minutes: newMinutes, seconds: newSeconds };
@@ -151,7 +165,7 @@ const Timer = () => {
             <input
               type="text"
               value={inputMinutes}
-              onChange={(e) => setInputMinutes(e.target.value)}
+              onChange={(e) => handleInputChange(e, 'minutes')}
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
               style={{ width: '30px', marginRight: '5px', textAlign: 'center' }}
@@ -161,7 +175,7 @@ const Timer = () => {
             <input
               type="text"
               value={inputSeconds}
-              onChange={(e) => setInputSeconds(e.target.value)}
+              onChange={(e) => handleInputChange(e, 'seconds')}
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
               style={{ width: '30px', marginLeft: '5px', textAlign: 'center' }}
@@ -199,11 +213,12 @@ const Timer = () => {
         </button>
         <button
           style={{ marginLeft: '10px', marginBottom: '10px' }}
-          onClick={() => setTime({ minutes: 0, seconds: 0 })}
+          onClick={() => setTime({ minutes: 25, seconds: 0 })}
         >
           Reset
         </button>
       </div>
+      <audio ref={audioRef} src={Sound} />
     </div>
   );
 };
