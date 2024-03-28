@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import bp from './Path.js'; // Assuming Path.js exports an object or function
+import bp from './Path.js'; 
 
 function EmailVerification({ verificationToken }) {
     const [verifyMessage, setMessage] = useState('');

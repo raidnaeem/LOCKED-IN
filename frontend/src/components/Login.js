@@ -38,7 +38,7 @@ function Login() {
                     { 
                         FirstName: res.FirstName, 
                         LastName: res.LastName, 
-                        //UserID: res.UserID 
+                        UserID: res.UserID 
                     };
                     localStorage.setItem('user_data', JSON.stringify(user));
 

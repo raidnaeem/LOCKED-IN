@@ -1,52 +1,63 @@
-import React, { useState } from 'react';
-import { Input, InputLeftElement, InputGroup, Button} from '@chakra-ui/react';
+import React, { useState, useEffect, useRef } from 'react';
+import bp from './Path.js'; 
+import { Input, InputLeftElement, InputGroup, Stack, InputRightElement, Button} from '@chakra-ui/react';
+const logo = require('../assets/locked-in-logo.png')
+const userIcon = require('../assets/user-icon.png')
+const passwordIcon = require('../assets/password-icon.png')
 const emailIcon = require('../assets/email-icon.png')
-var bp = require('./Path.js');
 
-
-function ResetUI()
-{
+function ResetPasswordRedirect ({ passwordResetToken }) {
     const commonTextStyle = {
         fontFamily: 'Roboto',
         wordWrap: 'break-word',
     };
 
-    const [email, setEmail] = useState('');
-    const [message, setMessage] = useState('');
+    const [show, setShow] = React.useState(false)
+    const handleClick = () => setShow(!show)
 
-    const requestReset = async (event) => {
+    const [message, setMessage] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
+    const resetPassword = async event => {
         event.preventDefault();
 
-        var obj_requestReset = 
+        if(password !== confirmPassword)
+        {
+            setMessage('Password do not match!');
+            return;
+        }
+
+        var obj_passwordReset = 
         { 
-            Email: email
+            newPassword: password
         };
-        obj_requestReset = JSON.stringify(obj_requestReset);
+        obj_passwordReset = JSON.stringify(obj_passwordReset);
 
         try {
-            //Password Request Reset API endpoint call
-            const response = await fetch(bp.buildPath('api/request-password-reset'), {
+            //Calls Reset Password Endpoint
+            const response = await fetch(bp.buildPath(`api/reset-password/${passwordResetToken}`), {
                 method: 'POST',
-                body: obj_requestReset,
-                headers: { 'Content-Type': 'application/json' },
+                body: obj_passwordReset,
+                headers:{'Content-Type': 'application/json'}
             });
 
-            var res = await response.text();
+            const res = await response.text();
 
             //Success
-            if (response.status === 200) {
+            if(response.status === 200){
                 setMessage(res);
-                console.log('test');
             } else {
                 setMessage(res);
             }
+
+
         } catch (e) {
             alert(e.toString());
-            return;
         }
-    };
+    }
 
-   return(
+    return (
         <div>
             <div className="flex justify-center">
             <div className="sm:w-4/5 p-4 relative max-w-[800px]">
@@ -55,20 +66,35 @@ function ResetUI()
                 <div className="bg-blue relative z-10 top-10 left-12 h-[450px] max-w-[1200px] rounded" style={{boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.12)' }}>
                 <div className="bg-white relative z-10 bottom-3 right-3 h-[450px] max-w-[1200px] flex flex-col justify-start items-center rounded" style={{boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.12)' }}>
 
-                    <div className="text-slate-600 w-full text-center text-xl p-10" style={{commonTextStyle}}>Enter your email to reset your password</div>
-                    <form onSubmit={requestReset} className='text-center'>
-                        <InputGroup className='-mb-4'>
-                            <InputLeftElement pointerEvents='none'>
-                                <img src={emailIcon} className='relative top-1 h-[18px]' alt='User Icon'></img>
-                            </InputLeftElement>
-                            <Input bg='gray.200' width='300px' height='50px'
-                                type='email'
-                                placeholder='Email'
-                                id="registerFName"
-                                className='mb-10'
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </InputGroup>
+                    <div className="text-slate-600 w-full text-center text-xl p-10" style={{commonTextStyle}}>Enter a new password for your account</div>
+                    <form onSubmit={resetPassword} className='text-center'>
+                    <InputGroup className='mb-2'>
+                        <InputLeftElement pointerEvents='none'>
+                            <img src={passwordIcon} className='relative top-1' alt='Password Icon'></img>
+                        </InputLeftElement>
+                        <Input bg='gray.200' width='340px' height='50px'
+                            type={show ? 'text' : 'password'}
+                            placeholder='Password'
+                            id="newPassword"
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <InputRightElement>
+                            <Button className="relative top-1 right-1" h='1.75rem' size='sm' onClick={handleClick}>
+                            {show ? 'Hide' : 'Show'}
+                            </Button>
+                        </InputRightElement>
+                    </InputGroup>
+                    <InputGroup className='mb-2'>
+                        <InputLeftElement pointerEvents='none'>
+                            <img src={passwordIcon} className='relative top-1' alt='Password Icon'></img>
+                        </InputLeftElement>
+                        <Input bg='gray.200' width='340px' height='50px'
+                            type='password'
+                            placeholder='Confirm Password'
+                            id="confirmPassword"
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                    </InputGroup>
                         <Button bgColor='#667EEA' textColor='white' height='50px' fontSize='20px' styles={[commonTextStyle]}
                             type='submit'
                             onMouseEnter={(e) => {
@@ -84,7 +110,7 @@ function ResetUI()
                                 e.target.style.backgroundColor = '#2f55fa';
                             }}
                         >
-                            Request Password Reset
+                            Reset Password
                         </Button>
 
                         {/*Register Feedback Message*/}
@@ -95,7 +121,7 @@ function ResetUI()
                     <Button 
                         className='mt-7 p-6'
                         style={{background: 'white', border: '1px #4A5568 solid', commonTextStyle, fontSize: 24}}
-                        onClick={() => window.location.href = './'}
+                        onClick={() => window.location.href = '/'}
                         onMouseEnter={(e) => {
                             e.target.style.backgroundColor = '#4a5568';
                             e.target.style.color = 'white';
@@ -121,7 +147,8 @@ function ResetUI()
             </div>
             </div>
         </div>
-   );
-};
+    );
 
-export default ResetUI;
+}
+
+export default ResetPasswordRedirect

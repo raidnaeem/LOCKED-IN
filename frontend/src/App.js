@@ -9,6 +9,7 @@ import RegisterPage from './pages/RegisterPage';
 import ResetRequest from './pages/ResetRequest';
 import PlannerPage from './pages/PlannerPage';
 import EmailVerificationPage from './pages/EmailVerificationPage'; 
+import ResetPasswordPage from './pages/ResetPassword';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/register" index element={<RegisterPage />} />
         <Route path="/planner" index element={<PlannerPage />} />
         <Route path="/verify-email/:verificationToken" index element={<EmailVerificationPage />} />
+        <Route path="/reset-password/:passwordResetToken" index element={<ResetPasswordPage />} />
       </Routes>
     </BrowserRouter>
     </ChakraProvider>
