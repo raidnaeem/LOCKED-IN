@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 const Sound = require('../assets/TimesUp.mp3')
 
 const Timer = () => {
-  const [position, setPosition] = useState({ x: 0, y: 50 });
+  const [position, setPosition] = useState({ x: 0, y: 75 });
   const [isDragging, setIsDragging] = useState(false);
   const timerRef = useRef(null);
   const [time, setTime] = useState({ minutes: 25, seconds: 0 });
@@ -209,7 +209,7 @@ const Timer = () => {
         </button>
         <button
           style={{ marginLeft: '10px', marginBottom: '10px' }}
-          onClick={() => setTime({ minutes: 0, seconds: 0 })}
+          onClick={() => setTime({ minutes: 25, seconds: 0 })}
         >
           Reset
         </button>
