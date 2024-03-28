@@ -120,7 +120,7 @@ const RegisterUI = ({doRegister, setRegisterFName, setRegisterLName, setRegister
         {/*Navigate to Login*/}
         <Button 
             className='mt-5 p-6'
-            style={{background: 'white', border: '1px #4A5568 solid', commonTextStyle, fontSize: 24, marginTop: '-20px'}}
+            style={{background: 'white', border: '1px #4A5568 solid', commonTextStyle, fontSize: 24, marginTop: '-5px'}}
             onClick={() => window.location.href = './'}
             onMouseEnter={(e) => {
                 e.target.style.backgroundColor = '#4a5568';
