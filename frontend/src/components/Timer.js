@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import Sound from '../assests/TimesUp.mp3';
 
 const Timer = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -10,6 +11,14 @@ const Timer = () => {
   const [isEditable, setIsEditable] = useState(false);
   const [inputMinutes, setInputMinutes] = useState('');
   const [inputSeconds, setInputSeconds] = useState('');
+
+  const audioRef = useRef(null);
+
+  const playSound = () => {
+    if (audioRef.current) {
+      audioRef.current.play();
+    }
+  };
 
   const handleMouseDown = (e) => {
     if (e.target === timerRef.current) {
@@ -77,6 +86,7 @@ const Timer = () => {
             newMinutes = 0;
             newSeconds = 0;
             setIsRunning(false);
+            playSound();
           }
 
           return { minutes: newMinutes, seconds: newSeconds };
@@ -204,6 +214,7 @@ const Timer = () => {
           Reset
         </button>
       </div>
+      <audio ref={audioRef} src={Sound} />
     </div>
   );
 };
