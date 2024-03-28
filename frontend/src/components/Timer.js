@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import Sound from '../assests/TimesUp.mp3';
+const Sound = require('../assets/TimesUp.mp3')
 
 const Timer = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
