@@ -64,7 +64,7 @@ function ToDoPrototype()
             //Success
             if(response.ok){
                 console.log(res);
-                setTasks([tasks, res]); // Add newly created task to tasks state
+                setTasks([...tasks, obj_newTask]); // Add newly created task to tasks state
                 //setTaskName(''); // Clear task name input
 
             } else {
