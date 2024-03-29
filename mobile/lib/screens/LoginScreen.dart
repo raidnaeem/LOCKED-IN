@@ -36,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         loginName = value;
                       });
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(),
@@ -61,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       });
                     },
                     obscureText: true,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(),
