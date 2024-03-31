@@ -8,6 +8,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const { v4: uuidv4 } = require("uuid");
 const jwtHelpers = require("./createJWT.js");
 const bp = require('./frontend/src/components/Path.js');
+const fetch = require('node-fetch');
 
 exports.setApp = function (app, client) {
   app.post("/api/login", async (req, res) => {
@@ -428,6 +429,56 @@ app.get("/api/calendar/search", async (req, res) => {
   }
 });
 
+//Spotify API
+
+//Spotify Search
+// Search Spotify (by genre, artist)
+app.get("/api/spotify/search", async (req, res) => {
+  try {
+    const token = await getSpotifyAccessToken();
+    const { query, type } = req.query; // type can be 'artist' or 'genre'
+    const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=${type}&market=US&limit=10`;
+    
+    const response = await fetch(searchUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    });
+
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('Spotify Search API error:', error);
+    res.status(500).json({ error: 'Failed to search Spotify.' });
+  }
+});
+
+// Fetching for Random Track from Genre
+app.get("/api/spotify/random-track", async (req, res) => {
+  try {
+    const token = await getSpotifyAccessToken();
+    const { genre } = req.query; // Genre as a query parameter
+    
+    const randomTrackUrl = `https://api.spotify.com/v1/recommendations?seed_genres=${encodeURIComponent(genre)}&limit=1`;
+
+    const response = await fetch(randomTrackUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    });
+
+    const data = await response.json();
+    // Assuming the response structure and selecting the first track
+    const track = data.tracks[0];
+    res.json(track);
+  } catch (error) {
+    console.error('Spotify Random Track API error:', error);
+    res.status(500).json({ error: 'Failed to fetch random track from Spotify.' });
+  }
+});
+
 };
 
 // Send Email Function
@@ -453,3 +504,31 @@ const sendVerificationEmail = async (email, verificationToken) => {
     throw new Error("Failed to send verification email");
   }
 };
+
+// SpotifyAccessToken 
+async function getSpotifyAccessToken() {
+  const response = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + (new Buffer.from(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64'))
+    },
+    body: 'grant_type=client_credentials'
+  });
+
+  const data = await response.json();
+  return data.access_token;
+}
+
+// fetchNewReleases 
+async function fetchNewReleases(token) {
+  const response = await fetch('https://api.spotify.com/v1/browse/new-releases', {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer ' + token
+    }
+  });
+
+  const data = await response.json();
+  console.log(data);
+}
