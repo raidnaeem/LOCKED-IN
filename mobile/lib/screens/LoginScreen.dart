@@ -1,9 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import CardsScreen from './screens/CardScreen.dart';
 class LoginScreen extends StatefulWidget {
 @override
 _LoginScreenState createState() => _LoginScreenState();
 }
 
+String message = "This is a message", newMessageText='';
+
+Future<String> getJson(String url, String outgoing) async
+{
+  String ret = "";
+
+  try
+  {
+    http.Response response = await http.post(Uri(path: url),
+        body: utf8.encode(outgoing),
+        headers:
+        {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+        },
+        encoding: Encoding.getByName("utf-8")
+    );
+    ret = response.body;
+  }
+  catch (e)
+  {
+    //print(e.toString());
+  }
+
+  return ret;
+}
 class _LoginScreenState extends State<LoginScreen> {
   String message = "This is a message";
   String newMessageText = '';
@@ -18,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 200,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -26,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
         children: <Widget>[
           Row(
             children: <Widget>[
-              Container(
+              SizedBox(
                 width: 200,
                 child: Material(
                   // Ensure TextField has a Material ancestor
@@ -50,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           Row(
             children: <Widget>[
-              Container(
+              SizedBox(
                 width: 200,
                 child: Material(
                   // Ensure TextField has a Material ancestor
@@ -76,10 +105,45 @@ class _LoginScreenState extends State<LoginScreen> {
           Row(
             children: <Widget>[
               ElevatedButton(
-                onPressed: () {
-                  // Use loginName and password variables as needed
-                  Navigator.pushNamed(context, '/cards');
-                },
+                onPressed: () async
+                    {
+                      newMessageText = "";
+                      changeText();
+
+                      String payload = '{"login":"$loginName.trim()","password":"$password.trim()"}';
+                      var userId = -1;
+                      var jsonObject = {};
+
+                      try	
+                      {
+                        String url = 'https://cop4331-10.herokuapp.com/api/login';
+                        String ret = await CardsData.getJson(url, payload);
+                        jsonObject = json.decode(ret);
+                        userId = jsonObject["id"];
+                      }
+                      catch(e)
+                      {
+                        newMessageText = e.toString();
+                        changeText();	
+                        return;
+                      }
+                      if( userId <= 0 )
+                      {
+                        newMessageText = "Incorrect Login/Password";
+                        changeText();
+                      }
+                      else
+                      {
+                        //GlobalData.userId = userId;
+                        //GlobalData.firstName = jsonObject["firstName"];
+                        //GlobalData.lastName = jsonObject["lastName"];
+                        //GlobalData.loginName = loginName;
+                        //GlobalData.password = password;
+                        //Navigator.pushNamed(context, '/main.dart');
+                        MaterialPageRoute(builder: (context) => '/main.dart')
+                      }
+                    },
+
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.brown[50]), // Background color
                   foregroundColor: MaterialStateProperty.all(Colors.black), // Text color
@@ -112,4 +176,8 @@ super.initState();
 Widget build(BuildContext context) {
 return Container();
 }
-}
+changeText() {
+  setState(() {
+    message = newMessageText;
+  });
+}}
