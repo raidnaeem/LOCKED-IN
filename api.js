@@ -431,6 +431,13 @@ app.get("/api/calendar/search", async (req, res) => {
 
 //Spotify API
 
+//Spotify Login
+app.get('/api/spotify/login', (req, res) => {
+  const scope = 'user-read-private user-read-email';
+  const redirect_uri = process.env.SPOTIFY_REDIRECT_URI;
+  res.redirect(`https://accounts.spotify.com/authorize?response_type=code&client_id=${process.env.SPOTIFY_CLIENT_ID}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(redirect_uri)}`);
+});
+
 //Spotify Search
 // Search Spotify (by genre, artist)
 app.get("/api/spotify/search", async (req, res) => {
