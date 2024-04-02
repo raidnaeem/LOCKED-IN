@@ -9,7 +9,7 @@ const PlannerPage = () => {
     <div>
       <PageTitle />
       <LoggedInName />
-      <Timer /> {/* Include the MoveableTimer component here */}
+      <Timer />
       <ToDoProtoType />
     </div>
   );
