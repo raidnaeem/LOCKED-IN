@@ -247,7 +247,7 @@ app.post("/api/task/add", async (req, res) => {
 
   try {
       const newTask = {
-          TaskID: new mongodb.ObjectId(), // Generates a unique identifier
+          _id: new mongodb.ObjectId(), // Generates a unique identifier
           Task,
           TaskImage, // Ensure this object is structured correctly
           Done,
@@ -255,7 +255,7 @@ app.post("/api/task/add", async (req, res) => {
       };
 
       await db.collection("To-Do").insertOne(newTask);
-      res.status(200).json({ message: "Task added successfully", TaskID: newTask.TaskID });
+      res.status(200).json({ message: "Task added successfully", TaskID: newTask._id });
   } catch (error) {
       console.error("Error adding task:", error);
       res.status(500).json({ error: "An error occurred while adding the task." });
@@ -315,7 +315,7 @@ app.get("/api/todo/search", async (req, res) => {
                                  UserID: parseInt(userID),
                                  Task: { $regex: regex }
                              })
-                             .limit(10) // limiting the reponse to be quick 
+                             .limit(10) // limiting the reponse to be quick (changed from 5 to 10 for testing)
                              .toArray();
       res.status(200).json(todos);
   } catch (error) {
