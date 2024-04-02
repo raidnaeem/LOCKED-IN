@@ -77,27 +77,6 @@ function ToDoPrototype()
         }
     }
 
-    /*
-    const deleteTask = async (index) => {
-        try {
-            const response = await fetch(bp.buildPath('api/task/delete'), {
-                method: 'DELETE',
-                body: JSON.stringify({taskId: tasks[index].TaskID}), // Assuming TaskID is available in tasks
-                headers: {'Content-Type': 'application/json'}
-            });
-
-            if (response.ok) {
-                const newTasks = [...tasks];
-                newTasks.splice(index, 1); // Remove the task from tasks array
-                setTasks(newTasks); // Update tasks state
-            } else {
-                console.log('Failed to delete task');
-            }
-        } catch (error) {
-            console.error('Error deleting task:', error);
-        }
-    }; */
-
     return(
         <div>
             <div className='bg-gray w-1/2 relative left-1/4'>
@@ -108,7 +87,7 @@ function ToDoPrototype()
                     />
                     <CheckboxGroup id="todoList" spacing={4} w="100%" size="lg" h="100%" minH="100vh"x>
                         {tasks.map((task, index) => (
-                            <ToDoItem key={index} taskName={task.Task} doneStatus={task.Done} /> //onDelete={() => deleteTask(index)} />
+                            <ToDoItem key={index} taskName={task.Task} doneStatus={task.Done} />
                         ))}
                     </CheckboxGroup>
                 </div>
