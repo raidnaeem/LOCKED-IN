@@ -12,21 +12,27 @@ class LoginScreen extends StatefulWidget {
   }
 }
 
-String message = "This is a message", newMessageText = '';
+String message = "This is a message", newMessageText='';
 
-Future<String> getJson(String url, String outgoing) async {
+Future<String> getJson(String url, String outgoing) async
+{
   String ret = "";
 
-  try {
+  try
+  {
     http.Response response = await http.post(Uri(path: url),
         body: utf8.encode(outgoing),
-        headers: {
+        headers:
+        {
           "Accept": "application/json",
           "Content-Type": "application/json",
         },
-        encoding: Encoding.getByName("utf-8"));
+        encoding: Encoding.getByName("utf-8")
+    );
     ret = response.body;
-  } catch (e) {
+  }
+  catch (e)
+  {
     //print(e.toString());
   }
 
@@ -47,9 +53,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        // Use Container to set the background color
-        color: Colors.white, // Set the background color to white
+    return Scaffold(
+      backgroundColor: Colors.white, // Set the background color to white
+      body: Center( // Center the content vertically
         child: SizedBox(
           width: 200,
           child: Column(
@@ -80,6 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
+              SizedBox(height: 16), // Add spacing between login field and password field
               Row(
                 children: <Widget>[
                   SizedBox(
@@ -105,6 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
+              SizedBox(height: 16), // Add spacing between password field and button
               Row(
                 children: <Widget>[
                   ElevatedButton(
@@ -136,17 +144,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         // Process user data and navigate to the next screen
                       }
                     },
+
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          Colors.brown[50]), // Background color
-                      foregroundColor:
-                          MaterialStateProperty.all(Colors.black), // Text color
-                      padding: MaterialStateProperty.all(
-                          EdgeInsets.all(12.0)), // Button padding
-                      textStyle: MaterialStateProperty.all(
-                          TextStyle(fontSize: 14)), // Text style
-                      overlayColor: MaterialStateProperty.all(
-                          Colors.grey[100]), // Splash color
+                      backgroundColor: MaterialStateProperty.all(Colors.brown[50]), // Background color
+                      foregroundColor: MaterialStateProperty.all(Colors.black), // Text color
+                      padding: MaterialStateProperty.all(EdgeInsets.all(12.0)), // Button padding
+                      textStyle: MaterialStateProperty.all(TextStyle(fontSize: 14)), // Text style
+                      overlayColor: MaterialStateProperty.all(Colors.grey[100]), // Splash color
                     ),
                     child: Text('Do Login'),
                   ),
@@ -154,31 +158,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ],
           ),
-        ));
-  }
-}
-
-class MainPage extends StatefulWidget {
-  @override
-  State<MainPage> createState() {
-    return _MainPageState();
-  }
-}
-
-class _MainPageState extends State<MainPage> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-
-  changeText() {
-    setState(() {
-      message = newMessageText;
-    });
+        ),
+      ),
+    );
   }
 }
