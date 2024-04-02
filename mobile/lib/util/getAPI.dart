@@ -2,7 +2,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 class CardsData {
-
   static Future<String> getJson(String url, String outgoing) async
   {
     String ret = "";
