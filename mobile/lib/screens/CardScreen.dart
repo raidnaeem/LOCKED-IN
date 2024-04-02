@@ -1,10 +1,11 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 
 class CardsScreen extends StatefulWidget {
-  final String?tea;
-  const CardsScreen({Key? key, this.tea}) : super(key:key);
   @override
-  _CardsScreenState createState() => _CardsScreenState();
+  State<CardsScreen> createState() {
+    return _CardsScreenState();
+  }
 }
 
 class _CardsScreenState extends State<CardsScreen> {
@@ -24,7 +25,9 @@ class _CardsScreenState extends State<CardsScreen> {
 
 class MainPage extends StatefulWidget {
   @override
-  _MainPageState createState() => _MainPageState();
+  State<MainPage> createState() {
+    return _MainPageState();
+  }
 }
 
 class _MainPageState extends State<MainPage> {

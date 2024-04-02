@@ -1,10 +1,13 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import CardsScreen from './screens/CardScreen.dart';
+import 'package:mobile/screens/CardScreen.dart';
 class LoginScreen extends StatefulWidget {
-@override
-_LoginScreenState createState() => _LoginScreenState();
+  @override
+  State<LoginScreen> createState() {
+    return _LoginScreenState();
+  }
 }
 
 String message = "This is a message", newMessageText='';
