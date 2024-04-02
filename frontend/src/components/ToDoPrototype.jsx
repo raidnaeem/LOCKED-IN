@@ -77,6 +77,7 @@ function ToDoPrototype()
         }
     }
 
+    /*
     const deleteTask = async (index) => {
         try {
             const response = await fetch(bp.buildPath('api/task/delete'), {
@@ -95,7 +96,7 @@ function ToDoPrototype()
         } catch (error) {
             console.error('Error deleting task:', error);
         }
-    };
+    }; */
 
     return(
         <div>
