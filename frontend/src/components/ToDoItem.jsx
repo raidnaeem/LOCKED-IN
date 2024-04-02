@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { Checkbox, CheckboxGroup } from "@chakra-ui/react";
 
-function ToDoItem({taskName, doneStatus, taskonToggleStatus}){
+function ToDoItem({taskName, doneStatus, taskID, taskonToggleStatus}){
 
     const [isChecked, setIsChecked] = useState(doneStatus);
 
@@ -14,7 +14,7 @@ function ToDoItem({taskName, doneStatus, taskonToggleStatus}){
     return (   
         <div>
             <Checkbox isChecked={doneStatus} onChange={handleCheckboxChange} size='lg'>
-                {taskName}
+                {taskName} {taskID}
             </Checkbox>
         </div>
     );

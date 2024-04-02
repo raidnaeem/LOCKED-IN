@@ -60,8 +60,7 @@ function ToDoPrototype()
             });
 
             const res = await response.json();
-
-            obj_newTask.TaskID = res.TaskID; //assign TaskID to newly created task
+            obj_newTask._id = res.TaskID;
 
             //Success
             if(response.ok){
@@ -79,11 +78,6 @@ function ToDoPrototype()
         }
     }
 
-    const onToggleStatus = async event =>
-    {
-        event.preventDefault(); 
-    }
-
     return(
         <div>
             <div className='bg-gray w-1/2 relative left-1/4'>
@@ -94,7 +88,7 @@ function ToDoPrototype()
                     />
                     <CheckboxGroup id="todoList" spacing={4} w="100%" size="lg" h="100%" minH="100vh"x>
                         {tasks.map((task, index) => (
-                            <ToDoItem key={index} taskName={task.Task} doneStatus={task.Done} onToggleStatus={onToggleStatus}/>
+                            <ToDoItem key={index} taskName={task.Task} doneStatus={task.Done} taskID={task._id}/>
                         ))}
                     </CheckboxGroup>
                 </div>
