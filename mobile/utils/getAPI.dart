@@ -5,12 +5,11 @@ class CardsData {
   static Future<String> getJson(String url, String outgoing) async
   {
     String ret = "";
-
     try
     {
       http.Response response = await http.post(url,
           body: utf8.encode(outgoing),
-          headers:S
+          headers:
           {
             "Accept": "application/json",
             "Content-Type": "application/json",
@@ -23,7 +22,6 @@ class CardsData {
     {
       print(e.toString());
     }
-
     return ret;
   }
 }
