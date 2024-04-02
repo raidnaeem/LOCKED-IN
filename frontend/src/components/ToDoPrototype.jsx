@@ -108,7 +108,7 @@ function ToDoPrototype()
                     />
                     <CheckboxGroup id="todoList" spacing={4} w="100%" size="lg" h="100%" minH="100vh"x>
                         {tasks.map((task, index) => (
-                            <ToDoItem key={index} taskName={task.Task} doneStatus={task.Done} onDelete={() => deleteTask(index)} />
+                            <ToDoItem key={index} taskName={task.Task} doneStatus={task.Done} /> //onDelete={() => deleteTask(index)} />
                         ))}
                     </CheckboxGroup>
                 </div>
