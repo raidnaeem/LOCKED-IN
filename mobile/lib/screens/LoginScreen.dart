@@ -166,19 +166,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
 class MainPage extends StatefulWidget {
 @override
-_MainPageState createState() => _MainPageState();
+State<MainPage> createState() {
+    return _MainPageState();
+  }
 }
 
 class _MainPageState extends State<MainPage> {
 @override
-void initState() {
-super.initState();
+  void initState() {
+  super.initState();
 }
 
 @override
 Widget build(BuildContext context) {
-return Container();
+  return Container();
 }
+
 changeText() {
   setState(() {
     message = newMessageText;

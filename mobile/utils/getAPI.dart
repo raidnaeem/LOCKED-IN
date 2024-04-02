@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 class CardsData {
@@ -7,7 +8,7 @@ class CardsData {
     String ret = "";
     try
     {
-      http.Response response = await http.post(url,
+      http.Response response = await http.post(Uri(path: url),
           body: utf8.encode(outgoing),
           headers:
           {
@@ -20,7 +21,7 @@ class CardsData {
     }
     catch (e)
     {
-      print(e.toString());
+      //print(e.toString());
     }
     return ret;
   }
