@@ -1,18 +1,21 @@
 import React, {useState} from 'react';
-import { Checkbox, CheckboxGroup } from "@chakra-ui/react";
+import { Checkbox, CloseButton } from "@chakra-ui/react";
 
-function ToDoItem({taskName, doneStatus}){
-    const [isChecked, setIsChecked] = useState(doneStatus);
+function ToDoItem({taskName, doneStatus, taskID, onMark, deleteTask}){
 
     const handleCheckboxChange = () => {
-        setIsChecked(!isChecked); // Toggle the checked state
+        onMark(taskID); // Call the function to update the status in parent component
+        console.log("clicked checkbox");
     };
 
     return (   
-        <div>
-            <Checkbox isChecked={doneStatus} onChange={handleCheckboxChange}>
+        <div className="w-[90%] flex justify-between pl-3 pt-1 pb-1">
+            <Checkbox id={taskID} isChecked={doneStatus} onChange={handleCheckboxChange} size='lg' spacing={6}>
                 {taskName}
             </Checkbox>
+            <CloseButton size='sm' onClick={() => deleteTask(taskID)}>
+               
+            </CloseButton>
         </div>
     );
 };
