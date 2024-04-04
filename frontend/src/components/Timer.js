@@ -19,20 +19,28 @@ const Timer = () => {
     }
   };
 
-  // Save timer state to localStorage
-  useEffect(() => {
+ // Save timer state to localStorage
+useEffect(() => {
+  try {
     localStorage.setItem('timerData', JSON.stringify({ time, isRunning, pausedAt }));
-  }, [time, isRunning, pausedAt]);
+  } catch (error) {
+    console.error('Error saving timer data to localStorage:', error);
+  }
+}, [time, isRunning, pausedAt]);
 
-  // Retrieve timer state from localStorage
-  useEffect(() => {
+// Retrieve timer state from localStorage
+useEffect(() => {
+  try {
     const timerData = JSON.parse(localStorage.getItem('timerData'));
     if (timerData) {
       setTime(timerData.time);
       setIsRunning(timerData.isRunning);
       setPausedAt(timerData.pausedAt);
     }
-  }, []);
+  } catch (error) {
+    console.error('Error retrieving timer data from localStorage:', error);
+  }
+}, []);
 
   const handleMouseDown = (e) => {
     if (e.target === timerRef.current) {
