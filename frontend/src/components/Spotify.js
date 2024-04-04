@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { searchSpotify, getRandomTrack } from './api'; // Importing the Spotify API functions
-var bp = require('./Path.js'); // Importing the variable bp from Path.js
+import { searchSpotify, getRandomTrack } from '../../api';
+
 
 function Spotify() {
   useEffect(() => {
