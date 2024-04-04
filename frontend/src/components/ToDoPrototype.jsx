@@ -71,11 +71,65 @@ function ToDoPrototype()
             } else {
                 console.log(res);
             }
-
-
         } catch (e) {
             alert(e.toString());
         }
+    }
+
+    const onMark = async (currTaskID) =>
+    {
+        try {
+            const response = await fetch(bp.buildPath(`api/task/markDone/${currTaskID}`), {
+                method: 'PUT',
+            });
+
+            const res = await response.json();
+
+            //Success
+            if(response.ok){
+                console.log(res.message);
+                //Update checkmark on frontend
+
+                // Find the index of the task with the given taskID
+                const taskIndex = tasks.findIndex(task => task._id === currTaskID);
+
+                // Create a reference copy of tasks array
+                const updatedTasks = [...tasks];
+
+                // Toggle the 'Done' status of the specific task
+                updatedTasks[taskIndex].Done = true;
+
+                // Update the state with the modified tasks array
+                setTasks(updatedTasks);
+            } else {
+                console.log(res.error);
+            }
+        } catch (e) {
+            alert(e.toString());
+        }
+    }
+
+    const deleteTask = async (currTaskID) =>
+    {
+        try {
+            const response = await fetch(bp.buildPath(`api/task/delete/${currTaskID}`), {
+                method: 'DELETE',
+            });
+
+            const res = await response.json();
+            
+            //Success
+            if(response.ok) {
+                console.log(res.message);
+                // Remove the deleted task from the tasks array
+                setTasks(prevTasks => prevTasks.filter(task => task._id !== currTaskID));
+            } else {
+                console.log(res.error);
+            }
+        } catch (e) {
+            alert(e.toString());
+        }
+
     }
 
     return(
@@ -86,9 +140,9 @@ function ToDoPrototype()
                         setTaskName={setTaskName}
                         createTask={createTask}
                     />
-                    <CheckboxGroup id="todoList" spacing={4} w="100%" size="lg" h="100%" minH="100vh"x>
+                    <CheckboxGroup id="todoList" w="100%" size="lg" h="100%" minH="100vh">
                         {tasks.map((task, index) => (
-                            <ToDoItem key={index} taskName={task.Task} doneStatus={task.Done} taskID={task._id}/>
+                            <ToDoItem key={index} taskName={task.Task} doneStatus={task.Done} taskID={task._id} onMark={onMark} deleteTask={deleteTask}/>
                         ))}
                     </CheckboxGroup>
                 </div>
