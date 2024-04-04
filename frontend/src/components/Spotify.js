@@ -1,25 +1,43 @@
-import React, { useEffect } from 'react';
-import { searchSpotify, getRandomTrack } from 'api';
-
+import React, { useState } from 'react';
+import SpotifyUI from './SpotifyUI';
 
 function Spotify() {
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const searchResult = await searchSpotify('song name', 'track');
-        console.log('Search Result:', searchResult);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResult, setSearchResult] = useState(null);
+    const [randomTrack, setRandomTrack] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
 
-        const randomTrack = await getRandomTrack('rock');
-        console.log('Random Track:', randomTrack);
-      } catch (error) {
-        console.error('Error:', error.message);
-      }
+    const handleSearch = async (query) => {
+        try {
+            const result = await searchSpotify(query, 'track');
+            setSearchResult(result);
+        } catch (error) {
+            setErrorMessage('Failed to search Spotify.');
+            console.error('Spotify Search API error:', error);
+        }
     };
 
-    fetchData();
-  }, []); // Empty dependency array ensures the effect runs only once on component mount
+    const handleRandomTrack = async () => {
+        try {
+            const track = await getRandomTrack('rock');
+            setRandomTrack(track);
+        } catch (error) {
+            setErrorMessage('Failed to fetch random track from Spotify.');
+            console.error('Spotify Random Track API error:', error);
+        }
+    };
 
-  return <div>{bp}</div>; // Rendering the variable bp from Path.js
+    return (
+        <SpotifyUI
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            searchResult={searchResult}
+            randomTrack={randomTrack}
+            errorMessage={errorMessage}
+            handleSearch={handleSearch}
+            handleRandomTrack={handleRandomTrack}
+        />
+    );
 }
 
 export default Spotify;
