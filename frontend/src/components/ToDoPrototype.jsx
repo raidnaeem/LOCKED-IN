@@ -1,26 +1,27 @@
 import React, {useState, useEffect} from 'react';
 import bp from './Path.js'; 
-import ToDoForm from './ToDoForm.jsx';
+import ToDoSearch from './ToDoSearch.jsx';
 import ToDoItem from './ToDoItem.jsx';
+import ToDoAdd from './ToDoAdd.jsx';
 import { Checkbox, CheckboxGroup } from "@chakra-ui/react";
 
 function ToDoPrototype()
 {
     let _ud = localStorage.getItem('user_data');
     var ud = JSON.parse(_ud);
-    //console.log(ud.UserID);
     
     const [taskName, setTaskName] = useState('');
     const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
         // Fetch tasks when component mounts
-        fetchTasks();
+        searchTasks('');
     }, []);
 
-    const fetchTasks = async () => {
+    //Search Tasks; given query of searchItem, uses current user's ID.
+    const searchTasks = async searchItem => {
         try {
-            const response = await fetch(bp.buildPath(`api/todo/search?query=&userID=${ud.UserID}`), {
+            const response = await fetch(bp.buildPath(`api/todo/search?query=${searchItem}&userID=${ud.UserID}`), {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -36,6 +37,7 @@ function ToDoPrototype()
         }
     };
 
+    //Add Task  
     const createTask = async event =>
     {
         event.preventDefault();
@@ -60,7 +62,7 @@ function ToDoPrototype()
             });
 
             const res = await response.json();
-            obj_newTask._id = res.TaskID;
+            obj_newTask._id = res.TaskID; //return newly created task's _id
 
             //Success
             if(response.ok){
@@ -76,6 +78,7 @@ function ToDoPrototype()
         }
     }
 
+    //Mark a task given a task's _id
     const onMark = async (currTaskID) =>
     {
         try {
@@ -132,19 +135,31 @@ function ToDoPrototype()
 
     }
 
+    //IN-PROGRESS: Function that will clear all tasks that are marked done
+    const clearCompleted = async event =>
+    {
+        event.preventDefault();
+    }
+
     return(
         <div>
             <div className='bg-gray w-1/2 relative left-1/4'>
+                <h1 className='text-[50px] text-bold'>
+                    To-Do List
+                </h1>
                 <div>
-                    <ToDoForm
-                        setTaskName={setTaskName}
-                        createTask={createTask}
+                    <ToDoSearch
+                        searchTasks={searchTasks}
                     />
                     <CheckboxGroup id="todoList" w="100%" size="lg" h="100%" minH="100vh">
                         {tasks.map((task, index) => (
                             <ToDoItem key={index} taskName={task.Task} doneStatus={task.Done} taskID={task._id} onMark={onMark} deleteTask={deleteTask}/>
                         ))}
                     </CheckboxGroup>
+                    <ToDoAdd 
+                        setTaskName={setTaskName}
+                        createTask={createTask}
+                    />
                 </div>
             </div>
         </div>

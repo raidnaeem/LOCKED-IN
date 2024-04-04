@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import { Stack, InputGroup, InputRightElement, Input, Button } from "@chakra-ui/react";
 
-function ToDoForm({setTaskName, createTask})
+function ToDoAdd({setTaskName, createTask})
 {
     return(
-        <div>
+        <div className='p-2'>
             <Stack direction='row' spacing={5}>
                 <Input bg='gray.200' width='340px' height='50px'
                     type='text'
@@ -20,4 +20,4 @@ function ToDoForm({setTaskName, createTask})
     );
 };
 
-export default ToDoForm;
+export default ToDoAdd;
