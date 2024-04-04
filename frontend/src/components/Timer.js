@@ -11,7 +11,6 @@ const Timer = () => {
   const [isEditable, setIsEditable] = useState(false);
   const [inputMinutes, setInputMinutes] = useState('');
   const [inputSeconds, setInputSeconds] = useState('');
-
   const audioRef = useRef(null);
 
   const playSound = () => {
@@ -19,6 +18,29 @@ const Timer = () => {
       audioRef.current.play();
     }
   };
+
+ // Save timer state to localStorage
+useEffect(() => {
+  try {
+    localStorage.setItem('timerData', JSON.stringify({ time, isRunning, pausedAt }));
+  } catch (error) {
+    console.error('Error saving timer data to localStorage:', error);
+  }
+}, [time, isRunning, pausedAt]);
+
+// Retrieve timer state from localStorage
+useEffect(() => {
+  try {
+    const timerData = JSON.parse(localStorage.getItem('timerData'));
+    if (timerData) {
+      setTime(timerData.time);
+      setIsRunning(timerData.isRunning);
+      setPausedAt(timerData.pausedAt);
+    }
+  } catch (error) {
+    console.error('Error retrieving timer data from localStorage:', error);
+  }
+}, []);
 
   const handleMouseDown = (e) => {
     if (e.target === timerRef.current) {
@@ -28,31 +50,6 @@ const Timer = () => {
       setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
     }
   };
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (isDragging) {
-        setPosition({
-          x: e.clientX,
-          y: e.clientY,
-        });
-      }
-    };
-
-    const handleMouseUp = () => {
-      setIsDragging(false);
-    };
-
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-    }
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isDragging]);
 
   const handleStartStop = () => {
     if (isRunning) {
