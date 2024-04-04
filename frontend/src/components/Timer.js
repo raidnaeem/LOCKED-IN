@@ -34,6 +34,15 @@ const Timer = () => {
     }
   }, []);
 
+  const handleMouseDown = (e) => {
+    if (e.target === timerRef.current) {
+      e.preventDefault();
+      setIsDragging(true);
+      const rect = timerRef.current.getBoundingClientRect();
+      setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    }
+  };
+
   const handleStartStop = () => {
     if (isRunning) {
       setIsRunning(false);
