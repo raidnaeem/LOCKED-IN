@@ -3,8 +3,7 @@ import SpotifyUI from './SpotifyUI';
 
 function Spotify() {
     return (
-        <SpotifyUI
-        />
+        <SpotifyUI/>
     );
 }
 
