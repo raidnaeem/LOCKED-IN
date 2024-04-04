@@ -12,6 +12,7 @@ const PlannerPage = () => {
       <LoggedInName />
       <Timer />
       <ToDoProtoType />
+      <Spotify />
     </div>
   );
 };

@@ -438,6 +438,39 @@ app.get('/api/spotify/login', (req, res) => {
   res.redirect(`https://accounts.spotify.com/authorize?response_type=code&client_id=${process.env.SPOTIFY_CLIENT_ID}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(redirect_uri)}`);
 });
 
+// Spotify Callback
+app.get('/api/spotify/callback', async (req, res) => {
+  const code = req.query.code || null;
+  const authOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + (new Buffer.from(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64')),
+    },
+    body: new URLSearchParams({
+      code: code,
+      redirect_uri: process.env.SPOTIFY_REDIRECT_URI,
+      grant_type: 'authorization_code',
+    }),
+  };
+
+  try {
+    const response = await fetch('https://accounts.spotify.com/api/token', authOptions);
+    const data = await response.json();
+
+    if (data.access_token) {
+      // You can now use this access token to make API requests on behalf of the user
+      // Consider storing the tokens in the user's session or database
+      res.redirect('/frontend/path'); // Redirect the user to the front-end app with the tokens, or store them in your database
+    } else {
+      res.redirect('/#/error'); // Redirect the user to an error page in your application
+    }
+  } catch (error) {
+    console.error('Error during token exchange', error);
+    res.redirect('/#/error');
+  }
+});
+
 //Spotify Search
 // Search Spotify (by genre, artist)
 app.get("/api/spotify/search", async (req, res) => {
