@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import SpotifyUI from './SpotifyUI';
+import { searchSpotify, getRandomTrack } from '/api';
 
 function Spotify() {
     const [searchQuery, setSearchQuery] = useState('');
