@@ -521,6 +521,13 @@ app.get("/api/spotify/random-track", async (req, res) => {
 
 };
 
+module.exports = {
+  spotifyLogin,
+  spotifyCallback,
+  spotifySearch,
+  spotifyRandomTrack
+};
+
 // Send Email Function
 const sendVerificationEmail = async (email, verificationToken) => {
   //const verificationUrl = `http://localhost:5001/api/verify-email/${verificationToken}`;

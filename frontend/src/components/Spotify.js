@@ -1,45 +1,51 @@
-import React, { useState } from 'react';
-import SpotifyUI from './SpotifyUI';
-import { searchSpotify, getRandomTrack } from './api'; // Import your Spotify API functions
-import { buildPath } from './Path.js';
+const express = require('express');
+const { spotifyLogin, spotifyCallback, spotifySearch, spotifyRandomTrack } = require('./api/spotify');
 
-function Spotify() {
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchResult, setSearchResult] = useState(null);
-    const [randomTrack, setRandomTrack] = useState(null);
-    const [errorMessage, setErrorMessage] = useState('');
+const app = express();
 
-    const handleSearch = async (query) => {
-        try {
-            const result = await searchSpotify(query, 'track');
-            setSearchResult(result);
-        } catch (error) {
-            setErrorMessage('Failed to search Spotify.');
-            console.error('Spotify Search API error:', error);
-        }
-    };
+app.get('/api/spotify/login', (req, res) => {
+  const scope = 'user-read-private user-read-email';
+  const redirect_uri = process.env.SPOTIFY_REDIRECT_URI;
+  res.redirect(spotifyLogin(redirect_uri, process.env.SPOTIFY_CLIENT_ID, scope));
+});
 
-    const handleRandomTrack = async () => {
-        try {
-            const track = await getRandomTrack('rock');
-            setRandomTrack(track);
-        } catch (error) {
-            setErrorMessage('Failed to fetch random track from Spotify.');
-            console.error('Spotify Random Track API error:', error);
-        }
-    };
+app.get('/api/spotify/callback', async (req, res) => {
+  const code = req.query.code || null;
+  try {
+    const data = await spotifyCallback(code, process.env.SPOTIFY_CLIENT_ID, process.env.SPOTIFY_CLIENT_SECRET, process.env.SPOTIFY_REDIRECT_URI);
+    if (data.access_token) {
+      res.redirect('/frontend/path');
+    } else {
+      res.redirect('/#/error');
+    }
+  } catch (error) {
+    console.error('Error during token exchange', error);
+    res.redirect('/#/error');
+  }
+});
 
-    return (
-        <SpotifyUI
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            searchResult={searchResult}
-            randomTrack={randomTrack}
-            errorMessage={errorMessage}
-            handleSearch={handleSearch}
-            handleRandomTrack={handleRandomTrack}
-        />
-    );
-}
+app.get('/api/spotify/search', async (req, res) => {
+  try {
+    const token = await getSpotifyAccessToken(); // You need to implement getSpotifyAccessToken function
+    const { query, type } = req.query;
+    const data = await spotifySearch(token, query, type);
+    res.json(data);
+  } catch (error) {
+    console.error('Spotify Search API error:', error);
+    res.status(500).json({ error: 'Failed to search Spotify.' });
+  }
+});
 
-export default Spotify;
+app.get('/api/spotify/random-track', async (req, res) => {
+  try {
+    const token = await getSpotifyAccessToken(); // You need to implement getSpotifyAccessToken function
+    const { genre } = req.query;
+    const track = await spotifyRandomTrack(token, genre);
+    res.json(track);
+  } catch (error) {
+    console.error('Spotify Random Track API error:', error);
+    res.status(500).json({ error: 'Failed to fetch random track from Spotify.' });
+  }
+});
+
+module.exports = app;
