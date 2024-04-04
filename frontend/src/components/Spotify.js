@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { searchSpotify, getRandomTrack } from '../../api';
+import { searchSpotify, getRandomTrack } from 'api';
 
 
 function Spotify() {
