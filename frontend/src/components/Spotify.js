@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import SpotifyUI from './SpotifyUI';
-import { searchSpotify, getRandomTrack } from '/api';
+var bp = require('./Path.js');
 
 function Spotify() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -9,19 +9,28 @@ function Spotify() {
     const [errorMessage, setErrorMessage] = useState('');
 
     const handleSearch = async (query) => {
-        try {
-            const result = await searchSpotify(query, 'track');
-            setSearchResult(result);
-        } catch (error) {
+        try
+        {    
+            const response = await fetch(bp.buildPath('api/spotify/search'), {
+              method:'POST',
+              body:js_register,
+              headers:{'Content-Type': 'application/json'}
+            });
+        } 
+        catch (error) {
             setErrorMessage('Failed to search Spotify.');
             console.error('Spotify Search API error:', error);
         }
     };
 
     const handleRandomTrack = async () => {
-        try {
-            const track = await getRandomTrack('rock');
-            setRandomTrack(track);
+        try
+        {    
+            const response = await fetch(bp.buildPath('api/spotify/random-track'), {
+              method:'POST',
+              body:js_register,
+              headers:{'Content-Type': 'application/json'}
+            });
         } catch (error) {
             setErrorMessage('Failed to fetch random track from Spotify.');
             console.error('Spotify Random Track API error:', error);
