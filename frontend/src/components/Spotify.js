@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { searchSpotify, getRandomTrack } from './api'; // Importing the Spotify API functions
+var bp = require('./Path.js'); // Importing the variable bp from Path.js
 
 function Spotify() {
   useEffect(() => {
@@ -18,7 +19,7 @@ function Spotify() {
     fetchData();
   }, []); // Empty dependency array ensures the effect runs only once on component mount
 
-  return <div>Spotify Component Temp</div>; // Replace with your actual component UI
+  return <div>{bp}</div>; // Rendering the variable bp from Path.js
 }
 
 export default Spotify;
