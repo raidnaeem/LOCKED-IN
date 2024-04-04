@@ -10,6 +10,7 @@ import ResetRequest from './pages/ResetRequest';
 import PlannerPage from './pages/PlannerPage';
 import EmailVerificationPage from './pages/EmailVerificationPage'; 
 import ResetPasswordPage from './pages/ResetPassword';
+import CalendarPage from './pages/CalendarPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/passwordReset" index element={<ResetRequest />} />
         <Route path="/register" index element={<RegisterPage />} />
         <Route path="/planner" index element={<PlannerPage />} />
+        <Route path="/calendar" index element={<CalendarPage />} />
         <Route path="/verify-email/:verificationToken" index element={<EmailVerificationPage />} />
         <Route path="/reset-password/:passwordResetToken" index element={<ResetPasswordPage />} />
       </Routes>
