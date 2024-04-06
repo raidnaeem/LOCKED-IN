@@ -271,7 +271,7 @@ class _EmailInputState extends State<EmailInput> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              hintText: 'Example@gmail.com',
+              hintText: 'Enter an Email',
               hintStyle: const TextStyle(
                   color: Colors.black54, fontFamily: 'Arial Narrow'),
               contentPadding: const EdgeInsets.fromLTRB(
@@ -356,7 +356,7 @@ class _FirstNameInputState extends State<FirstNameInput> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              hintText: 'John',
+              hintText: 'Enter First Name',
               hintStyle: const TextStyle(
                   color: Colors.black54, fontFamily: 'Arial Narrow'),
               contentPadding: const EdgeInsets.fromLTRB(
@@ -431,7 +431,7 @@ class _LastNameInputState extends State<LastNameInput> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              hintText: 'Doe',
+              hintText: 'Enter Last Name',
               hintStyle: const TextStyle(
                   color: Colors.black54, fontFamily: 'Arial Narrow'),
               contentPadding: const EdgeInsets.fromLTRB(
