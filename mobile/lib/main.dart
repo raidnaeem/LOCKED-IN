@@ -31,17 +31,15 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _handleSubmit(context) async {
     try {
       await login(_email, _password);
-      print(decodedToken);
 
-      if (decodedToken['verified'] == true) {
+      if (token == true) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => HomePageScreen()),
         );
-
       }
-
     }
+
     catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
