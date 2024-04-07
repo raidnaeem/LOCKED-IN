@@ -31,11 +31,11 @@ class _RegisterState extends State<Register> {
                 const Align(
                   alignment: Alignment.center,
                   child: Text(
-                    'Welcome To LockedIn!',
+                    'LockedIn',
                     style: TextStyle(
                       color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 60,
                       fontFamily: 'Arial Narrow',
                     ),
                   ),
@@ -111,7 +111,6 @@ class _RegisterState extends State<Register> {
                 const SizedBox(height: 5),
                 const Align(
                   alignment: Alignment.centerRight,
-                  child: ForgotPassword(),
                 ),
                 const SizedBox(height: 20),
                 const RegisterButton(),
@@ -149,21 +148,6 @@ class _RegisterState extends State<Register> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class ForgotPassword extends StatelessWidget {
-  const ForgotPassword({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // Navigate to ForgotPasswordScreen when text is tapped
-      },
-      child: const Text('Forgot Password?',
-          style: TextStyle(color: Colors.blue, fontSize: 17)),
     );
   }
 }
@@ -271,7 +255,7 @@ class _EmailInputState extends State<EmailInput> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              hintText: 'Enter an Email',
+              hintText: 'Example@gmail.com',
               hintStyle: const TextStyle(
                   color: Colors.black54, fontFamily: 'Arial Narrow'),
               contentPadding: const EdgeInsets.fromLTRB(
@@ -356,7 +340,7 @@ class _FirstNameInputState extends State<FirstNameInput> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              hintText: 'Enter First Name',
+              hintText: 'John',
               hintStyle: const TextStyle(
                   color: Colors.black54, fontFamily: 'Arial Narrow'),
               contentPadding: const EdgeInsets.fromLTRB(
@@ -431,7 +415,7 @@ class _LastNameInputState extends State<LastNameInput> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              hintText: 'Enter Last Name',
+              hintText: 'Doe',
               hintStyle: const TextStyle(
                   color: Colors.black54, fontFamily: 'Arial Narrow'),
               contentPadding: const EdgeInsets.fromLTRB(
