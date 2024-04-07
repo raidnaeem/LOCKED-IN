@@ -4,12 +4,12 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 
 dynamic token;
 late String userId;
-late var decodedToken = {};
+dynamic decodedToken;
 
 Future<void> signUp(
     String firstName, String lastName, String email, String password) async {
   final Uri url =
-  Uri.parse('https://locked-in-561ee2a901c9.herokuapp.com/api/users/signup');
+  Uri.parse('https://locked-in-561ee2a901c9.herokuapp.com/api/register');
   final Map<String, String> body = {
     'firstName': firstName,
     'lastName': lastName,
@@ -49,6 +49,8 @@ Future<void> login(String email, String password) async {
     'Email': email,
     'Password': password,
   };
+  print(email);
+  print(password);
 
   try {
     final response = await http.post(
@@ -59,29 +61,16 @@ Future<void> login(String email, String password) async {
       body: json.encode(body),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
-      token = jsonResponse['token']; // Extracting the token string
-      decodedToken = JwtDecoder.decode(token);
+      token = jsonResponse['verified']; // Extracting the token string
+      print(token);
 
-      //userId
-      userId = decodedToken['userId'];
-
-      print(userId);
-      print(decodedToken['firstName']);
-
-    } else if(response.statusCode == 404) {
-      // Login failed
-      throw 'Invalid Email';
+    } else {
+      print(response.statusCode);
     }
-    else
-    {
-      throw 'Invalid Password';
-    }
-  }
-
-  catch (e) {
-    // Exception occurred
+  } catch (e) {
+    throw 'Invalid Username or Password, Please Try Again';
   }
 }
 
@@ -147,6 +136,8 @@ Future<void> verifyUser(String code) async {
     // Exception occurred
   }
 }
+
+
 
 
 
