@@ -38,6 +38,13 @@ class _LoginPageState extends State<LoginPage> {
           MaterialPageRoute(builder: (context) => HomePageScreen()),
         );
       }
+
+      else if (token == false) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const VerificationPage()),
+        );
+      }
     }
 
     catch (e) {
@@ -89,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                             onChanged: _handleEmailChange,
                             obscureText: false,
                             decoration: InputDecoration(
-                              hintText: 'Example@gmail.com',
+                              hintText: 'Example@email.com',
                               hintStyle: const TextStyle(
                                   color: Colors.black54, fontFamily: 'Arial Narrow'),
                               border: OutlineInputBorder(
