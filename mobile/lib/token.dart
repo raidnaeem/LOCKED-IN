@@ -4,17 +4,16 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 
 dynamic token;
 late String userId;
-dynamic decodedToken;
 
 Future<void> signUp(
     String firstName, String lastName, String email, String password) async {
   final Uri url =
   Uri.parse('https://locked-in-561ee2a901c9.herokuapp.com/api/register');
   final Map<String, String> body = {
-    'firstName': firstName,
-    'lastName': lastName,
-    'email': email,
-    'password': password,
+    'Email': email,
+    'Password': password,
+    'FirstName': firstName,
+    'LastName': lastName,
   };
 
   try {
@@ -28,18 +27,21 @@ Future<void> signUp(
 
     if (response.statusCode == 201) {
       final jsonResponse = json.decode(response.body);
-      token = jsonResponse['token']; // Extracting the token string
-      decodedToken = JwtDecoder.decode(token);
+      token = jsonResponse['verified']; // Extracting the token string
+    }
 
-      //userId
-      userId = decodedToken['userId'];
-    } else {
-      // Signup failed
+    else if (response.statusCode == 400) {
+      throw 'User already exists with the provided email.';
+    }
+
+    else {
       throw 'Signup failed';
     }
-  } catch (e) {
+
+  }
+
+  catch (e) {
     // Exception occurred
-    throw 'Signup failed';
   }
 }
 
@@ -61,14 +63,18 @@ Future<void> login(String email, String password) async {
       body: json.encode(body),
     );
 
+    print(response.statusCode);
+
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
       token = jsonResponse['verified']; // Extracting the token string
       print(token);
-
-    } else {
-      print(response.statusCode);
     }
+
+    else if (response.statusCode == 400) {
+      throw 'Invalid Username or Password, Please Try Again';
+    }
+
   } catch (e) {
     throw 'Invalid Username or Password, Please Try Again';
   }
@@ -108,7 +114,7 @@ Future<void> sendCode() async {
 
 Future<void> verifyUser(String code) async {
   final Uri url = Uri.parse(
-      'https://locked-in-561ee2a901c9.herokuapp.com/api/verifyUser');
+      'https://locked-in-561ee2a901c9.herokuapp.com/api/verify-email/:verificationToken');
   final Map<String, String> body = {
     'id': userId,
     'code': code,
@@ -136,8 +142,6 @@ Future<void> verifyUser(String code) async {
     // Exception occurred
   }
 }
-
-
 
 
 
