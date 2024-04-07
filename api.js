@@ -9,6 +9,7 @@ const { v4: uuidv4 } = require("uuid");
 const jwtHelpers = require("./createJWT.js");
 const bp = require('./frontend/src/components/Path.js');
 const fetch = require('node-fetch');
+const cron = require('node-cron');
 
 exports.setApp = function (app, client) {
   app.post("/api/login", async (req, res) => {
@@ -255,7 +256,12 @@ app.post("/api/task/add", async (req, res) => {
           UserID
       };
 
-      await db.collection("To-Do").insertOne(newTask);
+      const result = await db.collection("To-Do").insertOne(newTask);
+      
+      // Create a notification for the newly created task
+      const message = `New task added: ${Task}. Remember to complete it!`;
+      await createToDoNotification(client, UserID, result.insertedId, message);
+
       res.status(200).json({ message: "Task added successfully", TaskID: newTask._id });
   } catch (error) {
       console.error("Error adding task:", error);
@@ -293,6 +299,10 @@ app.put("/api/task/markDone/:TaskID", async (req, res) => {
       { _id: new mongodb.ObjectId(TaskID) },
       { $set: {Done: true } }
     );
+
+    // delete the associated notification 
+    await db.collection("Notifications").deleteOne({ relatedId: new mongodb.ObjectId(TaskID), type: "todoReminder" });
+
     if(result.modifiedCount === 1) {
       res.status(200).json({ message: "Task marked as done successfully "});
     } else {
@@ -519,6 +529,8 @@ app.get("/api/spotify/random-track", async (req, res) => {
   }
 });
 
+// Call the scheduler at the end of the setApp function
+scheduleDailyToDoReminders();
 };
 
 // Send Email Function
@@ -544,6 +556,21 @@ const sendVerificationEmail = async (email, verificationToken) => {
     throw new Error("Failed to send verification email");
   }
 };
+
+// Function ToDoNotification 
+async function createToDoNotification(client, userId, taskId, message) {
+  const db = client.db("locked-in");
+  const notification = {
+    userId,
+    taskId, // Link notification directly to the task
+    message,
+    dateCreated: new Date(),
+    status: "unread",
+    type: "ToDoReminder"
+  };
+
+  await db.collection("Notifications").insertOne(notification);
+}
 
 // SpotifyAccessToken 
 async function getSpotifyAccessToken() {
@@ -571,4 +598,22 @@ async function fetchNewReleases(token) {
 
   const data = await response.json();
   console.log(data);
+}
+
+// Schedule Daily 
+function scheduleDailyToDoReminders() {
+  cron.schedule('0 7 * * *', async () => {
+    console.log('Scheduling daily To-Do reminders');
+    const db = client.db("locked-in");
+    const today = new Date().toISOString().split('T')[0];
+    const todos = await db.collection("To-Do").find({ Done: false }).toArray();
+
+    todos.forEach(todo => {
+      const reminderMessage = `Don't forget to complete your task: ${todo.Task}.`;
+      createToDoNotification(todo.UserID, todo._id, reminderMessage);
+    });
+  }, {
+    scheduled: true,
+    timezone: "US/Eastern"
+  });
 }
