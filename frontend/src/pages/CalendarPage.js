@@ -1,7 +1,7 @@
 import React from 'react';
 import PageTitle from '../components/PageTitle';
 import LoggedInName from '../components/LoggedInName';
-import Timer from '../components/Timer';
+import Janurary from '../components/Janurary';
 
 
 const CalendarPage = () => {
@@ -10,6 +10,7 @@ const CalendarPage = () => {
       <PageTitle />
       <LoggedInName />
       <Timer />
+      <Janurary />
     </div>
   );
 };
