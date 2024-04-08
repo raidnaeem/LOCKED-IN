@@ -11,7 +11,7 @@ function ToDoSearch({searchTasks})
             <Stack direction='row' spacing={5}>
                 <InputGroup>
                     <InputLeftElement>
-                        <img src={searchIcon} width='20px'></img>
+                        <img src={searchIcon} width='20px' alt='src-icon' className='absolute top-4'></img>
                     </InputLeftElement>
                     <Input bg='gray.200' height='50px'
                         type='text'

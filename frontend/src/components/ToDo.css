@@ -1,0 +1,38 @@
+.fadeInLeft {
+    animation: fadeInLeft 0.4s ease-in-out;
+}
+
+.fadeOutLeft {
+    animation: fadeOutLeft 0.3s ease-out;
+}
+
+.addButtonMenu {
+    background-color: #AAA06C;
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 10px;
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeOutLeft {
+    from {
+        opacity: 1;
+        transform: translateX(0px);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+}
+

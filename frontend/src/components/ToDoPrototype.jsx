@@ -3,7 +3,8 @@ import bp from './Path.js';
 import ToDoSearch from './ToDoSearch.jsx';
 import ToDoItem from './ToDoItem.jsx';
 import ToDoAdd from './ToDoAdd.jsx';
-import { Checkbox, CheckboxGroup } from "@chakra-ui/react";
+import { Button, Checkbox, CheckboxGroup } from "@chakra-ui/react";
+import './ToDo.css'
 
 function ToDoPrototype()
 {
@@ -68,14 +69,14 @@ function ToDoPrototype()
             if(response.ok){
                 console.log(res);
                 setTasks([...tasks, obj_newTask]); // Add newly created task to tasks state
-                //setTaskName(''); // Clear task name input
+                setTaskName(''); // Clear task name input
 
             } else {
                 console.log(res);
             }
-        } catch (e) {
-            alert(e.toString());
-        }
+            } catch (e) {
+                alert(e.toString());
+            }
     }
 
     //Mark a task given a task's _id
@@ -112,55 +113,81 @@ function ToDoPrototype()
         }
     }
 
-    const deleteTask = async (currTaskID) =>
-    {
-        try {
-            const response = await fetch(bp.buildPath(`api/task/delete/${currTaskID}`), {
-                method: 'DELETE',
-            });
+        const deleteTask = async (currTaskID) =>
+        {
+            try {
+                const response = await fetch(bp.buildPath(`api/task/delete/${currTaskID}`), {
+                    method: 'DELETE',
+                });
 
-            const res = await response.json();
-            
-            //Success
-            if(response.ok) {
-                console.log(res.message);
-                // Remove the deleted task from the tasks array
-                setTasks(prevTasks => prevTasks.filter(task => task._id !== currTaskID));
-            } else {
-                console.log(res.error);
+                const res = await response.json();
+                
+                //Success
+                if(response.ok) {
+                    console.log(res.message);
+
+                    //Delete animation
+                    const delTask = document.getElementById(`task-${currTaskID}`)
+                    console.log(delTask);
+                    delTask.classList.add('fadeOutLeft');
+
+                    // Wait for animation to finish
+                    delTask.addEventListener('animationend', () => {
+                        // Remove the deleted task from the tasks array
+                        console.log('deleted');
+                        setTasks(prevTasks => prevTasks.filter(task => task._id !== currTaskID));
+                    });
+                } else {
+                    console.log(res.error);
+                }
+            } catch (e) {
+                alert(e.toString());
             }
-        } catch (e) {
-            alert(e.toString());
-        }
 
-    }
+        }
 
     //IN-PROGRESS: Function that will clear all tasks that are marked done
     const clearCompleted = async event =>
     {
         event.preventDefault();
+        if(window.confirm("Clear all completed tasks?"))
+        {
+            var i;
+            for(i = 0; i < tasks.length; i++)
+            {
+                const currTask = tasks[i];
+                if(currTask.Done)
+                {
+                    deleteTask(currTask._id);
+                }
+            }
+        }
     }
 
     return(
-        <div>
-            <div className='bg-gray w-1/2 relative left-1/4'>
-                <h1 className='text-[50px] text-bold'>
+        <div className='w-1/2 relative left-1/4'>
+            <div className='flex items-center justify-between pr-5'>
+                <h1 className='text-[50px] text-bold pl-4'>
                     To-Do List
                 </h1>
-                <div>
-                    <ToDoSearch
-                        searchTasks={searchTasks}
-                    />
-                    <CheckboxGroup id="todoList" w="100%" size="lg" h="100%" minH="100vh">
-                        {tasks.map((task, index) => (
-                            <ToDoItem key={index} taskName={task.Task} doneStatus={task.Done} taskID={task._id} onMark={onMark} deleteTask={deleteTask}/>
-                        ))}
-                    </CheckboxGroup>
-                    <ToDoAdd 
-                        setTaskName={setTaskName}
-                        createTask={createTask}
-                    />
-                </div>
+                <Button onClick={clearCompleted} colorScheme='yellow'>
+                    Clear Done
+                </Button>
+            </div>  
+            <div>
+                <ToDoSearch
+                    searchTasks={searchTasks}
+                />
+                <CheckboxGroup id="todoList" w="100%" size="lg" h="100%" minH="100vh">
+                    {tasks.map((task) => (
+                        <ToDoItem key={task._id} taskName={task.Task} doneStatus={task.Done} taskID={task._id} onMark={onMark} deleteTask={deleteTask}/>
+                    ))}
+                </CheckboxGroup>
+                <ToDoAdd 
+                    setTaskName={setTaskName}
+                    taskName={taskName}
+                    createTask={createTask}
+                />
             </div>
         </div>
     );

@@ -1,21 +1,40 @@
-import React, {useState} from 'react';
-import { Stack, InputGroup, InputRightElement, Input, Button } from "@chakra-ui/react";
+import React, {useState, useEffect, useRef} from 'react';
+import {Input, Button } from "@chakra-ui/react";
+import './ToDo.css'
 
-function ToDoAdd({setTaskName, createTask})
-{
+function ToDoAdd({setTaskName, taskName, createTask})
+{    
+    const [showInput, setShowInput] = useState(false);
+    const inputRef = useRef(null); 
+
+    //Opens field for add task submissoin
+    const showAdd = () => {
+        setShowInput(!showInput);
+    };
+
+    // Function to focus input field when it becomes visible
+    useEffect(() => {
+        if (showInput && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [showInput]);
+
     return(
-        <div className='p-2'>
-            <Stack direction='row' spacing={5}>
-                <Input bg='gray.200' width='340px' height='50px'
+        <div className='mt-5 p-3 pr-5 flex sm:flex-row justify-between'>
+            <form onSubmit={createTask}>
+                <Input bg='white' height='50px'
+                    className={`w-full sm:w-[200px] ml-8 ${showInput ? 'fadeInLeft' : 'hidden'}`}
                     type='text'
                     placeholder='Task Name'
-                    id="newPassword"
-                    onChange={(e) => setTaskName(e.target.value)}
+                    id="taskAddField"
+                    value={taskName}
+                    onChange={(e) => setTaskName(e.target.value)}   
+                    ref={inputRef}
                 />
-                <Button className="mt-2" h='2rem' size='xl' onClick={createTask}>
-                    Add Task
-                </Button>
-            </Stack>
+            </form>
+            <button className="mt-2 addButtonMenu rounded-full" onClick={showAdd}>
+                {showInput ? 'Close Menu': '+ Add Task'}
+            </button>
         </div>
     );
 };

@@ -11,7 +11,7 @@ function LoggedInName()
     }
 
     var ud = JSON.parse(_ud);
-    var userId = ud.UserID;
+    //var userId = ud.UserID;
     var firstName = ud.FirstName;
     var lastName = ud.LastName;
 
