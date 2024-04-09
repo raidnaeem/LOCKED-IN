@@ -10,7 +10,6 @@ const CalendarPage = () => {
       <PageTitle />
       <LoggedInName />
       <Calendar />
-      <DayGridComponent />
     </div>
   );
 };
