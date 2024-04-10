@@ -2,11 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import Sound from '../assets/TimesUp.mp3'; // Assuming your sound import is correct
 
 const Timer = () => {
-  const [time, setTime] = useState({ hours: 0, minutes: 25, seconds: 0 });
+  const [time, setTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
   const [isRunning, setIsRunning] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
   const [inputHours, setInputHours] = useState('00');
-  const [inputMinutes, setInputMinutes] = useState('25');
+  const [inputMinutes, setInputMinutes] = useState('00');
   const [inputSeconds, setInputSeconds] = useState('00');
 
   const audioRef = useRef(null);
@@ -24,7 +24,7 @@ const Timer = () => {
   };
 
   const handleReset = () => {
-    setTime({ hours: 0, minutes: 25, seconds: 0 });
+    setTime({ hours: 0, minutes: 0, seconds: 0 });
     setIsRunning(false);
   };
 
@@ -35,6 +35,7 @@ const Timer = () => {
       interval = setInterval(() => {
         setTime((prevTime) => {
           let { hours, minutes, seconds } = prevTime;
+
           if (hours === 0 && minutes === 0 && seconds === 0) {
             setIsRunning(false);
             playSound();
@@ -84,42 +85,17 @@ const Timer = () => {
   };
 
   return (
-    <div className="w-[200px] h-[159px] relative">
-      <div className="w-[200px] h-[79px] left-0 top-[80px] absolute bg-amber-600 rounded-bl-xl rounded-br-xl" />
-      <div className="w-[200px] h-20 left-0 top-0 absolute bg-orange-700 rounded-tl-xl rounded-tr-xl">
-        <div
-          className="text-white text-2xl font-normal font-['Inter']"
-          style={{ marginLeft: '19px', marginTop: '4px' }}
-        >
-          Meditate
-        </div>
-        <div
-          className="text-black text-sm font-normal font-['Inter']"
-          style={{ marginLeft: '19px', marginTop: '31px' }}
-        >
-          Add note...
-        </div>
+    <div className="w-[388px] h-[268px] relative">
+      <div className="w-[388px] h-[268px] left-0 top-0 absolute bg-orange-500 rounded-[26px]" />
+      <div className="w-[341px] h-[85px] left-[23px] top-[134px] absolute text-black text-[64px] font-normal font-['Poppins']">
+        {formatTime(time.hours)} : {formatTime(time.minutes)} : {formatTime(time.seconds)}
       </div>
-      <div className="w-[33px] h-[27px] left-[17px] top-[88px] absolute text-black text-2xl font-normal font-['Inter']">
-        {formatTime(time.hours)}
-      </div>
-      <div className="w-[33px] h-[27px] left-[81px] top-[88px] absolute text-black text-2xl font-normal font-['Inter']">
-        {formatTime(time.minutes)}
-      </div>
-      <div className="w-[33px] h-[27px] left-[145px] top-[88px] absolute text-black text-2xl font-normal font-['Inter']">
-        {formatTime(time.seconds)}
-      </div>
-      <div className="w-9 h-[18px] left-[21px] top-[117px] absolute text-white text-base font-normal font-['Inter']">
-        hrs
-      </div>
-      <div className="w-9 h-[18px] left-[78px] top-[117px] absolute text-white text-base font-normal font-['Inter']">
-        mins
-      </div>
-      <div className="w-9 h-[18px] left-[143px] top-[117px] absolute text-white text-base font-normal font-['Inter']">
-        secs
-      </div>
-      <div className="w-[13px] h-[31px] left-[59px] top-[86px] absolute text-black text-2xl font-normal font-['Inter']">:</div>
-      <div className="w-[13px] h-[31px] left-[123px] top-[86px] absolute text-black text-2xl font-normal font-['Inter']">:</div>
+      <div className="w-[81px] h-[45px] left-[40px] top-[210px] absolute text-white text-[28px] font-normal font-['Poppins']">hrs</div>
+      <div className="w-[69px] h-[45px] left-[159px] top-[210px] absolute text-white text-[28px] font-normal font-['Poppins']">mins</div>
+      <div className="w-16 h-[45px] left-[288px] top-[210px] absolute text-white text-[28px] font-normal font-['Poppins']">secs</div>
+      <div className="w-[388px] h-[134px] left-0 top-0 absolute bg-orange-700 rounded-tl-[25px] rounded-tr-[25px]" />
+      <div className="w-[248px] h-[58px] left-[30px] top-[9px] absolute text-white text-5xl font-bold font-['Poppins']">meditate</div>
+      <div className="w-[134px] h-9 left-[30px] top-[67px] absolute text-black text-2xl font-medium font-['Poppins']">add note...</div>
       <button
         className="w-[200px] h-[27px] absolute left-0 top-[117px] text-white text-base font-normal font-['Inter'] bg-transparent"
         onClick={handleStartStop}
