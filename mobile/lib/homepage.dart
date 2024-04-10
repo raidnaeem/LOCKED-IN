@@ -55,16 +55,12 @@ class _HomePageState extends State<HomePage> {
     switch (selectedIndex) {
       case 0:
         page = CalendarPage();
-        break;
       case 1:
         page = ToDoPage();
-        break;
       case 2:
         page = TimerPage();
-        break;
       case 3:
         page = AlarmPage();
-        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -72,54 +68,41 @@ class _HomePageState extends State<HomePage> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Scaffold(
-          body: Row(
-            children: [
-              SafeArea(
-                child: NavigationRail(
-                  extended: constraints.maxWidth >= 600,
-                  destinations: [
-                  NavigationRailDestination(
-                  icon: Badge(
-                    label: Text('1'),
-                    child: Icon(Icons.task),
-                  ),
-                  selectedIcon: Badge(
-                    //label: Text('4'),
-                    child: Icon(Icons.task),
-                  ),
-                  label: Text('To-Do'),
+          body: page,
+          bottomNavigationBar: BottomNavigationBar(
+            items: [
+              BottomNavigationBarItem(
+                icon: Badge(
+                  label: Text('1'),
+                  child: Icon(Icons.task),
                 ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.calendar_month),
-                      label: Text('Calendar'),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.timer),
-                      label: Text('Timer'),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.alarm),
-                      label: Text('Alarm'),
-                    ),
-                  ],
-                  selectedIndex: selectedIndex,
-                  onDestinationSelected: (value) {
-                    setState(() {
-                      selectedIndex = value;
-                    });
-                  },
-                ),
+                label: 'To-Do',
+                backgroundColor:
               ),
-              Expanded(
-                child: Container(
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  child: page,
-                ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.calendar_month),
+                label: 'Calendar',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.timer),
+                label: 'Timer',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.alarm),
+                label: 'Alarm',
               ),
             ],
+            currentIndex: selectedIndex,
+            onTap: (index) {
+              setState(() {
+                selectedIndex = index;
+              });
+            },
+            selectedItemColor: Colors.blue,
+            unselectedItemColor: Colors.grey,
           ),
         );
-      }
+      },
     );
   }
 }
