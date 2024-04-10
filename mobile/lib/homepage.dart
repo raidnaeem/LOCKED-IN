@@ -77,7 +77,6 @@ class _HomePageState extends State<HomePage> {
                   child: Icon(Icons.task),
                 ),
                 label: 'To-Do',
-                backgroundColor:
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.calendar_month),
