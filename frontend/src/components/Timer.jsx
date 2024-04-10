@@ -85,25 +85,24 @@ const Timer = () => {
   };
 
   return (
-    <div className="w-[388px] h-[268px] relative">
-      <div className="w-[388px] h-[268px] left-0 top-0 absolute bg-orange-500 rounded-[26px]" />
-      <div className="w-[341px] h-[85px] left-[23px] top-[134px] absolute text-black text-[64px] font-normal font-['Poppins']">
+    <div className="w-[388px] h-[268px] relative bg-orange-500 rounded-[26px]">
+      <div className="w-[341px] h-[85px] mt-[134px] text-black text-[64px] font-normal font-['Poppins']">
         {formatTime(time.hours)} : {formatTime(time.minutes)} : {formatTime(time.seconds)}
       </div>
-      <div className="w-[81px] h-[45px] left-[40px] top-[210px] absolute text-white text-[28px] font-normal font-['Poppins']">hrs</div>
-      <div className="w-[69px] h-[45px] left-[159px] top-[210px] absolute text-white text-[28px] font-normal font-['Poppins']">mins</div>
-      <div className="w-16 h-[45px] left-[288px] top-[210px] absolute text-white text-[28px] font-normal font-['Poppins']">secs</div>
-      <div className="w-[388px] h-[134px] left-0 top-0 absolute bg-orange-700 rounded-tl-[25px] rounded-tr-[25px]" />
-      <div className="w-[248px] h-[58px] left-[30px] top-[9px] absolute text-white text-5xl font-bold font-['Poppins']">meditate</div>
-      <div className="w-[134px] h-9 left-[30px] top-[67px] absolute text-black text-2xl font-medium font-['Poppins']">add note...</div>
+      <div className="absolute left-[40px] bottom-[10px] text-white text-[28px] font-normal font-['Poppins']">hrs</div>
+      <div className="absolute left-[159px] bottom-[10px] text-white text-[28px] font-normal font-['Poppins']">mins</div>
+      <div className="absolute left-[288px] bottom-[10px] text-white text-[28px] font-normal font-['Poppins']">secs</div>
+      <div className="w-[388px] h-[134px] absolute top-0 bg-orange-700 rounded-tl-[25px] rounded-tr-[25px]" />
+      <div className="absolute top-[9px] left-[30px] text-white text-5xl font-bold font-['Poppins']">meditate</div>
+      <div className="absolute top-[67px] left-[30px] text-black text-2xl font-medium font-['Poppins']">add note...</div>
       <button
-        className="w-[200px] h-[27px] absolute left-0 top-[117px] text-white text-base font-normal font-['Inter'] bg-transparent"
+        className="absolute left-0 bottom-[30px] w-[200px] h-[27px] text-white text-base font-normal bg-transparent"
         onClick={handleStartStop}
       >
         {isRunning ? 'Pause' : 'Start'}
       </button>
       <button
-        className="w-[200px] h-[27px] absolute left-0 top-[117px] text-white text-base font-normal font-['Inter'] bg-transparent"
+        className="absolute right-0 bottom-[30px] w-[200px] h-[27px] text-white text-base font-normal bg-transparent"
         onClick={handleReset}
       >
         Reset
