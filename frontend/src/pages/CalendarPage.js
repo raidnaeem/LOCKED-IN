@@ -1,7 +1,7 @@
 import React from 'react';
 import PageTitle from '../components/PageTitle';
 import LoggedInName from '../components/LoggedInName';
-import Calendar from '../components/Calendar';
+import CalendarMonthly from '../components/CalendarMonthly';
 import DayGridComponent from '../components/DayGridComponent';
 import NavigationTabs from '../components/NavigationTabs';
 
@@ -10,7 +10,7 @@ const CalendarPage = () => {
     <div>
       <PageTitle />
       <LoggedInName />
-      <Calendar />
+      <CalendarMonthly />
       <NavigationTabs />
     </div>
   );
