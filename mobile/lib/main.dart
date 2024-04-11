@@ -32,14 +32,14 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await login(_email, _password);
 
-      if (token == true) {
+      if (verify == true) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => HomePageScreen()),
         );
       }
 
-      else if (token == false) {
+      else if (verify == false) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const VerificationPage()),
@@ -50,7 +50,12 @@ class _LoginPageState extends State<LoginPage> {
     catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('$e'), // Convert the error to a string to display
+          content: Center(
+            child: Text(
+              '$e', // Convert the error to a string to display
+              textAlign: TextAlign.center, // Center the text horizontally
+            ),
+          ),
           duration: const Duration(seconds: 10), // Adjust the duration as needed
         ),
       );
@@ -220,3 +225,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
