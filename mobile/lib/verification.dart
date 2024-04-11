@@ -36,33 +36,15 @@ class _VerificationPageState extends State<VerificationPage> {
           duration: const Duration(seconds: 5), // Adjust the duration as needed
         ),
       );
-
-      if(sent == 202) {
         Future.delayed(Duration(seconds: 5), () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const LoginPage()),
           );
         });
-      }
     }
   }
 
-
-
-  void _handleSendCode(BuildContext context) async {
-    final currentContext = context;
-    try {
-      //await sendCode(_email); // Pass email to sendCode function
-    } catch (e) {
-      if (!currentContext.mounted) return;
-      ScaffoldMessenger.of(currentContext).showSnackBar(
-        const SnackBar(
-          content: Text('An error occurred. Please try again...'),
-        ),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +84,7 @@ class _VerificationPageState extends State<VerificationPage> {
                   textAlign: TextAlign.center, // Optional, to center the text within its container
                 ),
               ),
-              const SizedBox(height: 20.0),
+              const SizedBox(height: 30.0),
               ElevatedButton(
                 onPressed: () => _handleSubmit(context),
                 style: ElevatedButton.styleFrom(
