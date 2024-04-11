@@ -247,8 +247,8 @@ const Timer = () => {
           <button
             style={{
               position: 'absolute',
-              top: 250,
-              left: 130,
+              top: 275,
+              left: 60,
               width: '120px',
               height: '40px',
               color: 'white',
@@ -266,8 +266,8 @@ const Timer = () => {
           <button
             style={{
               position: 'absolute',
-              top: 250,
-              left: 220,
+              top: 275,
+              left: 190,
               width: '120px',
               height: '40px',
               color: 'white',
