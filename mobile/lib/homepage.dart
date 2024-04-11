@@ -13,7 +13,8 @@ class HomePageScreen extends StatelessWidget {
         title: 'Locked In',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+          fontFamily: 'Poppins',
         ),
         home: HomePage(),
       ),
