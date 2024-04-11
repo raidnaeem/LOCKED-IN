@@ -1,5 +1,8 @@
 import React from 'react';
-import './Calendar.css'; // Import external CSS for component styling
+import './Calendar.css';
+addButton = require('../assets/AddButton.png');
+searchButton = require('../assets/SearchEvent.png');
+
 
 const CalendarMonthly = () => {
   return (
@@ -10,10 +13,12 @@ const CalendarMonthly = () => {
       </div>
       <div className="footer">
         <div className="addEvent">
-          <div className="addEventButton">+</div>
+          <img src={addButton} alt="Add Event" className="addEventButton" />
           <div className="addEventText">Add Event</div>
         </div>
-        <div className="searchEvent">Search Event</div>
+        <div className="searchEvent"></div>
+          <img src={searchButton} alt="Add Event" className="searchEventButton" />
+          <div className="searchEvent">Search Event</div>
       </div>
     </div>
   );
