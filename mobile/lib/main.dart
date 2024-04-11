@@ -3,6 +3,7 @@ import 'verification.dart';
 import 'package:flutter/material.dart';
 import 'token.dart';
 import 'register.dart';
+import 'reset.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -152,7 +153,10 @@ class _LoginPageState extends State<LoginPage> {
                     alignment: Alignment.centerLeft,
                     child: TextButton(
                       onPressed: () {
-                        // Implement your forgot password logic here
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const ResetPage()),
+                        );
                       },
                       child: const Text(
                         'Forgot password?',
@@ -225,4 +229,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
