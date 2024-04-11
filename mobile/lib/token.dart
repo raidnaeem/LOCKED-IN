@@ -1,9 +1,14 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:sendgrid_mailer/sendgrid_mailer.dart';
+const String sendgridApiKey = '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';
 
 dynamic token;
+dynamic verify;
+dynamic sent;
 late String userId;
+String emailVerify = '';
+String code = '';
 
 Future<void> signUp(
     String firstName, String lastName, String email, String password) async {
@@ -16,6 +21,8 @@ Future<void> signUp(
     'LastName': lastName,
   };
 
+  emailVerify = email;
+
   try {
     final response = await http.post(
       url,
@@ -27,15 +34,16 @@ Future<void> signUp(
 
     if (response.statusCode == 201) {
       final jsonResponse = json.decode(response.body);
-      token = jsonResponse['verified']; // Extracting the token string
+      verify = jsonResponse['verified']; // Extracting the token string
+      code = jsonResponse['AccessToken'];
     }
 
     else if (response.statusCode == 400) {
-      throw 'User already exists with the provided email.';
+      throw 'User Already Exists With The Provided Email.';
     }
 
     else {
-      throw 'Signup failed';
+      throw 'Register Failed';
     }
 
   }
@@ -51,8 +59,8 @@ Future<void> login(String email, String password) async {
     'Email': email,
     'Password': password,
   };
-  print(email);
-  print(password);
+
+  emailVerify = email;
 
   try {
     final response = await http.post(
@@ -67,8 +75,8 @@ Future<void> login(String email, String password) async {
 
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
-      token = jsonResponse['verified']; // Extracting the token string
-      print(token);
+      verify = jsonResponse['verified']; // Extracting the token string
+      code = jsonResponse['AccessToken'];
     }
 
     else if (response.statusCode == 400) {
@@ -98,11 +106,10 @@ Future<void> sendCode() async {
 
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
-      print(jsonResponse);
       var sent = jsonResponse['sent'];
 
       if (sent == false) {
-        throw Exception('Failed to send verification code');
+        throw Exception('Failed to Send Verification Code');
       }
     }
   } catch (e) {
@@ -112,36 +119,48 @@ Future<void> sendCode() async {
   }
 }
 
-Future<void> verifyUser(String code) async {
-  final Uri url = Uri.parse(
-      'https://locked-in-561ee2a901c9.herokuapp.com/api/verify-email/:verificationToken');
-  final Map<String, String> body = {
-    'id': userId,
-    'code': code,
+Future<void> verifyUser(String email, String verificationToken) async {
+  final String verificationUrl = 'https://locked-in-561ee2a901c9.herokuapp.com/verify-email/$verificationToken';
+  final Map<String, dynamic> message = {
+    'personalizations': [
+      {
+        'to': [
+          {'email': email}
+        ],
+      }
+    ],
+    'from': {'email': 'lockedin123@myyahoo.com'},
+    'subject': 'Verify Your Email Address',
+    'content': [
+      {
+        'type': 'text/plain',
+        'value': 'Please verify your email by clicking on the link: $verificationUrl',
+      }
+    ]
   };
+
+  final Uri sendgridUrl = Uri.parse('https://api.sendgrid.com/v3/mail/send');
+
+  const String sendgridApiKey = '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';
 
   try {
     final response = await http.post(
-      url,
+      sendgridUrl,
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $sendgridApiKey',
+        'Content-Type': 'application/json',
       },
-      body: json.encode(body),
+      body: jsonEncode(message),
     );
 
-    if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body);
-      var verified = jsonResponse['verified'];
+    sent = response.statusCode;
 
-      if (verified == false) {
-        throw 'Unable to Verify User';
-      }
+    if (response.statusCode == 202) {
+      throw 'Verification Email Sent Successfully.\nPlease Check Your Email.';
+    } else {
+      throw 'Failed to Send Verification Email. Status Code: ${response.statusCode}';
     }
-  }
-  catch (e) {
-    // Exception occurred
+  } catch (error) {
+    throw '$error';
   }
 }
-
-
-
