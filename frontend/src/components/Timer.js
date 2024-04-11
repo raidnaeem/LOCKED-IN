@@ -238,9 +238,9 @@ const Timer = () => {
         </div>
 
         <div style={{ display: 'flex', marginTop: '10px' }}>
-          <div style={{ position: 'absolute', top: 240, left: 60, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>hrs</div>
-          <div style={{ position: 'absolute', top: 240, left: 150, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>mins</div>
-          <div style={{ position: 'absolute', top: 240, left: 255, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400' }}>secs</div>
+          <div style={{ position: 'absolute', top: 235, left: 60, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>hrs</div>
+          <div style={{ position: 'absolute', top: 235, left: 150, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>mins</div>
+          <div style={{ position: 'absolute', top: 235, left: 255, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400' }}>secs</div>
         </div>
 
         <div style={{ display: 'flex' }}>
