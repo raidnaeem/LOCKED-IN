@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:sendgrid_mailer/sendgrid_mailer.dart';
-const String sendgridApiKey = '';
-final Uri sendgridUrl = Uri.parse('https://api.sendgrid.com/v3/mail/send');
 
 dynamic token;
 dynamic verify;
@@ -53,7 +51,6 @@ Future<void> signUp(
   }
 
   catch (e) {
-    // Exception occurred
   }
 }
 
@@ -103,8 +100,10 @@ Future<void> requestPasswordReset(String email) async {
       body: jsonEncode(requestBody),
     );
 
+    validEmail = response.statusCode;
+
     if (response.statusCode == 200) {
-      throw 'Password reset email sent successfully.';
+      throw 'User Found.';
     } else if (response.statusCode == 404) {
       throw 'User not found.';
     } else {
@@ -117,39 +116,21 @@ Future<void> requestPasswordReset(String email) async {
 
 
 Future<void> sendPasswordResetEmail(String email, String passwordResetToken) async {
-  final String resetUrl = 'https://locked-in-561ee2a901c9.herokuapp.com/reset-password/$passwordResetToken';
-  final Map<String, dynamic> message = {
-    'personalizations': [
-      {
-        'to': [
-          {'email': email}
-        ],
-      }
-    ],
-    'from': {'email': 'lockedin123@myyahoo.com'},
-    'subject': 'Password Reset Request',
-    'content': [
-      {
-        'type': 'text/html',
-        'value': 'Please click on the following link to reset your password: <a href="$resetUrl">$resetUrl</a>',
-      }
-    ]
-  };
+  const String apiUrl = 'https://locked-in-561ee2a901c9.herokuapp.com/api/reset-password/:passwordResetToken';
+  final Map<String, String> requestBody =
+  {'Email': email, 'passwordResetToken': passwordResetToken};
 
   try {
     final response = await http.post(
-      sendgridUrl,
-      headers: <String, String>{
-        'Authorization': 'Bearer $sendgridApiKey',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(message),
+      Uri.parse(apiUrl),
+      headers: <String, String>{'Content-Type': 'application/json'},
+      body: jsonEncode(requestBody),
     );
 
-    if (response.statusCode == 202) {
-      throw 'Password Reset Email Sent Successfully.';
+    if (response.statusCode == 200) {
+      throw 'Password Reset Successfully.';
     } else {
-      throw 'Failed to Send Password Reset Email. Status Code: ${response.statusCode}';
+      throw 'Failed to request password reset. Status Code: ${response.statusCode}';
     }
   } catch (error) {
     throw '$error';
@@ -158,41 +139,14 @@ Future<void> sendPasswordResetEmail(String email, String passwordResetToken) asy
 
 Future<void> verifyUser(String email, String verificationToken) async {
   final String verificationUrl = 'https://locked-in-561ee2a901c9.herokuapp.com/verify-email/$verificationToken';
-  final Map<String, dynamic> message = {
-    'personalizations': [
-      {
-        'to': [
-          {'email': email}
-        ],
-      }
-    ],
-    'from': {'email': 'lockedin123@myyahoo.com'},
-    'subject': 'Verify Your Email Address',
-    'content': [
-      {
-        'type': 'text/plain',
-        'value': 'Please verify your email by clicking on the link: $verificationUrl',
-      }
-    ]
-  };
 
   try {
     final response = await http.post(
-      sendgridUrl,
-      headers: <String, String>{
-        'Authorization': 'Bearer $sendgridApiKey',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(message),
+      Uri.parse(verificationUrl),
     );
 
-    sent = response.statusCode;
+    throw 'Verification Email Sent Successfully.\nPlease Check Your Email.';
 
-    if (response.statusCode == 202) {
-      throw 'Verification Email Sent Successfully.\nPlease Check Your Email.';
-    } else {
-      throw 'Failed to Send Verification Email. Status Code: ${response.statusCode}';
-    }
   } catch (error) {
     throw '$error';
   }
