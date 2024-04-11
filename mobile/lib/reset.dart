@@ -1,56 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/homepage.dart';
 import 'main.dart';
-import 'register.dart';
 import 'token.dart';
 
-class VerificationPage extends StatefulWidget {
-  const VerificationPage({super.key});
+class ResetPage extends StatefulWidget {
+  const ResetPage({super.key});
 
   @override
-  createState() => _VerificationPageState();
+  _ResetPageState createState() => _ResetPageState();
 }
 
-class _VerificationPageState extends State<VerificationPage> {
-  @override
-  void initState() {
-    super.initState();
-    // Call sendVerification when the page is initialized
+class _ResetPageState extends State<ResetPage> {
+  String email = '';
+
+  void _handleEmailChange(String newEmail) {
+    setState(() {
+      email = newEmail;
+    });
   }
-
-
-  void _handleSubmit(BuildContext context) async {
-    try {
-      await verifyUser(emailVerify, code);
-
-    } catch (e) {
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Center(
-            child: Text(
-              '$e', // Convert the error to a string to display
-              textAlign: TextAlign.center, // Center the text horizontally
-            ),
-          ),
-          duration: const Duration(seconds: 5), // Adjust the duration as needed
-        ),
-      );
-        Future.delayed(Duration(seconds: 5), () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const LoginPage()),
-          );
-        });
-    }
-  }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Email Verification'),
+        title: const Text('Password Reset'),
       ),
       body: Center(
         child: Container(
@@ -60,7 +32,7 @@ class _VerificationPageState extends State<VerificationPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 15), // Added SizedBox
+              SizedBox(height: 15),
               Align(
                 alignment: Alignment.center,
                 child: Text(
@@ -72,16 +44,37 @@ class _VerificationPageState extends State<VerificationPage> {
                     fontFamily: 'Arial Narrow',
                   ),
                 ),
-              ), // Added Align
+              ),
               const SizedBox(height: 30.0),
-              Center(
+              const Center(
                 child: Text(
-                  "Send Verification Link to $emailVerify:",
+                  "Enter an Email to Receive a Password Reset Link:",
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center, // Optional, to center the text within its container
+                ),
+              ),
+              const SizedBox(height: 30.0),
+              SizedBox(
+                width: 350, // Set width of the container
+                child: Container(
+                  color: Colors.grey[200],
+                  child: TextFormField(
+                    onChanged: _handleEmailChange,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                      hintText: 'Example@email.com',
+                      hintStyle: const TextStyle(
+                          color: Colors.black54, fontFamily: 'Arial Narrow'),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      contentPadding: const EdgeInsets.fromLTRB(
+                          12.0, 8.0, 12.0, 8.0),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 30.0),
@@ -107,11 +100,35 @@ class _VerificationPageState extends State<VerificationPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 40.0),
+              const SizedBox(height: 30.0),
             ],
           ),
         ),
       ),
     );
   }
+
+  void _handleSubmit(BuildContext context) async {
+    try {
+      await requestPasswordReset(email); // Assuming `code` is defined somewhere
+
+    } catch (e) {
+      if (validEmail == 200){
+
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Center(
+            child: Text(
+              '$e',
+              textAlign: TextAlign.center,
+            ),
+          ),
+          duration: const Duration(seconds: 5),
+        ),
+      );
+    }
+  }
 }
+
