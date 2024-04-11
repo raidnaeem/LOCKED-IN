@@ -100,14 +100,16 @@ Future<void> requestPasswordReset(String email) async {
       body: jsonEncode(requestBody),
     );
 
+    print(response.body);
+
     validEmail = response.statusCode;
 
     if (response.statusCode == 200) {
-      throw 'User Found.';
+      throw 'Password Reset Email Sent.';
     } else if (response.statusCode == 404) {
-      throw 'User not found.';
+      throw 'Email Not Recognized.';
     } else {
-      throw 'Failed to request password reset. Status Code: ${response.statusCode}';
+      throw 'Failed to Request Password Reset. Status Code: ${response.statusCode}';
     }
   } catch (error) {
     throw '$error';

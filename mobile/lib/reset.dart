@@ -12,11 +12,17 @@ class ResetPage extends StatefulWidget {
 class _ResetPageState extends State<ResetPage> {
   String email = '';
 
+  void _handleEmailChange(String newEmail) {
+    setState(() {
+      email = newEmail;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Email Verification'),
+        title: const Text('Password Reset'),
       ),
       body: Center(
         child: Container(
@@ -50,19 +56,28 @@ class _ResetPageState extends State<ResetPage> {
                   textAlign: TextAlign.center, // Optional, to center the text within its container
                 ),
               ),
-              const SizedBox(height: 20.0),
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    email = value;
-                  });
-                },
-                decoration: const InputDecoration(
-                  labelText: 'Example@email.com',
-                  border: OutlineInputBorder(),
+              const SizedBox(height: 30.0),
+              SizedBox(
+                width: 350, // Set width of the container
+                child: Container(
+                  color: Colors.grey[200],
+                  child: TextFormField(
+                    onChanged: _handleEmailChange,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                      hintText: 'Example@email.com',
+                      hintStyle: const TextStyle(
+                          color: Colors.black54, fontFamily: 'Arial Narrow'),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      contentPadding: const EdgeInsets.fromLTRB(
+                          12.0, 8.0, 12.0, 8.0),
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(height: 20.0),
+              const SizedBox(height: 30.0),
               ElevatedButton(
                 onPressed: () => _handleSubmit(context),
                 style: ElevatedButton.styleFrom(
@@ -85,7 +100,7 @@ class _ResetPageState extends State<ResetPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 40.0),
+              const SizedBox(height: 30.0),
             ],
           ),
         ),
@@ -109,6 +124,15 @@ class _ResetPageState extends State<ResetPage> {
           duration: const Duration(seconds: 5),
         ),
       );
+
+      if (validEmail == 200){
+        Future.delayed(Duration(seconds: 5), () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginPage()),
+          );
+        });
+      }
     }
   }
 }

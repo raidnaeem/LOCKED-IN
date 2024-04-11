@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                 selectedIndex = index;
               });
             },
-            selectedItemColor: Colors.blue,
+            selectedItemColor: Colors.red,
             unselectedItemColor: Colors.grey,
           ),
         );
@@ -114,30 +114,35 @@ class _HomePageState extends State<HomePage> {
 class ToDoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<HomePageState>();
+    //var appState = context.watch<HomePageState>();
 
-    if (appState.favorites.isEmpty) {
-      return Center(
-        child: Text('All tasks complete! Good job!'),
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 207, 80, 41),
+      body: Container(
+          padding: EdgeInsets.symmetric(horizontal: 15),
+          child: Column (
+            children: [
+              searchBox(),
+              Expanded(
+                child: ListView(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: 50,
+                        bottom: 20,
+                      ),
+                    ),
+                    ToDoItem(),
+                  ],
+                ),
+              )
+            ],
+          )
+        )
       );
-    }
-
-    return ListView(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: Text('You have '
-              '${appState.favorites.length} favorites:'),
-        ),
-        for (var pair in appState.favorites)
-          ListTile(
-            leading: Icon(Icons.favorite),
-            title: Text(pair.asLowerCase),
-          ),
-      ],
-    );
   }
 }
+
 
 class CalendarPage extends StatelessWidget {
   @override
@@ -298,4 +303,79 @@ class BigCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class ToDoItem extends StatelessWidget {
+  const ToDoItem({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: ListTile(
+        onTap: () {
+          print('Clicked on ToDo item.');
+        },
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+        tileColor: const Color.fromARGB(255, 163, 52, 18),
+        leading: Icon(
+          Icons.check_box,
+          color: Color.fromARGB(255, 107, 104, 104),
+        ),
+        title: Text(
+          'Work on POOSD project',
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.black,
+            decoration: TextDecoration.lineThrough,
+          ),
+        ),
+        trailing: Container(
+          padding: EdgeInsets.all(0),
+          margin: EdgeInsets.symmetric(vertical: 12),
+          height: 35,
+          width: 35,
+          decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: IconButton(
+            color: Colors.white,
+            iconSize: 18,
+            icon: Icon(Icons.delete),
+            onPressed: () {},
+          ),
+        ),
+      ),
+    );
+  }
+  
+}
+
+Widget searchBox() {
+  return Container (
+    padding: EdgeInsets.symmetric(horizontal: 15),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(20)
+    ),
+    child: TextField(
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.all(0),
+        prefixIcon: Icon(
+          Icons.search,
+          color: Color.fromARGB(255, 107, 104, 104),
+          size: 20,
+        ),
+        prefixIconConstraints: BoxConstraints(
+          maxHeight: 20,
+          minWidth: 25
+        ),
+        border: InputBorder.none,
+        hintText: 'Search',
+        hintStyle: TextStyle(color: Colors.grey),
+      ),
+    ),
+  );
 }

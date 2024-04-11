@@ -2,9 +2,23 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(CountdownTimerPage());
+  runApp(const HomePageApp());
 }
 
+class HomePageApp extends StatelessWidget {
+  const HomePageApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('LOCKED IN'),
+      ),
+    );
+  }
+}
+
+/*
 class CountdownTimerPage extends StatefulWidget {
   @override
   State<CountdownTimerPage> createState() {
@@ -56,3 +70,4 @@ class _CountdownTimerPageState extends State<CountdownTimerPage> {
     );
   }
 }
+*/
