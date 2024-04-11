@@ -246,6 +246,9 @@ const Timer = () => {
         <div style={{ display: 'flex' }}>
           <button
             style={{
+              position: 'absolute',
+              top: 250,
+              left: 230,
               width: '120px',
               height: '40px',
               color: 'white',
@@ -262,6 +265,9 @@ const Timer = () => {
           </button>
           <button
             style={{
+              position: 'absolute',
+              top: 250,
+              left: 150,
               width: '120px',
               height: '40px',
               color: 'white',
