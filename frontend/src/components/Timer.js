@@ -139,7 +139,7 @@ const Timer = () => {
     return () => clearInterval(interval);
   }, [isRunning]);
 
-  const inputsDisabled = isRunning;
+  const inputsDisabled = !isRunning;
 
   return (
     <div
@@ -248,7 +248,7 @@ const Timer = () => {
             style={{
               position: 'absolute',
               top: 275,
-              left: 60,
+              left: 55,
               width: '120px',
               height: '40px',
               color: 'white',
