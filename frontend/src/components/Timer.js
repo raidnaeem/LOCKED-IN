@@ -219,7 +219,7 @@ const Timer = () => {
             style={{ position: 'absolute', top: 180, left: 50, width: '50px', textAlign: 'center', fontSize: '42px', background: '#EA7331', fontFamily: 'Poppins', fontWeight: '400' }}
             disabled={inputsDisabled}
           />
-          <span style={{ position: 'relative', top: -20, left: -35, fontSize: '42px', color: 'black', fontFamily: 'Poppins', fontWeight: '400', margin: '0 10px' }}>:</span>
+          <span style={{ position: 'relative', top: -25, left: -35, fontSize: '42px', color: 'black', fontFamily: 'Poppins', fontWeight: '400', margin: '0 10px' }}>:</span>
           <input
             type="text"
             value={time.minutes}
@@ -227,7 +227,7 @@ const Timer = () => {
             style={{ position: 'absolute', top: 180, left: 150, width: '50px', textAlign: 'center', fontSize: '42px', background: '#EA7331', fontFamily: 'Poppins', fontWeight: '400' }}
             disabled={inputsDisabled}
           />
-          <span style={{ position: 'relative', top: -20, left: 32, fontSize: '42px', color: 'black', fontFamily: 'Poppins', fontWeight: '400', margin: '0 10px' }}>:</span>
+          <span style={{ position: 'relative', top: -25, left: 32, fontSize: '42px', color: 'black', fontFamily: 'Poppins', fontWeight: '400', margin: '0 10px' }}>:</span>
           <input
             type="text"
             value={time.seconds}
@@ -238,9 +238,9 @@ const Timer = () => {
         </div>
 
         <div style={{ display: 'flex', marginTop: '10px' }}>
-          <div style={{ position: 'absolute', top: 235, left: 60, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>hrs</div>
-          <div style={{ position: 'absolute', top: 235, left: 150, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>mins</div>
-          <div style={{ position: 'absolute', top: 235, left: 255, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400' }}>secs</div>
+          <div style={{ position: 'absolute', top: 230, left: 60, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>hrs</div>
+          <div style={{ position: 'absolute', top: 230, left: 150, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>mins</div>
+          <div style={{ position: 'absolute', top: 230, left: 255, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400' }}>secs</div>
         </div>
 
         <div style={{ display: 'flex' }}>
