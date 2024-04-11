@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/homepage.dart';
+import 'main.dart';
+import 'register.dart';
 import 'token.dart';
 
 class VerificationPage extends StatefulWidget {
@@ -16,38 +18,37 @@ class _VerificationPageState extends State<VerificationPage> {
     // Call sendVerification when the page is initialized
   }
 
-  String _verificationCode = '';
-  String _email = ''; // Added email field
-
-  void _handleVerificationCode(String value) {
-    setState(() {
-      _verificationCode = value;
-    });
-  }
-
-  void _handleEmail(String value) {
-    setState(() {
-      _email = value;
-    });
-  }
 
   void _handleSubmit(BuildContext context) async {
     try {
-      await verifyUser(_verificationCode);
+      await verifyUser(emailVerify, code);
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePageScreen()),
-      );
     } catch (e) {
-      if (!context.mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('An error occurred. Please try again later.'),
+        SnackBar(
+          content: Center(
+            child: Text(
+              '$e', // Convert the error to a string to display
+              textAlign: TextAlign.center, // Center the text horizontally
+            ),
+          ),
+          duration: const Duration(seconds: 5), // Adjust the duration as needed
         ),
       );
+
+      if(sent == 202) {
+        Future.delayed(Duration(seconds: 5), () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginPage()),
+          );
+        });
+      }
     }
   }
+
+
 
   void _handleSendCode(BuildContext context) async {
     final currentContext = context;
@@ -91,27 +92,14 @@ class _VerificationPageState extends State<VerificationPage> {
                 ),
               ), // Added Align
               const SizedBox(height: 30.0),
-              const Text(
-                'Enter Email:',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10.0),
-              TextField(
-                onChanged: _handleEmail,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+              Center(
+                child: Text(
+                  "Send Verification Link to $emailVerify:",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
                   ),
-                  hintText: 'Example@email.com',
-                  hintStyle: const TextStyle(
-                    color: Colors.black54,
-                    fontFamily: 'Arial Narrow',
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 15.0, horizontal: 12.0),
+                  textAlign: TextAlign.center, // Optional, to center the text within its container
                 ),
               ),
               const SizedBox(height: 20.0),
@@ -138,52 +126,6 @@ class _VerificationPageState extends State<VerificationPage> {
                 ),
               ),
               const SizedBox(height: 40.0),
-              const Text(
-                'Enter Verification Code:',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10.0),
-              TextField(
-                onChanged: _handleVerificationCode,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  hintText: 'Verification Code',
-                  hintStyle: const TextStyle(
-                    color: Colors.black54,
-                    fontFamily: 'Arial Narrow',
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 15.0, horizontal: 12.0),
-                ),
-              ),
-              const SizedBox(height: 20.0),
-              ElevatedButton(
-                onPressed: () => _handleSendCode(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF14532d).withBlue(255),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 13.0),
-                ),
-                child: const SizedBox(
-                  width: 350,
-                  child: Text(
-                    'Submit Code',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontFamily: 'Arial Narrow',
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
             ],
           ),
         ),
