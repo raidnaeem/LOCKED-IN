@@ -1,16 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/homepage.dart';
 import 'main.dart';
+import 'register.dart';
 import 'token.dart';
 
-class ResetPage extends StatefulWidget {
-  const ResetPage({super.key});
+class VerificationPage extends StatefulWidget {
+  const VerificationPage({super.key});
 
   @override
-  _ResetPageState createState() => _ResetPageState();
+  createState() => _VerificationPageState();
 }
 
-class _ResetPageState extends State<ResetPage> {
-  String email = '';
+class _VerificationPageState extends State<VerificationPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Call sendVerification when the page is initialized
+  }
+
+
+  void _handleSubmit(BuildContext context) async {
+    try {
+      await verifyUser(emailVerify, code);
+
+    } catch (e) {
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Center(
+            child: Text(
+              '$e', // Convert the error to a string to display
+              textAlign: TextAlign.center, // Center the text horizontally
+            ),
+          ),
+          duration: const Duration(seconds: 5), // Adjust the duration as needed
+        ),
+      );
+        Future.delayed(Duration(seconds: 5), () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginPage()),
+          );
+        });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +60,7 @@ class _ResetPageState extends State<ResetPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 15),
+              SizedBox(height: 15), // Added SizedBox
               Align(
                 alignment: Alignment.center,
                 child: Text(
@@ -38,11 +72,11 @@ class _ResetPageState extends State<ResetPage> {
                     fontFamily: 'Arial Narrow',
                   ),
                 ),
-              ),
+              ), // Added Align
               const SizedBox(height: 30.0),
-              const Center(
+              Center(
                 child: Text(
-                  "Enter an Email to Receive a Password Reset Link:",
+                  "Send Verification Link to $emailVerify:",
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
@@ -50,19 +84,7 @@ class _ResetPageState extends State<ResetPage> {
                   textAlign: TextAlign.center, // Optional, to center the text within its container
                 ),
               ),
-              const SizedBox(height: 20.0),
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    email = value;
-                  });
-                },
-                decoration: const InputDecoration(
-                  labelText: 'Example@email.com',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 20.0),
+              const SizedBox(height: 30.0),
               ElevatedButton(
                 onPressed: () => _handleSubmit(context),
                 style: ElevatedButton.styleFrom(
@@ -91,24 +113,5 @@ class _ResetPageState extends State<ResetPage> {
         ),
       ),
     );
-  }
-
-  void _handleSubmit(BuildContext context) async {
-    try {
-      await requestPasswordReset(email); // Assuming `code` is defined somewhere
-
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Center(
-            child: Text(
-              '$e',
-              textAlign: TextAlign.center,
-            ),
-          ),
-          duration: const Duration(seconds: 5),
-        ),
-      );
-    }
   }
 }
