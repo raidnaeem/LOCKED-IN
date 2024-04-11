@@ -497,7 +497,9 @@ class RegisterButton extends StatelessWidget {
           // Display error message to the user
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(check),
+              content: Center(
+                child: Text(check, textAlign: TextAlign.center),
+              ),
             ),
           );
         }
