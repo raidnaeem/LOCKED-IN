@@ -2,16 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 const Sound = require('../assets/TimesUp.mp3')
 
 const Timer = () => {
-  const [position, setPosition] = useState({ x: 50, y: 100 });
-  const [isDragging, setIsDragging] = useState(false);
-  const timerRef = useRef(null);
-  const [time, setTime] = useState({ minutes: 25, seconds: 0 });
+  const [time, setTime] = useState({ hours: 0, minutes: 25, seconds: 0 });
   const [isRunning, setIsRunning] = useState(false);
-  const [pausedAt, setPausedAt] = useState(null);
-  const [isEditable, setIsEditable] = useState(false);
-  const [inputMinutes, setInputMinutes] = useState('');
-  const [inputSeconds, setInputSeconds] = useState('');
-
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [note, setNote] = useState('');
+  const timerRef = useRef(null);
   const audioRef = useRef(null);
 
   const playSound = () => {
@@ -20,33 +16,86 @@ const Timer = () => {
     }
   };
 
+  const handleStartStop = () => {
+    setIsRunning((prev) => !prev);
+  };
+
+  const handleReset = () => {
+    setTime({ hours: 0, minutes: 25, seconds: 0 });
+    setIsRunning(false);
+  };
+
   const handleMouseDown = (e) => {
-    if (e.target === timerRef.current) {
+    const { clientX, clientY } = e;
+    const rect = timerRef.current.getBoundingClientRect();
+
+    const isEdgeClick =
+      clientX <= rect.left + 10 ||
+      clientX >= rect.right - 10 ||
+      clientY <= rect.top + 10 ||
+      clientY >= rect.bottom - 10;
+
+    if (isEdgeClick) {
       e.preventDefault();
       setIsDragging(true);
-      const rect = timerRef.current.getBoundingClientRect();
-      setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+      setDragOffset({
+        x: clientX - rect.left,
+        y: clientY - rect.top,
+      });
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging) {
+      const newX = e.clientX - dragOffset.x;
+      const newY = e.clientY - dragOffset.y;
+      timerRef.current.style.left = `${newX}px`;
+      timerRef.current.style.top = `${newY}px`;
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleInputChange = (e, type) => {
+    let value = parseInt(e.target.value) || 0;
+
+    if (type === 'hours') {
+      const hours = value;
+      const minutes = time.minutes;
+
+      setTime((prevTime) => ({
+        ...prevTime,
+        hours: hours,
+        minutes: minutes,
+      }));
+    } else if (type === 'minutes') {
+      const totalMinutes = time.hours * 60 + value;
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+
+      setTime((prevTime) => ({
+        ...prevTime,
+        hours: hours,
+        minutes: minutes,
+      }));
+    } else {
+      const totalSeconds = time.minutes * 60 + value;
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+
+      setTime((prevTime) => ({
+        ...prevTime,
+        minutes: minutes,
+        seconds: seconds,
+      }));
     }
   };
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (isDragging) {
-        setPosition({
-          x: e.clientX,
-          y: e.clientY,
-        });
-      }
-    };
-
-    const handleMouseUp = () => {
-      setIsDragging(false);
-    };
-
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-    }
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
@@ -54,42 +103,33 @@ const Timer = () => {
     };
   }, [isDragging]);
 
-  const handleStartStop = () => {
-    if (isRunning) {
-      setIsRunning(false);
-      setPausedAt(new Date());
-    } else {
-      setIsRunning(true);
-      if (pausedAt) {
-        const elapsedSeconds = Math.floor((new Date() - pausedAt) / 1000);
-        setTime((prevTime) => ({ ...prevTime, seconds: prevTime.seconds }));
-        setPausedAt(null);
-      }
-    }
-  };
-
   useEffect(() => {
     let interval;
 
     if (isRunning) {
       interval = setInterval(() => {
         setTime((prevTime) => {
-          let newSeconds = prevTime.seconds - 1;
-          let newMinutes = prevTime.minutes;
+          let { hours, minutes, seconds } = prevTime;
 
-          if (newSeconds < 0) {
-            newSeconds = 59;
-            newMinutes -= 1;
-          }
-
-          if (newMinutes < 0) {
-            newMinutes = 0;
-            newSeconds = 0;
-            setIsRunning(false);
+          if (hours === 0 && minutes === 0 && seconds === 0) {
+            setTime({ hours: 0, minutes: 25, seconds: 0 });
             playSound();
+            setIsRunning(false);
+          } else {
+            if (seconds === 0) {
+              if (minutes === 0 && hours > 0) {
+                hours--;
+                minutes = 59;
+              } else if (minutes > 0) {
+                minutes--;
+              }
+              seconds = 59;
+            } else {
+              seconds--;
+            }
           }
 
-          return { minutes: newMinutes, seconds: newSeconds };
+          return { hours, minutes, seconds };
         });
       }, 1000);
     } else {
@@ -99,121 +139,151 @@ const Timer = () => {
     return () => clearInterval(interval);
   }, [isRunning]);
 
-  const handleInputChange = (e, type) => {
-    const value = e.target.value;
-
-    if (type === 'minutes') {
-      setInputMinutes(value);
-    } else if (type === 'seconds') {
-      setInputSeconds(value);
-    }
-  };
-
-  const handleEditClick = () => {
-    setIsEditable(true);
-  };
-
-  const handleBlur = () => {
-    setIsEditable(false);
-    const minutes = inputMinutes ? parseInt(inputMinutes) : 0;
-    const seconds = inputSeconds ? parseInt(inputSeconds) : 0;
-    setTime({ minutes, seconds });
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      setIsEditable(false);
-      const minutes = inputMinutes ? parseInt(inputMinutes) : 0;
-      const seconds = inputSeconds ? parseInt(inputSeconds) : 0;
-      setTime({ minutes, seconds });
-    }
-  };
+  const inputsDisabled = isRunning;
 
   return (
     <div
       ref={timerRef}
+      className="timer-container"
       style={{
         position: 'absolute',
-        left: position.x + 'px',
-        top: position.y + 'px',
-        cursor: isDragging ? 'grabbing' : 'grab',
-        border: '4px solid black', // Thick black border
-        padding: '10px',
-        minWidth: '200px', // Ensure the timer is wide enough
-        textAlign: 'center', // Center the timer horizontally
+        width: '358.93px',
+        height: '243.88px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '20px',
+        cursor: isDragging ? 'grabbing' : 'default',
       }}
       onMouseDown={handleMouseDown}
     >
+      {/* Top Half */}
       <div
+        className="top-section"
         style={{
-          cursor: 'text', // Change cursor to text when clicking inside the timer
-          fontSize: '24px', // Increase font size
-          lineHeight: '1.5', // Set line height
-          minHeight: '50px', // Ensure vertical centering
+          width: '100%',
+          minHeight: '75%',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          background: '#C15138',
+          borderRadius: '26px 26px 0 0',
+          padding: '20px',
         }}
-        onClick={handleEditClick}
       >
-        {isEditable ? (
-          <>
-            <input
-              type="text"
-              value={inputMinutes}
-              onChange={(e) => handleInputChange(e, 'minutes')}
-              onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
-              style={{ width: '30px', marginRight: '5px', textAlign: 'center' }}
-              autoFocus
-            />
-            m
-            <input
-              type="text"
-              value={inputSeconds}
-              onChange={(e) => handleInputChange(e, 'seconds')}
-              onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
-              style={{ width: '30px', marginLeft: '5px', textAlign: 'center' }}
-            />
-            s
-          </>
-        ) : (
-          <>
-            <span
-              style={{
-                cursor: 'text',
-                marginRight: '5px',
-              }}
-              onClick={() => setIsEditable(true)}
-            >
-              {time.minutes}
-            </span>
-            m
-            <span
-              style={{
-                cursor: 'text',
-                marginLeft: '5px',
-              }}
-              onClick={() => setIsEditable(true)}
-            >
-              {time.seconds}
-            </span>
-            s
-          </>
-        )}
+        <div style={{ fontSize: '48px', color: 'white', fontFamily: 'Poppins', fontWeight: '700' }}>meditate</div>
+        <textarea
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          style={{
+            fontSize: '24px',
+            color: 'black',
+            fontFamily: 'Poppins',
+            fontWeight: '500',
+            border: 'none',
+            outline: 'none',
+            background: 'transparent',
+            textAlign: 'center',
+            marginTop: '10px',
+            width: '90%',
+            resize: 'none', // Disable textarea resize
+            boxSizing: 'border-box',
+          }}
+          placeholder="Add notes.."
+          disabled={inputsDisabled}
+        />
       </div>
-      <div style={{ marginTop: '10px' }}>
-        <button style={{ marginRight: '10px', marginBottom: '10px' }} onClick={handleStartStop}>
-          {isRunning ? 'Pause' : 'Start'}
-        </button>
-        <button
-          style={{ marginLeft: '10px', marginBottom: '10px' }}
-          onClick={() => setTime({ minutes: 25, seconds: 0 })}
-        >
-          Reset
-        </button>
+
+      {/* Bottom Half */}
+      <div
+        className="bottom-section"
+        style={{
+          width: '100%',
+          minHeight: '75%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#EA7331',
+          borderRadius: '0 0 26px 26px',
+          padding: '20px',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <input
+            type="text"
+            value={time.hours}
+            onChange={(e) => handleInputChange(e, 'hours')}
+            style={{ position: 'absolute', top: 180, left: 50, width: '50px', textAlign: 'center', fontSize: '42px', background: '#EA7331', fontFamily: 'Poppins', fontWeight: '400' }}
+            disabled={inputsDisabled}
+          />
+          <span style={{ position: 'relative', top: -35, left: -38, fontSize: '42px', color: 'black', fontFamily: 'Poppins', fontWeight: '400', margin: '0 10px' }}>:</span>
+          <input
+            type="text"
+            value={time.minutes}
+            onChange={(e) => handleInputChange(e, 'minutes')}
+            style={{ position: 'absolute', top: 180, left: 150, width: '50px', textAlign: 'center', fontSize: '42px', background: '#EA7331', fontFamily: 'Poppins', fontWeight: '400' }}
+            disabled={inputsDisabled}
+          />
+          <span style={{ position: 'relative', top: -35, left: 32, fontSize: '42px', color: 'black', fontFamily: 'Poppins', fontWeight: '400', margin: '0 10px' }}>:</span>
+          <input
+            type="text"
+            value={time.seconds}
+            onChange={(e) => handleInputChange(e, 'seconds')}
+            style={{ position: 'absolute', top: 180, left: 255, width: '50px', textAlign: 'center', fontSize: '42px', background: '#EA7331', fontFamily: 'Poppins', fontWeight: '400' }}
+            disabled={inputsDisabled}
+          />
+        </div>
+
+        <div style={{ display: 'flex', marginTop: '10px' }}>
+          <div style={{ position: 'absolute', top: 232, left: 60, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>hrs</div>
+          <div style={{ position: 'absolute', top: 232, left: 150, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>mins</div>
+          <div style={{ position: 'absolute', top: 232, left: 255, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400' }}>secs</div>
+        </div>
+
+        <div style={{ display: 'flex' }}>
+          <button
+            style={{
+              position: 'absolute',
+              top: 277,
+              left: 55,
+              width: '120px',
+              height: '40px',
+              color: 'white',
+              fontSize: '20px',
+              fontFamily: 'Poppins',
+              fontWeight: '400',
+              background: '#C15138',
+              borderRadius: '20px',
+              marginRight: '20px',
+            }}
+            onClick={handleStartStop}
+          >
+            {isRunning ? 'Pause' : 'Start'}
+          </button>
+          <button
+            style={{
+              position: 'absolute',
+              top: 277,
+              left: 190,
+              width: '120px',
+              height: '40px',
+              color: 'white',
+              fontSize: '20px',
+              fontFamily: 'Poppins',
+              fontWeight: '400',
+              background: '#C15138',
+              borderRadius: '20px',
+            }}
+            onClick={handleReset}
+          >
+            Reset
+          </button>
+        </div>
       </div>
+      {/* Audio: Time's Up */}
       <audio ref={audioRef} src={Sound} />
     </div>
   );

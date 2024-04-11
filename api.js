@@ -343,7 +343,7 @@ app.post("/api/calendar/create", async (req, res) => {
   const db = client.db("locked-in");
 
   try {
-      await db.collection("Calendar").insertOne({
+      const result = await db.collection("Calendar").insertOne({
           Event,
           StartTime,
           StartDate,
@@ -351,6 +351,9 @@ app.post("/api/calendar/create", async (req, res) => {
           EndDate,
           UserID
       });
+
+      await createNotification(client, UserID, result.insertedId, `New event added: ${Event}. Don't forget it!`, "EventReminder");
+
       res.status(200).json({ message: "Event created successfully" });
   } catch (error) {
       console.error("Error creating event:", error);
@@ -382,18 +385,27 @@ app.put("/api/event/update/:EventID", async (req, res) => {
   if(updateFields._id) delete updateFields._id;
 
   try {
-      const result = await db.collection("Calendar").updateOne(
-          { _id: new mongodb.ObjectId(EventID) },
-          { $set: updateFields }
-      );
+    // First, fetch the event to get the UserID
+    const event = await db.collection("Calendar").findOne({ _id: new mongodb.ObjectId(EventID) });
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
 
-      if (result.matchedCount === 0) {
-          res.status(404).json({ message: "Event not found" });
-      } else if (result.modifiedCount === 0) {
-          res.status(200).json({ message: "No changes made to the event" });
-      } else {
-          res.status(200).json({ message: "Event updated successfully" });
-      }
+    const UserID = event.UserID; // Attain Thr UserID
+
+    const result = await db.collection("Calendar").updateOne(
+        { _id: new mongodb.ObjectId(EventID) },
+        { $set: updateFields }
+    );
+
+    if (result.matchedCount === 0) {
+        res.status(404).json({ message: "Event not found" });
+    } else if (result.modifiedCount === 0) {
+        res.status(200).json({ message: "No changes made to the event" });
+    } else {
+        await createNotification(client, UserID, EventID, `Your event '${updateFields.Event || event.Event}' has been updated. Check the changes!`, "EventUpdateReminder");
+        res.status(200).json({ message: "Event updated successfully" });
+    }
   } catch (error) {
       console.error("Error updating event:", error);
       res.status(500).json({ error: "An error occurred while updating the event." });
@@ -530,6 +542,7 @@ app.get("/api/spotify/random-track", async (req, res) => {
 });
 
 // Call the scheduler at the end of the setApp function
+scheduleEventReminders();
 scheduleDailyToDoReminders();
 };
 
@@ -572,6 +585,21 @@ async function createToDoNotification(client, userId, taskId, message) {
   await db.collection("Notifications").insertOne(notification);
 }
 
+// Function Calendar Notification 
+async function createNotification(client, userId, relatedId, message, type) {
+  const db = client.db("locked-in");
+  const notification = {
+    userId,
+    relatedId, 
+    message,
+    dateCreated: new Date(),
+    status: "unread",
+    type
+  };
+
+  await db.collection("Notifications").insertOne(notification);
+}
+
 // SpotifyAccessToken 
 async function getSpotifyAccessToken() {
   const response = await fetch('https://accounts.spotify.com/api/token', {
@@ -600,9 +628,9 @@ async function fetchNewReleases(token) {
   console.log(data);
 }
 
-// Schedule Daily 
+// TODO Schedule Daily 
 function scheduleDailyToDoReminders() {
-  cron.schedule('0 7 * * *', async () => {
+  cron.schedule('0 8 * * *', async () => {
     console.log('Scheduling daily To-Do reminders');
     const db = client.db("locked-in");
     const today = new Date().toISOString().split('T')[0];
@@ -611,6 +639,35 @@ function scheduleDailyToDoReminders() {
     todos.forEach(todo => {
       const reminderMessage = `Don't forget to complete your task: ${todo.Task}.`;
       createToDoNotification(todo.UserID, todo._id, reminderMessage);
+    });
+  }, {
+    scheduled: true,
+    timezone: "US/Eastern"
+  });
+}
+
+// EventSchedule Daily 
+function scheduleEventReminders() {
+  cron.schedule('0 7 * * *', async () => { // Runs every day at 7 AM
+    console.log('Scheduling daily event reminders');
+    const db = client.db("locked-in");
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+
+    const events = await db.collection("Calendar").find({
+      StartDate: {
+        $gte: today.toISOString().split('T')[0],
+        $lt: tomorrow.toISOString().split('T')[0]
+      },
+      EndDate: {
+        $gte: today.toISOString().split('T')[0]
+      }
+    }).toArray();
+
+    events.forEach(event => {
+      const reminderMessage = `Reminder: You have an event '${event.Event}' scheduled for today.`;
+      createNotification(client, event.UserID, event._id, reminderMessage, "EventReminder");
     });
   }, {
     scheduled: true,

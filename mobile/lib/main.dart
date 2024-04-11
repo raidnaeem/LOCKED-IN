@@ -3,6 +3,7 @@ import 'verification.dart';
 import 'package:flutter/material.dart';
 import 'token.dart';
 import 'register.dart';
+import 'reset.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -32,14 +33,14 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await login(_email, _password);
 
-      if (token == true) {
+      if (verify == true) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => HomePageScreen()),
         );
       }
 
-      else if (token == false) {
+      else if (verify == false) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const VerificationPage()),
@@ -50,7 +51,12 @@ class _LoginPageState extends State<LoginPage> {
     catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('$e'), // Convert the error to a string to display
+          content: Center(
+            child: Text(
+              '$e', // Convert the error to a string to display
+              textAlign: TextAlign.center, // Center the text horizontally
+            ),
+          ),
           duration: const Duration(seconds: 10), // Adjust the duration as needed
         ),
       );
@@ -147,7 +153,10 @@ class _LoginPageState extends State<LoginPage> {
                     alignment: Alignment.centerLeft,
                     child: TextButton(
                       onPressed: () {
-                        // Implement your forgot password logic here
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const ResetPage()),
+                        );
                       },
                       child: const Text(
                         'Forgot password?',
