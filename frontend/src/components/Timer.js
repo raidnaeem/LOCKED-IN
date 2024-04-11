@@ -147,8 +147,8 @@ const Timer = () => {
       className="timer-container"
       style={{
         position: 'absolute',
-        width: '276.1px',
-        height: '187.6px',
+        width: '358.93px',
+        height: '243.88px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
