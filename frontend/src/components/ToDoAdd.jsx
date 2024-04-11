@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {Input, Button } from "@chakra-ui/react";
-import './ToDo.css'
+import './style_ToDo.css'
 
 function ToDoAdd({setTaskName, taskName, createTask})
 {    

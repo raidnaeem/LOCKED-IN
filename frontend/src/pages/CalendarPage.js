@@ -11,7 +11,8 @@ const CalendarPage = () => {
       <PageTitle />
       <LoggedInName />
       <CalendarMonthly />
-      <NavigationTabs />
+      <DayGridComponent />
+      <NavigationTabs selectedPage={"calendar-tab"}/>
     </div>
   );
 };

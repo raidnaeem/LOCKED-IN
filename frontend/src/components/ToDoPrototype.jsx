@@ -5,7 +5,7 @@ import ToDoSearch from './ToDoSearch.jsx';
 import ToDoItem from './ToDoItem.jsx';
 import ToDoAdd from './ToDoAdd.jsx';
 import { Button, Checkbox, CheckboxGroup } from "@chakra-ui/react";
-import './ToDo.css'
+import './style_ToDo.css'
 
 function ToDoPrototype()
 {

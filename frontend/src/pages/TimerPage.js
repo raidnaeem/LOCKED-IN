@@ -11,7 +11,7 @@ const TimerPage = () =>
     return(
       <div>
         <PageTitle />
-        <NavigationTabs/>
+        <NavigationTabs selectedPage={"timer-tab"}/>
         <LoggedInName />
         <Timer />
       </div>

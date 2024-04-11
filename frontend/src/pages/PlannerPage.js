@@ -14,7 +14,7 @@ const PlannerPage = () => {
       <Timer />
       <ToDoProtoType />
       <Spotify />
-      <NavigationTabs />
+      <NavigationTabs selectedPage={"planner-tab"}/>
     </div>
   );
 };
