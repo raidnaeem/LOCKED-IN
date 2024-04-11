@@ -113,10 +113,6 @@ class _ResetPageState extends State<ResetPage> {
       await requestPasswordReset(email); // Assuming `code` is defined somewhere
 
     } catch (e) {
-      if (validEmail == 200){
-
-      }
-
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Center(
@@ -128,7 +124,15 @@ class _ResetPageState extends State<ResetPage> {
           duration: const Duration(seconds: 5),
         ),
       );
+
+      if (validEmail == 200){
+        Future.delayed(Duration(seconds: 5), () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginPage()),
+          );
+        });
+      }
     }
   }
 }
-
