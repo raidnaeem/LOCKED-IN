@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { Resizable } from 'react-resizable';
 import bp from './Path.js'; 
 import ToDoSearch from './ToDoSearch.jsx';
 import ToDoItem from './ToDoItem.jsx';

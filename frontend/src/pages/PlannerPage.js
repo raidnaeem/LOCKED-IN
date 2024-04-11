@@ -4,6 +4,7 @@ import LoggedInName from '../components/LoggedInName';
 import ToDoProtoType from '../components/ToDoPrototype';
 import Timer from '../components/Timer';
 import Spotify from '../components/Spotify';
+import NavigationTabs from '../components/NavigationTabs';
 
 const PlannerPage = () => {
   return (
@@ -13,6 +14,7 @@ const PlannerPage = () => {
       <Timer />
       <ToDoProtoType />
       <Spotify />
+      <NavigationTabs />
     </div>
   );
 };
