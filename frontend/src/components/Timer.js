@@ -216,10 +216,10 @@ const Timer = () => {
             type="text"
             value={time.hours}
             onChange={(e) => handleInputChange(e, 'hours')}
-            style={{ position: 'absolute', top: 200, left: 30, width: '50px', textAlign: 'center', fontSize: '32px', background: '#EA7331', fontFamily: 'Poppins', fontWeight: '400' }}
+            style={{ position: 'absolute', top: 200, left: 50, width: '50px', textAlign: 'center', fontSize: '32px', background: '#EA7331', fontFamily: 'Poppins', fontWeight: '400' }}
             disabled={inputsDisabled}
           />
-          <span style={{ position: 'relative', top: 10, left: -35, fontSize: '64px', color: 'black', fontFamily: 'Poppins', fontWeight: '400', margin: '0 10px' }}>:</span>
+          <span style={{ position: 'relative', top: 0, left: -35, fontSize: '64px', color: 'black', fontFamily: 'Poppins', fontWeight: '400', margin: '0 10px' }}>:</span>
           <input
             type="text"
             value={time.minutes}
@@ -227,7 +227,7 @@ const Timer = () => {
             style={{ position: 'absolute', top: 200, left: 150, width: '50px', textAlign: 'center', fontSize: '32px', background: '#EA7331', fontFamily: 'Poppins', fontWeight: '400' }}
             disabled={inputsDisabled}
           />
-          <span style={{ position: 'relative', top: 10, left: 32, fontSize: '64px', color: 'black', fontFamily: 'Poppins', fontWeight: '400', margin: '0 10px' }}>:</span>
+          <span style={{ position: 'relative', top: 0, left: 32, fontSize: '64px', color: 'black', fontFamily: 'Poppins', fontWeight: '400', margin: '0 10px' }}>:</span>
           <input
             type="text"
             value={time.seconds}
@@ -238,8 +238,8 @@ const Timer = () => {
         </div>
 
         <div style={{ display: 'flex', marginTop: '10px' }}>
-          <div style={{ position: 'absolute', top: 240, left: 75, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>hrs</div>
-          <div style={{ position: 'absolute', top: 240, left: 135, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>mins</div>
+          <div style={{ position: 'absolute', top: 240, left: 65, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>hrs</div>
+          <div style={{ position: 'absolute', top: 240, left: 140, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>mins</div>
           <div style={{ position: 'absolute', top: 240, left: 255, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400' }}>secs</div>
         </div>
 
