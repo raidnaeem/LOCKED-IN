@@ -16,9 +16,10 @@ const CalendarMonthly = () => {
           <img src={addButton} alt="Add Event" className="addEventButton" />
           <div className="addEventText">Add Event</div>
         </div>
-        <div className="searchEvent"></div>
+        <div className="searchEvent">
           <img src={searchButton} alt="Add Event" className="searchEventButton" />
           <div className="searchEvent">Search Event</div>
+        </div>
       </div>
     </div>
   );
