@@ -10,11 +10,11 @@ const PlannerPage = () => {
   return (
     <div>
       <PageTitle />
+      <NavigationTabs selectedPage={"planner-tab"}/>
       <LoggedInName />
       <Timer />
       <ToDoProtoType />
       <Spotify />
-      <NavigationTabs selectedPage={"planner-tab"}/>
     </div>
   );
 };

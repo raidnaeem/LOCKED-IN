@@ -12,18 +12,25 @@ function ToDoPrototype()
     let _ud = localStorage.getItem('user_data');
     var ud = JSON.parse(_ud);
     
-    const [taskName, setTaskName] = useState('');
-    const [tasks, setTasks] = useState([]);
+    const [taskName, setTaskName] = useState(''); // Keeps track of the task name
+    const [queryTask, setQueryTask] = useState(''); // current value of search 
+    const [pageNumber, setPageNumber] = useState(1); // Default page number is 1
+    const [tasks, setTasks] = useState([]); // Array of tasks
 
     useEffect(() => {
         // Fetch tasks when component mounts
-        searchTasks('');
-    }, []);
+        searchTasks(queryTask);
+    }, [pageNumber, queryTask]);
+
+    //Sets page number and calls search to re-render task array
+    const changePage = page => {
+        setPageNumber(page);
+    }
 
     //Search Tasks; given query of searchItem, uses current user's ID.
     const searchTasks = async searchItem => {
         try {
-            const response = await fetch(bp.buildPath(`api/todo/search?query=${searchItem}&userID=${ud.UserID}`), {
+            const response = await fetch(bp.buildPath(`api/todo/search?query=${searchItem}&userID=${ud.UserID}&page=${pageNumber}`), {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -167,17 +174,19 @@ function ToDoPrototype()
 
     return(
         <div className='w-1/2 relative left-1/4'>
+            {/*Title and Clear Button*/}
             <div className='flex items-center justify-between pr-5'>
                 <h1 className='text-[50px] text-bold pl-4'>
-                    To-Do List
+                    To-Do List {pageNumber}
                 </h1>
                 <Button onClick={clearCompleted} colorScheme='yellow'>
                     Clear Done
                 </Button>
             </div>  
+            {/*Search, List Items, Add*/}
             <div>
                 <ToDoSearch
-                    searchTasks={searchTasks}
+                    setQueryTask={setQueryTask}
                 />
                 <CheckboxGroup id="todoList" w="100%" size="lg" h="100%" minH="100vh">
                     {tasks.map((task) => (
@@ -189,6 +198,16 @@ function ToDoPrototype()
                     taskName={taskName}
                     createTask={createTask}
                 />
+            </div>
+            {/*Pagination Buttons*/}
+            <div className='flex items-center justify-center pr-5'>
+                <Button onClick={() => changePage(pageNumber - 1)} colorScheme='yellow'>
+                    Prev Page
+                </Button>
+
+                <Button onClick={() => changePage(pageNumber + 1)} colorScheme='yellow'>
+                    Next Page
+                </Button>
             </div>
         </div>
     );

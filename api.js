@@ -316,7 +316,7 @@ app.put("/api/task/markDone/:TaskID", async (req, res) => {
 
 // Search Todo + Paginatioin
 app.get("/api/todo/search", async (req, res) => {
-  const { query, userID, page = 1, pageSize = 10 } = req.query; // Defaults to first page, 10 items per page
+  const { query, userID, page, pageSize = 10 } = req.query; // page is page number, 10 items per page
   const db = client.db("locked-in");
 
   const skips = pageSize * (page - 1); // Calculate the number of documents to skip

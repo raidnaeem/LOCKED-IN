@@ -3,7 +3,7 @@ import { Stack, InputGroup, InputLeftElement, Input, Button } from "@chakra-ui/r
 const searchIcon = require('../assets/search-icon.png')
 
 
-function ToDoSearch({searchTasks})
+function ToDoSearch({setQueryTask})
 {
 
     return(
@@ -17,7 +17,7 @@ function ToDoSearch({searchTasks})
                         type='text'
                         placeholder='Search for task'
                         id="searchTask"
-                        onChange={(e) => searchTasks(e.target.value)}
+                        onChange={(e) => setQueryTask(e.target.value)}
                     />
                 </InputGroup>
             </Stack>

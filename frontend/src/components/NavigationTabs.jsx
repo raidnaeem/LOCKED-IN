@@ -11,9 +11,7 @@ const tabSpotifyIcon = require('../assets/tab-spotify.png');
 
 function NavigationTabs({selectedPage}){
     
-    console.log(selectedPage);
     const goToPage = (url) => {
-        console.log(url);
         window.location.href = `/${url}`;
     };
 
