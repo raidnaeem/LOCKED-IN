@@ -314,26 +314,31 @@ app.put("/api/task/markDone/:TaskID", async (req, res) => {
   }
 });
 
-// Search Todo
+// Search Todo + Paginatioin
 app.get("/api/todo/search", async (req, res) => {
-  const { query, userID } = req.query;
+  const { query, userID, page = 1, pageSize = 10 } = req.query; // Defaults to first page, 10 items per page
   const db = client.db("locked-in");
 
+  const skips = pageSize * (page - 1); // Calculate the number of documents to skip
+
   try {
-      const regex = new RegExp(query, 'i'); // the 'i' allows for case-insensitive
+      const regex = new RegExp(query, 'i'); // creates Case-insensitive regex search
       const todos = await db.collection("To-Do")
                              .find({
                                  UserID: parseInt(userID),
                                  Task: { $regex: regex }
                              })
-                             .limit(10) // limiting the reponse to be quick (changed from 5 to 10 for testing)
+                             .skip(skips)
+                             .limit(parseInt(pageSize))
                              .toArray();
+
       res.status(200).json(todos);
   } catch (error) {
       console.error("Error searching todos:", error);
       res.status(500).json({ error: "An error occurred during the search." });
   }
 });
+
 
 //--Calendar Sectioin--//
 
