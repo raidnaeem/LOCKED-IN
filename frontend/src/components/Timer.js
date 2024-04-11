@@ -163,7 +163,7 @@ const Timer = () => {
         className="top-section"
         style={{
           width: '100%',
-          minHeight: '70%',
+          minHeight: '75%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -201,7 +201,7 @@ const Timer = () => {
         className="bottom-section"
         style={{
           width: '100%',
-          minHeight: '70%',
+          minHeight: '75%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
