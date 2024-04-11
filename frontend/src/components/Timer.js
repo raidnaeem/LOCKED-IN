@@ -216,7 +216,7 @@ const Timer = () => {
             type="text"
             value={time.hours}
             onChange={(e) => handleInputChange(e, 'hours')}
-            style={{ position: 'absolute', top: 120, left: 30, width: '50px', textAlign: 'center', fontSize: '32px', background: '#EA7331', fontFamily: 'Poppins', fontWeight: '400' }}
+            style={{ position: 'absolute', top: 140, left: 30, width: '50px', textAlign: 'center', fontSize: '32px', background: '#EA7331', fontFamily: 'Poppins', fontWeight: '400' }}
             disabled={inputsDisabled}
           />
           <span style={{ position: 'relative', top: -27, left: -35, fontSize: '64px', color: 'black', fontFamily: 'Poppins', fontWeight: '400', margin: '0 10px' }}>:</span>
@@ -224,7 +224,7 @@ const Timer = () => {
             type="text"
             value={time.minutes}
             onChange={(e) => handleInputChange(e, 'minutes')}
-            style={{ position: 'absolute', top: 120, left: 135, width: '50px', textAlign: 'center', fontSize: '32px', background: '#EA7331', fontFamily: 'Poppins', fontWeight: '400' }}
+            style={{ position: 'absolute', top: 140, left: 135, width: '50px', textAlign: 'center', fontSize: '32px', background: '#EA7331', fontFamily: 'Poppins', fontWeight: '400' }}
             disabled={inputsDisabled}
           />
           <span style={{ position: 'relative', top: -27, left: 32, fontSize: '64px', color: 'black', fontFamily: 'Poppins', fontWeight: '400', margin: '0 10px' }}>:</span>
@@ -232,15 +232,15 @@ const Timer = () => {
             type="text"
             value={time.seconds}
             onChange={(e) => handleInputChange(e, 'seconds')}
-            style={{ position: 'absolute', top: 120, left: 245, width: '50px', textAlign: 'center', fontSize: '32px', background: '#EA7331', fontFamily: 'Poppins', fontWeight: '400' }}
+            style={{ position: 'absolute', top: 140, left: 245, width: '50px', textAlign: 'center', fontSize: '32px', background: '#EA7331', fontFamily: 'Poppins', fontWeight: '400' }}
             disabled={inputsDisabled}
           />
         </div>
 
         <div style={{ display: 'flex', marginTop: '10px' }}>
-          <div style={{ position: 'absolute', top: 130, left: 40, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>hrs</div>
-          <div style={{ position: 'absolute', top: 130, left: 130, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>mins</div>
-          <div style={{ position: 'absolute', top: 130, left: 235, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400' }}>secs</div>
+          <div style={{ position: 'absolute', top: 150, left: 40, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>hrs</div>
+          <div style={{ position: 'absolute', top: 150, left: 130, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>mins</div>
+          <div style={{ position: 'absolute', top: 150, left: 235, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400' }}>secs</div>
         </div>
 
         <div style={{ display: 'flex' }}>
