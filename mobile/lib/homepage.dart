@@ -55,13 +55,17 @@ class _HomePageState extends State<HomePage> {
     Widget page;
     switch (selectedIndex) {
       case 0:
-        page = CalendarPage();
-      case 1:
         page = ToDoPage();
+        break;
+      case 1:
+        page = CalendarPage();
+        break;
       case 2:
         page = TimerPage();
+        break;
       case 3:
         page = AlarmPage();
+        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -111,6 +115,34 @@ class ToDoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<HomePageState>();
+
+    if (appState.favorites.isEmpty) {
+      return Center(
+        child: Text('All tasks complete! Good job!'),
+      );
+    }
+
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Text('You have '
+              '${appState.favorites.length} favorites:'),
+        ),
+        for (var pair in appState.favorites)
+          ListTile(
+            leading: Icon(Icons.favorite),
+            title: Text(pair.asLowerCase),
+          ),
+      ],
+    );
+  }
+}
+
+class CalendarPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<HomePageState>();
     var pair = appState.current;
 
     IconData icon;
@@ -147,34 +179,6 @@ class ToDoPage extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class CalendarPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<HomePageState>();
-
-    if (appState.favorites.isEmpty) {
-      return Center(
-        child: Text('All tasks complete! Good job!'),
-      );
-    }
-
-    return ListView(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: Text('You have '
-              '${appState.favorites.length} favorites:'),
-        ),
-        for (var pair in appState.favorites)
-          ListTile(
-            leading: Icon(Icons.favorite),
-            title: Text(pair.asLowerCase),
-          ),
-      ],
     );
   }
 }
