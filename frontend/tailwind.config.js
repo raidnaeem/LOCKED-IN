@@ -21,8 +21,10 @@ module.exports = {
       beige: '#F4D79E',
       brown: '#855A07',
       black: '#000000',
-      orange_700: '#C15138',
-      orange_500: '#EA7330'
+      orange: colors.orange,
+      amber: colors.amber,
+      zinc: colors.zinc,
+      pink: colors.pink,
     },
     extend: {},
   },

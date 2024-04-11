@@ -23,7 +23,7 @@ function NavigationTabs(){
             <div className='flex items-center justify-center w-[110px] h-[45px] text-3xl' style={{ backgroundImage: `url(${tabCalendarIcon})` }} onClick={() => goToPage("calendar")}>
                 <FaCalendarAlt/>
             </div>
-            <div className='flex items-center justify-center w-[110px] h-[45px] text-3xl' style={{ backgroundImage: `url(${tabTimerIcon})` }}>
+            <div className='flex items-center justify-center w-[110px] h-[45px] text-3xl' style={{ backgroundImage: `url(${tabTimerIcon})` }} onClick={() => goToPage("timer")}>
                 <RiTimerFill/>
             </div>
             <div className='flex items-center justify-center w-[110px] h-[45px] text-3xl' style={{ backgroundImage: `url(${tabSpotifyIcon})` }}>
