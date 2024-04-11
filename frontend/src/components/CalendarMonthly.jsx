@@ -1,7 +1,7 @@
 import React from 'react';
 import './Calendar.css';
-addButton = require('../assets/AddButton.png');
-searchButton = require('../assets/SearchEvent.png');
+const addButton = require('../assets/AddButton.png');
+const searchButton = require('../assets/SearchEvent.png');
 
 
 const CalendarMonthly = () => {
