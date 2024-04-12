@@ -3,10 +3,6 @@ import { FaListCheck, FaSpotify } from "react-icons/fa6";
 import { FaCalendarAlt} from "react-icons/fa";
 import { RiTimerFill } from "react-icons/ri";
 import './style_tabs.css'
-const tabListIcon = require('../assets/tab-list.png');
-const tabCalendarIcon = require('../assets/tab-calendar.png');
-const tabTimerIcon = require('../assets/tab-timer.png');
-const tabSpotifyIcon = require('../assets/tab-spotify.png');
 
 
 function NavigationTabs({selectedPage}){

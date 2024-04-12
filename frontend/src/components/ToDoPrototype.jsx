@@ -4,7 +4,8 @@ import bp from './Path.js';
 import ToDoSearch from './ToDoSearch.jsx';
 import ToDoItem from './ToDoItem.jsx';
 import ToDoAdd from './ToDoAdd.jsx';
-import { Button, Checkbox, CheckboxGroup } from "@chakra-ui/react";
+import { Button, Input, InputGroup, InputLeftAddon, InputRightAddon, CheckboxGroup } from "@chakra-ui/react";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import './style_ToDo.css'
 
 function ToDoPrototype()
@@ -177,7 +178,7 @@ function ToDoPrototype()
             {/*Title and Clear Button*/}
             <div className='flex items-center justify-between pr-5'>
                 <h1 className='text-[50px] text-bold pl-4'>
-                    To-Do List {pageNumber}
+                    To-Do List
                 </h1>
                 <Button onClick={clearCompleted} colorScheme='yellow'>
                     Clear Done
@@ -199,15 +200,26 @@ function ToDoPrototype()
                     createTask={createTask}
                 />
             </div>
-            {/*Pagination Buttons*/}
-            <div className='flex items-center justify-center pr-5'>
-                <Button onClick={() => changePage(pageNumber - 1)} colorScheme='yellow'>
-                    Prev Page
-                </Button>
+            {/*Pagination*/}
+            <div className='flex items-center justify-center'>
+                <h5 className='mr-5'>
+                    Page
+                </h5>
+                <InputGroup w='50%'>
+                    <InputLeftAddon>
+                        <Button onClick={() => changePage(pageNumber - 1)} isDisabled={pageNumber === 1}>
+                            <MdKeyboardArrowLeft />
+                        </Button>
+                    </InputLeftAddon>
+                    <Input w='30%' placeholder={pageNumber}>
 
-                <Button onClick={() => changePage(pageNumber + 1)} colorScheme='yellow'>
-                    Next Page
-                </Button>
+                    </Input>
+                    <InputRightAddon>
+                        <Button onClick={() => changePage(pageNumber + 1)}>
+                            <MdKeyboardArrowRight />
+                        </Button>
+                    </InputRightAddon>
+                </InputGroup>
             </div>
         </div>
     );
