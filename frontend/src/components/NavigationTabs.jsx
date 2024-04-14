@@ -12,7 +12,7 @@ function NavigationTabs({selectedPage}){
     };
 
     return (   
-        <div className='flex justify-end fixed top-0 right-0 mr-4 mt-4'>
+        <div className='flex'>
             <div className={`flex items-center justify-center w-[120px] h-[45px] text-3xl cursor-pointer bg-[#FEF49C] rounded-tl-[500px] rounded-tr-[500px] border-slate-500 border-b-2 ${selectedPage === "planner-tab" ? 'selected-tab' : ''}`} onClick={() => goToPage("planner")}>
                 <FaListCheck/>
             </div>

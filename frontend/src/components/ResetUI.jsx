@@ -52,8 +52,8 @@ function ResetUI()
             <div className="sm:w-4/5 p-4 relative max-w-[800px]">
 
                 {/*Rectangles*/}
-                <div className="bg-blue relative z-10 top-10 left-12 h-[450px] max-w-[1200px] rounded" style={{boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.12)' }}>
-                <div className="bg-white relative z-10 bottom-3 right-3 h-[450px] max-w-[1200px] flex flex-col justify-start items-center rounded" style={{boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.12)' }}>
+                <div className="bg-blue relative z-10 top-10 left-12 h-[350px] max-w-[1200px] rounded" style={{boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.12)' }}>
+                <div className="bg-white relative z-10 bottom-3 right-3 h-[350px] max-w-[1200px] flex flex-col justify-start items-center rounded" style={{boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.12)' }}>
 
                     <div className="text-slate-600 w-full text-center text-xl p-10" style={{commonTextStyle}}>Enter your email to reset your password</div>
                     <form onSubmit={requestReset} className='text-center'>
@@ -90,32 +90,6 @@ function ResetUI()
                         {/*Register Feedback Message*/}
                         <div id="requestResult" className='text-center text-red-600 text-md p-2' style={{commonTextStyle}}>{message}</div>
                     </form>
-
-                    {/*Navigate to Login*/}
-                    <Button 
-                        className='mt-7 p-6'
-                        style={{background: 'white', border: '1px #4A5568 solid', commonTextStyle, fontSize: 24}}
-                        onClick={() => window.location.href = './'}
-                        onMouseEnter={(e) => {
-                            e.target.style.backgroundColor = '#4a5568';
-                            e.target.style.color = 'white';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.target.style.backgroundColor = 'white';
-                            e.target.style.color = '#4a5568';
-                        }}
-                        onMouseDown={(e) => {
-                            e.target.style.backgroundColor = 'black';
-                            e.target.style.color = 'white';
-                        }}
-                        onMouseUp={(e) => {
-                            e.target.style.backgroundColor = '#4a5568';
-                            e.target.style.color = 'white';
-                        }}
-                        >
-                        Back to Login
-                    </Button>
-
                 </div>
                 </div>
             </div>

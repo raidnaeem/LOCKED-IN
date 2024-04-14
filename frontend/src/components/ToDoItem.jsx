@@ -27,7 +27,7 @@ function ToDoItem({taskName, doneStatus, taskID, onMark, deleteTask}){
     }
 
     return (   
-        <div id={`task-${taskID}`} className={`w-[98%] flex justify-between items-center pl-5 pr-6 pt-3 pb-3 ${isHovered ? 'bg-gray' : 'bg-white'}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}             >
+        <div id={`task-${taskID}`} className={`w-[100%] flex rounded-md justify-between items-center pl-5 pr-5 pt-3 pb-3 ${isHovered ? 'bg-gray' : 'bg-white'}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}             >
             <Checkbox colorScheme='yellow' border='brown' isChecked={doneStatus} onChange={handleCheckboxChange} size='lg' spacing={6}>
                 <span className='text-[20px]'>
                     {taskName}

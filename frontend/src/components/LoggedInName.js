@@ -1,6 +1,6 @@
 import React from 'react';
 
-function LoggedInName()
+function LoggedIn()
 {
 	
     var _ud = localStorage.getItem('user_data');
@@ -39,4 +39,4 @@ function LoggedInName()
 
 };
 
-export default LoggedInName;
+export default LoggedIn;

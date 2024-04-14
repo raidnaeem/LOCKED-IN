@@ -7,7 +7,7 @@ function ToDoSearch({setQueryTask})
 {
 
     return(
-        <div className='p-2'>
+        <div className='pl-2 pr-2 pt-5 pb-4'>
             <Stack direction='row' spacing={5}>
                 <InputGroup>
                     <InputLeftElement>

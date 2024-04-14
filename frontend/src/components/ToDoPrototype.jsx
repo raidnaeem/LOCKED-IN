@@ -159,7 +159,7 @@ function ToDoPrototype()
     const clearCompleted = async event =>
     {
         event.preventDefault();
-        if(window.confirm("Clear all completed tasks?"))
+        if(window.confirm("Clear all completed tasks on this page?"))
         {
             var i;
             for(i = 0; i < tasks.length; i++)
@@ -170,14 +170,15 @@ function ToDoPrototype()
                     deleteTask(currTask._id);
                 }
             }
+            setPageNumber(pageNumber);
         }
     }
 
     return(
-        <div className='w-1/2 relative left-1/4'>
+        <div className='w-1/2 relative left-1/4 bg-white rounded-xl'>
             {/*Title and Clear Button*/}
-            <div className='flex items-center justify-between pr-5'>
-                <h1 className='text-[50px] text-bold pl-4'>
+            <div className='flex items-center justify-between pl-5 pr-5 rounded-t-xl bg-brown bg-opacity-70'>
+                <h1 className='text-[50px] text-bold text-white underline'>
                     To-Do List
                 </h1>
                 <Button onClick={clearCompleted} colorScheme='yellow'>
@@ -185,7 +186,7 @@ function ToDoPrototype()
                 </Button>
             </div>  
             {/*Search, List Items, Add*/}
-            <div>
+            <div className='min-h-[720px]'>
                 <ToDoSearch
                     setQueryTask={setQueryTask}
                 />
@@ -201,17 +202,17 @@ function ToDoPrototype()
                 />
             </div>
             {/*Pagination*/}
-            <div className='flex items-center justify-center'>
-                <h5 className='mr-5'>
+            <div className='flex items-center justify-center pb-5'>
+                <h5 className='mr-5 hidden md:block'>
                     Page
                 </h5>
-                <InputGroup w='50%'>
+                <InputGroup w='40%'>
                     <InputLeftAddon>
                         <Button onClick={() => changePage(pageNumber - 1)} isDisabled={pageNumber === 1}>
                             <MdKeyboardArrowLeft />
                         </Button>
                     </InputLeftAddon>
-                    <Input w='30%' placeholder={pageNumber}>
+                    <Input className='hidden md:block' w='30%' placeholder={pageNumber}>
 
                     </Input>
                     <InputRightAddon>

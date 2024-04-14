@@ -38,25 +38,14 @@
   align-items: center;
 }
 
-.addEvent {
+.addEvent, .searchEvent{
   display: flex;
   align-items: center;
   font-size: 40px;
   font-family: 'Roboto', sans-serif;
 }
 
-.addEventButton {
+.addEventButton, .searchEventButton {
   width: 60px;
   height: 60px;
 }
-
-.searchEvent {
-  font-size: 40px;
-  font-family: 'Roboto', sans-serif;
-}
-
-.searchEventButton {
-    width: 60px;
-    height: 60px;
-  }
-  
