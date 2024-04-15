@@ -1,6 +1,7 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'todo.dart';
 
 class HomePageScreen extends StatelessWidget {
   const HomePageScreen({super.key});
@@ -48,7 +49,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var selectedIndex = 0; 
+  var selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -111,38 +112,185 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class ToDoPage extends StatelessWidget {
+class ToDoPage extends StatefulWidget {
+  @override
+  State<ToDoPage> createState() => _ToDoPageState();
+}
+
+class _ToDoPageState extends State<ToDoPage> {
+  final todosList = ToDo.todoList();
+  List<ToDo> _foundToDo = [];
+  final _todoController = TextEditingController();
+
+  @override
+  void initState() {
+    _foundToDo = todosList;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     //var appState = context.watch<HomePageState>();
-
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 207, 80, 41),
-      body: Container(
-          padding: EdgeInsets.symmetric(horizontal: 15),
-          child: Column (
-            children: [
-              searchBox(),
-              Expanded(
-                child: ListView(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(
-                        top: 50,
-                        bottom: 20,
-                      ),
+      body: Stack(
+        children: [
+          Container(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
+                children: [
+                  Container(
+                      padding: EdgeInsets.only(top: 50), child: searchBox()),
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(
+                            top: 0,
+                            bottom: 20,
+                            left: 5,
+                          ),
+                          child: Text(
+                            'To-Do',
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        for (ToDo todo in _foundToDo.reversed)
+                          ToDoItem(
+                            todo: todo,
+                            onToDoChanged: _handleToDoChange,
+                            onDeleteItem: _deleteToDoItem,
+                          ),
+                      ],
                     ),
-                    ToDoItem(),
-                  ],
+                  )
+                ],
+              )),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Row(children: [
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(
+                    bottom: 20,
+                    right: 20,
+                    left: 20,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color.fromARGB(255, 161, 50, 50),
+                        offset: Offset(0.0, 0.0),
+                        blurRadius: 10.0,
+                        spreadRadius: 0.0,
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: TextField(
+                    controller: _todoController,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(
+                        left: 15
+                      ),
+                      hintText: 'Add a new todo item',
+                      border: InputBorder.none
+                    ),
+                  ),
                 ),
+              ),
+              Container(
+                margin: EdgeInsets.only(
+                  bottom: 20, 
+                  right: 20
+                ),
+                child: ElevatedButton(
+                  onPressed: () {
+                    _addToDoItem(_todoController.text);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.amber,
+                    minimumSize: Size(60,60),
+                    elevation: 10,
+                  ),
+                  child: Text(
+                    '+', 
+                    style: TextStyle(fontSize: 40),
+                  )
+                )
               )
-            ],
-          )
-        )
-      );
+            ]),
+          ),
+        ],
+      )
+    );
+  }
+
+  Widget searchBox() {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 20),
+    decoration: BoxDecoration(
+        color: Colors.white, borderRadius: BorderRadius.circular(20)),
+    child: TextField(
+      onChanged: (value) => _runFilter(value),
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.all(0),
+        prefixIcon: Icon(
+          Icons.search,
+          color: Color.fromARGB(255, 107, 104, 104),
+          size: 20,
+        ),
+        prefixIconConstraints: BoxConstraints(maxHeight: 20, minWidth: 25),
+        border: InputBorder.none,
+        hintText: 'Search',
+        hintStyle: TextStyle(color: Colors.grey),
+      ),
+    ),
+  );
+}
+  
+  void _handleToDoChange(ToDo todo) {
+    setState (() {
+      todo.isDone = !todo.isDone;
+    });
+  }
+
+  void _deleteToDoItem(String id) {
+    setState (() {
+      todosList.removeWhere((item) => item.id == id);
+    });
+  }
+
+  void _addToDoItem(String toDo) {
+    setState (() {
+      todosList.add(ToDo(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        todoText: toDo
+      ));
+    });
+    _todoController.clear();
+  }
+
+  void _runFilter(String enteredKeyword) {
+    List<ToDo> results = [];
+    if (enteredKeyword.isEmpty) {
+      results = todosList;
+    } else {
+      results = todosList
+        .where((item) => item.todoText!
+          .toLowerCase()
+          .contains(enteredKeyword.toLowerCase()))
+        .toList();
+    }
+    setState(() {
+      _foundToDo = results;
+    });
   }
 }
-
 
 class CalendarPage extends StatelessWidget {
   @override
@@ -294,25 +442,32 @@ class BigCard extends StatelessWidget {
     return Card(
       color: theme.colorScheme.primary,
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Text(
-          pair.asLowerCase,
-          style: style,
-          semanticsLabel: "${pair.first} ${pair.second}",
-        )
-      ),
+          padding: const EdgeInsets.all(20.0),
+          child: Text(
+            pair.asLowerCase,
+            style: style,
+            semanticsLabel: "${pair.first} ${pair.second}",
+          )),
     );
   }
 }
 
 class ToDoItem extends StatelessWidget {
-  const ToDoItem({Key? key}) : super(key: key);
+  final ToDo todo;
+  final onToDoChanged;
+  final onDeleteItem;
+
+  const ToDoItem({Key? key, required this.todo, required this.onToDoChanged, 
+                  required this.onDeleteItem}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(bottom: 15),
       child: ListTile(
         onTap: () {
           print('Clicked on ToDo item.');
+          onToDoChanged(todo);
         },
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -320,15 +475,15 @@ class ToDoItem extends StatelessWidget {
         contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
         tileColor: const Color.fromARGB(255, 163, 52, 18),
         leading: Icon(
-          Icons.check_box,
+          todo.isDone ? Icons.check_box : Icons.check_box_outline_blank,
           color: Color.fromARGB(255, 107, 104, 104),
         ),
         title: Text(
-          'Work on POOSD project',
+          todo.todoText!,
           style: TextStyle(
             fontSize: 16,
             color: Colors.black,
-            decoration: TextDecoration.lineThrough,
+            decoration: todo.isDone ? TextDecoration.lineThrough : null,
           ),
         ),
         trailing: Container(
@@ -344,38 +499,15 @@ class ToDoItem extends StatelessWidget {
             color: Colors.white,
             iconSize: 18,
             icon: Icon(Icons.delete),
-            onPressed: () {},
+            onPressed: () {
+              print('Pressed Delete button');
+              onDeleteItem(todo.id);
+            },
           ),
         ),
       ),
     );
   }
-  
 }
 
-Widget searchBox() {
-  return Container (
-    padding: EdgeInsets.symmetric(horizontal: 15),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(20)
-    ),
-    child: TextField(
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.all(0),
-        prefixIcon: Icon(
-          Icons.search,
-          color: Color.fromARGB(255, 107, 104, 104),
-          size: 20,
-        ),
-        prefixIconConstraints: BoxConstraints(
-          maxHeight: 20,
-          minWidth: 25
-        ),
-        border: InputBorder.none,
-        hintText: 'Search',
-        hintStyle: TextStyle(color: Colors.grey),
-      ),
-    ),
-  );
-}
+
