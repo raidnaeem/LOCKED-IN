@@ -12,7 +12,7 @@ const TimerPage = () =>
       <div>
         <div className='flex justify-between h-1/5 bg-white'>
           <PageTitle />
-          <NavigationTabs selectedPage={"calendar-tab"}/>
+          <NavigationTabs selectedPage={"timer-tab"}/>
         </div>
         <LoggedInName />
         <Timer />

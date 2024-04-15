@@ -17,15 +17,14 @@
 }
 
 .header {
-  width: 100%;
+  width: 80%;
   height: 20%;
   display: flex;
-  justify-content: space-around;
   align-items: center;
 }
 
 .month, .year {
-  width: 230px;
+  padding-inline: 30px;
   font-size: 50px;
   font-family: 'Montagu Slab', sans-serif;
 }
@@ -48,4 +47,56 @@
 .addEventButton, .searchEventButton {
   width: 60px;
   height: 60px;
+}
+
+.calendar-body {
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.weekday {
+  width: 14%;
+  text-align: center;
+  background-color: #F7C666;
+  opacity: 80%;
+  border: 1px solid black;
+}
+
+.table-content {
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  box-sizing: border-box;
+} 
+
+.calendar-day {
+  width: 14%;
+  height: 100px;
+  position: relative;
+  background-color: #F0DCB4;
+  border: 1px solid black;
+}
+
+.calendar-day:hover {
+  background-color: rgba(237, 215, 155);
+}
+
+.calendar-day p {
+  position: absolute;
+  right: 15px;
+  font-size: 20px;
+  color: #a6a6a6;
+}
+
+.current-month p {
+  color: #000000;
+}
+
+.today p {
+  color: #cc0000;
+  font-weight: bold;
 }

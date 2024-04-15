@@ -25,6 +25,7 @@ module.exports = {
       amber: colors.amber,
       zinc: colors.zinc,
       pink: colors.pink,
+      bamboo: '#F0DCB4',
     },
     extend: {},
   },
