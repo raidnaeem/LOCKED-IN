@@ -29,7 +29,7 @@ function Register() {
 
     // Check length
     if (registerPassword.length < 8) {
-        passwordErrors.push('Password must be at least 8 characters long.');
+        passwordErrors.push('Password must be 8 characters long.');
     }
 
     // Check for uppercase letter
