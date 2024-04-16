@@ -16,6 +16,10 @@ const Timer = () => {
     }
   };
 
+  useEffect(() => {
+    localStorage.setItem('timer', JSON.stringify(time));
+  }, [time]);
+
   const handleStartStop = () => {
     setIsRunning((prev) => !prev);
   };
@@ -92,6 +96,13 @@ const Timer = () => {
       }));
     }
   };
+
+  // Reset timer when time changes
+  useEffect(() => {
+    if (!isRunning) {
+      setTime(storedTime); // Restore time when paused or stopped
+    }
+  }, [storedTime, isRunning]);
 
   useEffect(() => {
     document.addEventListener('mousemove', handleMouseMove);
