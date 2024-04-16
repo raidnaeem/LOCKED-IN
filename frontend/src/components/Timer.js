@@ -66,37 +66,17 @@ const Timer = () => {
 
   const handleInputChange = (e, type) => {
     let value = parseInt(e.target.value) || 0;
-
+  
     if (type === 'hours') {
-      const hours = value;
-      const minutes = time.minutes;
-
-      setTime((prevTime) => ({
-        ...prevTime,
-        hours: hours,
-        minutes: minutes,
-      }));
-    } else if (type === 'minutes') {
-      const totalMinutes = time.hours * 60 + value;
-      const hours = Math.floor(totalMinutes / 60);
-      const minutes = totalMinutes % 60;
-
-      setTime((prevTime) => ({
-        ...prevTime,
-        hours: hours,
-        minutes: minutes,
-      }));
-    } else {
-      const totalSeconds = time.minutes * 60 + value;
-      const minutes = Math.floor(totalSeconds / 60);
-      const seconds = totalSeconds % 60;
-
-      setTime((prevTime) => ({
-        ...prevTime,
-        minutes: minutes,
-        seconds: seconds,
-      }));
+      value = Math.max(0, value); // Ensure hours are non-negative
+    } else if (type === 'minutes' || type === 'seconds') {
+      value = Math.max(0, Math.min(type === 'minutes' ? 59 : 59, value)); // Limit minutes/seconds to valid range
     }
+  
+    setTime((prevTime) => ({
+      ...prevTime,
+      [type]: value,
+    }));
   };
 
   // Reset timer when time changes
@@ -118,37 +98,37 @@ const Timer = () => {
 
   useEffect(() => {
     let interval;
-
+  
     if (isRunning) {
       interval = setInterval(() => {
         setTime((prevTime) => {
           let { hours, minutes, seconds } = prevTime;
-
+  
           if (hours === 0 && minutes === 0 && seconds === 0) {
-            setTime({ hours: 0, minutes: 25, seconds: 0 });
             playSound();
             setIsRunning(false);
-          } else {
-            if (seconds === 0) {
-              if (minutes === 0 && hours > 0) {
-                hours--;
-                minutes = 59;
-              } else if (minutes > 0) {
-                minutes--;
-              }
-              seconds = 59;
-            } else {
-              seconds--;
-            }
+            return initialTime; // Reset back to initial time after timer ends
           }
-
+  
+          if (seconds === 0) {
+            if (minutes === 0 && hours > 0) {
+              hours--;
+              minutes = 59;
+            } else if (minutes > 0) {
+              minutes--;
+            }
+            seconds = 59;
+          } else {
+            seconds--;
+          }
+  
           return { hours, minutes, seconds };
         });
       }, 1000);
     } else {
       clearInterval(interval);
     }
-
+  
     return () => clearInterval(interval);
   }, [isRunning]);
 
