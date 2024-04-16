@@ -1,18 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
-import debounce from 'lodash/debounce'; // Import debounce from lodash
 const Sound = require('../assets/TimesUp.mp3')
 
-
 const Timer = () => {
-  const initialTime = { hours: 0, minutes: 25, seconds: 0 };
+  const [time, setTime] = useState({ hours: 0, minutes: 25, seconds: 0 });
   const [isRunning, setIsRunning] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [note, setNote] = useState('');
   const timerRef = useRef(null);
   const audioRef = useRef(null);
-  const storedTime = JSON.parse(localStorage.getItem('timer')) || initialTime;
-  const [time, setTime] = useState(storedTime);
 
   const playSound = () => {
     if (audioRef.current) {
@@ -67,27 +63,38 @@ const Timer = () => {
   };
 
   const handleInputChange = (e, type) => {
-    let value = e.target.value;
-  
-    // Validate input based on type
-    if (type === 'hours' || type === 'minutes' || type === 'seconds') {
-      // Allow only numeric characters
-      value = value.replace(/\D/g, ''); // Remove non-numeric characters
-  
-      // Ensure the value is within a valid range
-      if (value === '') {
-        value = '0'; // Default to 0 if the input is empty
-      } else {
-        const numericValue = parseInt(value, 10);
-        value = Math.max(0, Math.min(type === 'minutes' ? 59 : 59, numericValue));
-      }
+    let value = parseInt(e.target.value) || 0;
+
+    if (type === 'hours') {
+      const hours = value;
+      const minutes = time.minutes;
+
+      setTime((prevTime) => ({
+        ...prevTime,
+        hours: hours,
+        minutes: minutes,
+      }));
+    } else if (type === 'minutes') {
+      const totalMinutes = time.hours * 60 + value;
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+
+      setTime((prevTime) => ({
+        ...prevTime,
+        hours: hours,
+        minutes: minutes,
+      }));
+    } else {
+      const totalSeconds = time.minutes * 60 + value;
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+
+      setTime((prevTime) => ({
+        ...prevTime,
+        minutes: minutes,
+        seconds: seconds,
+      }));
     }
-  
-    // Update the corresponding time field in state
-    setTime((prevTime) => ({
-      ...prevTime,
-      [type]: value,
-    }));
   };
 
   // Reset timer when time changes
