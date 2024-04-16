@@ -1,53 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import './Calendar.css';
 
-const DayGrid = ({ currentDay, currentMonth, currentYear }) => {
-  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate(); // Get total days in current month
+function DayGrid({currentDay, currentMonth, currentYear}) {
+    const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
+    const startingWeekday = firstDayOfMonth.getDay() === 0 ? 7 : firstDayOfMonth.getDay(); 
+    let currentDays = [];
+  
+    //up to 6 weeks (42 days) to show prev and next weeks of month
+    for (let i = 0; i < 42; i++) {
 
-  // Initialize state to track user input for each day
-  const [reminders, setReminders] = useState(() => {
-    // Retrieve reminders from localStorage or initialize with empty strings
-    const savedReminders = JSON.parse(localStorage.getItem('reminders')) || [];
-    return Array(daysInMonth).fill('').map((_, index) => savedReminders[index] || '');
-  });
+        //for determing offset in beginning of month
+        if (i === 0) {
+            firstDayOfMonth.setDate(firstDayOfMonth.getDate() - startingWeekday);
+        } else {
+            firstDayOfMonth.setDate(firstDayOfMonth.getDate() + 1);
+        }
 
-  const handleReminderChange = (dayIndex, event) => {
-    const newReminders = [...reminders];
-    newReminders[dayIndex] = event.target.value;
-    setReminders(newReminders);
+        let calendarDay = {
+            currentMonth: (firstDayOfMonth.getMonth() === currentMonth),
+            date: (new Date(firstDayOfMonth)),
+            month: firstDayOfMonth.getMonth(),
+            number: firstDayOfMonth.getDate(),
+            today: (firstDayOfMonth.toDateString() === currentDay.toDateString()),
+            year: firstDayOfMonth.getFullYear()
+        }
 
-    // Save updated reminders to localStorage
-    localStorage.setItem('reminders', JSON.stringify(newReminders));
-  };
-
-  useEffect(() => {
-    // Update reminders in state with data from localStorage when component mounts
-    const savedReminders = JSON.parse(localStorage.getItem('reminders')) || [];
-    setReminders(savedReminders);
-  }, [daysInMonth]); // Trigger effect when daysInMonth changes (i.e., when month/year change)
-
-  return (
-    <div className="grid-container">
-      {/* Render each day cell */}
-      {[...Array(daysInMonth)].map((_, index) => {
-        const dayOfMonth = index + 1;
-        const isCurrentDay = currentDay.getDate() === dayOfMonth;
-        const dayClassName = `day ${isCurrentDay ? 'current-day' : ''}`;
-
-        return (
-          <div key={index} className={dayClassName}>
-            <div className="day-number">{dayOfMonth}</div>
-            {/* Editable input for reminders */}
-            <input
-              type="text"
-              value={reminders[index]}
-              onChange={(e) => handleReminderChange(index, e)}
-              placeholder="Add reminder..."
-            />
-          </div>
-        );
-      })}
-    </div>
-  );
-};
-
-export default DayGrid;
+        currentDays.push(calendarDay);
+    }
+  
+    return (
+      <div className="table-content">
+        {
+          currentDays.map((day) => {
+            return (
+              <div className={"calendar-day" + (day.currentMonth ? " current-month" : "") + (day.today ? " today" : "")}>
+                <p>
+                    {day.number}
+                </p>
+              </div>
+            )
+          })
+        }
+      </div>
+    )
+  }
+  
+  export default DayGrid;
