@@ -43,19 +43,19 @@ function Register() {
         }
 
         // Check for all 3
-        if (registerPassword.length < 10 && !/[!@#$%^&*]/.test(registerPassword) && !/[A-Z]/.test(registerPassword)) {
+        if (registerPassword.length < 8 && !/[!@#$%^&*]/.test(registerPassword) && !/[A-Z]/.test(registerPassword)) {
             setMessage('Password must be 8 characters, contain uppercase letter, and a special character.\n');
             return;
         }
 
         // Check for both length and uppercase letter
-        if (registerPassword.length < 10 && !/[A-Z]/.test(registerPassword)) {
+        if (registerPassword.length < 8 && !/[A-Z]/.test(registerPassword)) {
             setMessage('Password must be 8 characters long and contain an uppercase letter.\n');
             return;
         }
 
         // Check for both length and special character
-        if (registerPassword.length < 10 && !/[!@#$%^&*]/.test(registerPassword)) {
+        if (registerPassword.length < 8 && !/[!@#$%^&*]/.test(registerPassword)) {
             setMessage('Password must be 8 characters long and contain a special character.\n');
             return;
         }
