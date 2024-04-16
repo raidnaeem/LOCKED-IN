@@ -66,21 +66,29 @@ const Timer = () => {
     setIsDragging(false);
   };
 
-  // Debounced function to handle input change
-  const handleInputChange = debounce((e, type) => {
-    let value = parseInt(e.target.value) || 0;
-
-    if (type === 'hours') {
-      value = Math.max(0, value);
-    } else if (type === 'minutes' || type === 'seconds') {
-      value = Math.max(0, Math.min(type === 'minutes' ? 59 : 59, value));
+  const handleInputChange = (e, type) => {
+    let value = e.target.value;
+  
+    // Validate input based on type
+    if (type === 'hours' || type === 'minutes' || type === 'seconds') {
+      // Allow only numeric characters
+      value = value.replace(/\D/g, ''); // Remove non-numeric characters
+  
+      // Ensure the value is within a valid range
+      if (value === '') {
+        value = '0'; // Default to 0 if the input is empty
+      } else {
+        const numericValue = parseInt(value, 10);
+        value = Math.max(0, Math.min(type === 'minutes' ? 59 : 59, numericValue));
+      }
     }
-
+  
+    // Update the corresponding time field in state
     setTime((prevTime) => ({
       ...prevTime,
       [type]: value,
     }));
-  }, 300); // Debounce with a delay of 300ms
+  };
 
   // Reset timer when time changes
   useEffect(() => {
