@@ -29,40 +29,40 @@ function Register() {
 
         // Check length
         if (registerPassword.length < 8) {
-            passwordErrors.push('Password must be 8 characters.\n');
+            passwordErrors.push('Password must be 8 characters long.\n');
         }
 
         // Check for uppercase letter
         if (!/[A-Z]/.test(registerPassword)) {
-            passwordErrors.push('Missing uppercase letter.\n');
+            passwordErrors.push('Password must contain an uppercase letter.\n');
         }
 
         // Check for special character
         if (!/[!@#$%^&*]/.test(registerPassword)) {
-            passwordErrors.push('Missing special character\n');
+            passwordErrors.push('Password must contain a special character.\n');
         }
 
         // Check for all 3
         if (registerPassword.length < 10 && !/[!@#$%^&*]/.test(registerPassword) && !/[A-Z]/.test(registerPassword)) {
-            setMessage('Password must be 8 characters, contain uppercase letter, a special character.\n');
+            setMessage('Password must be 8 characters, contain uppercase letter, and a special character.\n');
             return;
         }
 
         // Check for both length and uppercase letter
         if (registerPassword.length < 10 && !/[A-Z]/.test(registerPassword)) {
-            setMessage('Password must be 8 characters and missing uppercase letter.\n');
+            setMessage('Password must be 8 characters long and contain an uppercase letter.\n');
             return;
         }
 
         // Check for both length and special character
         if (registerPassword.length < 10 && !/[!@#$%^&*]/.test(registerPassword)) {
-            setMessage('Password must be 8 characters and missing special character.\n');
+            setMessage('Password must be 8 characters long and contain a special character.\n');
             return;
         }
 
         // Check uppercase letter and special character
         if (!/[!@#$%^&*]/.test(registerPassword) && !/[A-Z]/.test(registerPassword)) {
-            setMessage('Missing uppercase letter and special character.\n');
+            setMessage('Password must contain an uppercase letter and a special character.\n');
             return;
         }
 

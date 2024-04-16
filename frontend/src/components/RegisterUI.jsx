@@ -114,7 +114,7 @@ const RegisterUI = ({doRegister, setRegisterFName, setRegisterLName, setRegister
             </Button>
         </Stack>
             {/*Register Feedback Message*/}
-            <div id="registerResult" className='text-center text-red-600 text-md p-2 max-w-[300px] h-16 ' style={{commonTextStyle}}>{registerMessage}</div>
+            <div id="registerResult" className='text-center text-red-600 text-md p-2 max-w-[400px] h-18 ' style={{commonTextStyle}}>{registerMessage}</div>
         </form>
 
         {/*Navigate to Login*/}
