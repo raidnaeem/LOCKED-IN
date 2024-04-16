@@ -2,13 +2,15 @@ import React, { useState, useRef, useEffect } from 'react';
 const Sound = require('../assets/TimesUp.mp3')
 
 const Timer = () => {
-  const [time, setTime] = useState({ hours: 0, minutes: 25, seconds: 0 });
+  const initialTime = { hours: 0, minutes: 25, seconds: 0 };
   const [isRunning, setIsRunning] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [note, setNote] = useState('');
   const timerRef = useRef(null);
   const audioRef = useRef(null);
+  const storedTime = JSON.parse(localStorage.getItem('timer')) || initialTime;
+  const [time, setTime] = useState(storedTime);
 
   const playSound = () => {
     if (audioRef.current) {
