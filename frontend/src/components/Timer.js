@@ -64,21 +64,21 @@ const Timer = () => {
     setIsDragging(false);
   };
 
-  const handleInputChange = (e, type) => {
-    const value = parseInt(e.target.value);
-  
-    if (isNaN(value)) {
-      setTime((prevTime) => ({
-        ...prevTime,
-        [type]: 0,
-      }));
-    } else {
-      setTime((prevTime) => ({
-        ...prevTime,
-        [type]: Math.max(0, Math.min(type === 'minutes' ? 59 : 59, value)),
-      }));
+  // Debounced function to handle input change
+  const handleInputChange = debounce((e, type) => {
+    let value = parseInt(e.target.value) || 0;
+
+    if (type === 'hours') {
+      value = Math.max(0, value);
+    } else if (type === 'minutes' || type === 'seconds') {
+      value = Math.max(0, Math.min(type === 'minutes' ? 59 : 59, value));
     }
-  };
+
+    setTime((prevTime) => ({
+      ...prevTime,
+      [type]: value,
+    }));
+  }, 300); // Debounce with a delay of 300ms
 
   // Reset timer when time changes
   useEffect(() => {
