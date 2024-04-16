@@ -304,95 +304,145 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  @override  
-  Widget build(BuildContext context) {  
-    return Scaffold(  
-      appBar: AppBar(  
-        title: Text('Calendar'),  
-      ),  
-      body: SingleChildScrollView(  
-        child: Column(  
-          crossAxisAlignment: CrossAxisAlignment.start,  
-          children: <Widget>[  
+  late final ValueNotifier<List<Event>> _selectedEvents;
+  late final Map<DateTime, List<Event>> _events;
+  late final TextEditingController _eventController;
+  late final CalendarFormat _calendarFormat;
+  late final DateTime _focusedDay;
+  late final DateTime _firstDay;
+  late final DateTime _lastDay;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusedDay = DateTime.now();
+    _firstDay = DateTime.utc(2010, 10, 16);
+    _lastDay = DateTime.utc(2030, 3, 14);
+    _calendarFormat = CalendarFormat.month;
+    _events = {};
+    _selectedEvents = ValueNotifier([]);
+    _eventController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _eventController.dispose();
+    _selectedEvents.dispose();
+    super.dispose();
+  }
+
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    setState(() {
+      _selectedEvents.value = _events[selectedDay] ?? [];
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Calendar'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
             TableCalendar(
-              firstDay: DateTime.utc(2010, 10, 16),
-              lastDay: DateTime.utc(2030, 3, 14),
-              focusedDay: DateTime.now(),
-              
-            )
-            
-          ],  
-        ),  
-        
-      ),  
-      
-    ); 
-     
-  }  
-  
+              firstDay: _firstDay,
+              lastDay: _lastDay,
+              focusedDay: _focusedDay,
+              calendarFormat: _calendarFormat,
+              onFormatChanged: (format) {
+                setState(() {
+                  _calendarFormat = format;
+                });
+              },
+              onDaySelected: _onDaySelected,
+              eventLoader: _getEventsForDay,
+            ),
+            SizedBox(height: 20),
+            _buildEventList(),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: _showAddDialog,
+      ),
+    );
+  }
+
+  List<Event> _getEventsForDay(DateTime day) {
+    return _events[day] ?? [];
+  }
+
+  Widget _buildEventList() {
+    return ValueListenableBuilder<List<Event>>(
+      valueListenable: _selectedEvents,
+      builder: (context, events, _) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: events
+              .map((event) => ListTile(
+                    title: Text(event.title),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        setState(() {
+                          _events[_focusedDay]!.remove(event);
+                          _selectedEvents.value = _events[_focusedDay]!;
+                        });
+                      },
+                    ),
+                  ))
+              .toList(),
+        );
+      },
+    );
+  }
+
+  void _showAddDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Add Event'),
+        content: TextField(
+          controller: _eventController,
+          decoration: InputDecoration(labelText: 'Event Title'),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                final newEvent = Event(title: _eventController.text);
+                if (_events[_focusedDay] != null) {
+                  _events[_focusedDay]!.add(newEvent);
+                } else {
+                  _events[_focusedDay] = [newEvent];
+                }
+                _selectedEvents.value = _events[_focusedDay]!;
+                _eventController.clear();
+                Navigator.pop(context);
+              });
+            },
+            child: Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
-class MeetingDataSource extends CalendarDataSource {
-  /// Creates a meeting data source, which used to set the appointment
-  /// collection to the calendar
-  MeetingDataSource(List<Meeting> source) {
-    appointments = source;
-  }
+class Event {
+  final String title;
 
-  @override
-  DateTime getStartTime(int index) {
-    return _getMeetingData(index).from;
-  }
-
-  @override
-  DateTime getEndTime(int index) {
-    return _getMeetingData(index).to;
-  }
-
-  @override
-  String getSubject(int index) {
-    return _getMeetingData(index).eventName;
-  }
-
-  @override
-  Color getColor(int index) {
-    return _getMeetingData(index).background;
-  }
-
-  @override
-  bool isAllDay(int index) {
-    return _getMeetingData(index).isAllDay;
-  }
-
-  Meeting _getMeetingData(int index) {
-    final dynamic meeting = appointments![index];
-    late final Meeting meetingData;
-    if (meeting is Meeting) {
-      meetingData = meeting;
-    }
-
-    return meetingData;
-  }
-}
-
-class Meeting {
-  /// Creates a meeting class with required details.
-  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
-
-  /// Event name which is equivalent to subject property of [Appointment].
-  String eventName;
-
-  /// From which is equivalent to start time property of [Appointment].
-  DateTime from;
-
-  /// To which is equivalent to end time property of [Appointment].
-  DateTime to;
-
-  /// Background which is equivalent to color property of [Appointment].
-  Color background;
-
-  /// IsAllDay which is equivalent to isAllDay property of [Appointment].
-  bool isAllDay;
+  Event({required this.title});
 }
 
 class TimerPage extends StatefulWidget {
