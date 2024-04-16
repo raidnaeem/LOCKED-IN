@@ -36,7 +36,10 @@ dependencies:
   web_socket_channel: ^2.4.4
   jwt_decoder: ^2.0.1
   lucide_icons: ^0.257.0
+  flutter_test:
+    sdk: flutter
   flutter_neat_and_clean_calendar: ^0.3.0+12
+  mockito: ^5.0.0
   intl: ^0.19.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -93,14 +96,6 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
-  fonts:
-    - family: Poppins
-      fonts:
-        - asset: fonts/Poppins-Regular.ttf
-        - asset: fonts/Poppins-Semibold.ttf
-          weight: 600
-        - asset: fonts/Poppins-Bold.ttf
-          weight: 700
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 

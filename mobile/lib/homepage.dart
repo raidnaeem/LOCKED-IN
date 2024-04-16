@@ -2,6 +2,12 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'todo.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';  
+import 'dart:async';
+import 'package:vibration/vibration.dart';
+import 'package:pausable_timer/pausable_timer.dart';
 
 class HomePageScreen extends StatelessWidget {
   const HomePageScreen({super.key});
@@ -49,7 +55,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var selectedIndex = 0;
+  var selectedIndex = 0; 
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +135,7 @@ class _ToDoPageState extends State<ToDoPage> {
   Widget build(BuildContext context) {
     //var appState = context.watch<HomePageState>();
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 207, 80, 41),
+      backgroundColor: Colors.deepOrange,
       body: Stack(
         children: [
           Container(
@@ -180,7 +186,7 @@ class _ToDoPageState extends State<ToDoPage> {
                     color: Colors.white,
                     boxShadow: const [
                       BoxShadow(
-                        color: Color.fromARGB(255, 161, 50, 50),
+                        color: Color.fromARGB(255, 161, 50, 111),
                         offset: Offset(0.0, 0.0),
                         blurRadius: 10.0,
                         spreadRadius: 0.0,
@@ -295,89 +301,246 @@ class _ToDoPageState extends State<ToDoPage> {
   }
 }
 
-class CalendarPage extends StatelessWidget {
+class CalendarPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<HomePageState>();
-    var pair = appState.current;
+  State<CalendarPage> createState() => _CalendarPageState();
+}
 
-    IconData icon;
-    if (appState.favorites.contains(pair)) {
-      icon = Icons.favorite;
-    } else {
-      icon = Icons.favorite_border;
+class _CalendarPageState extends State<CalendarPage> {
+  @override  
+  Widget build(BuildContext context) {  
+    return Scaffold(  
+      appBar: AppBar(  
+        title: Text('Calendar'),  
+      ),  
+      body: SingleChildScrollView(  
+        child: Column(  
+          crossAxisAlignment: CrossAxisAlignment.start,  
+          children: <Widget>[  
+            TableCalendar(
+              firstDay: DateTime.utc(2010, 10, 16),
+              lastDay: DateTime.utc(2030, 3, 14),
+              focusedDay: DateTime.now(),
+              
+            )
+            
+          ],  
+        ),  
+        
+      ),  
+      
+    ); 
+     
+  }  
+  
+}
+
+class MeetingDataSource extends CalendarDataSource {
+  /// Creates a meeting data source, which used to set the appointment
+  /// collection to the calendar
+  MeetingDataSource(List<Meeting> source) {
+    appointments = source;
+  }
+
+  @override
+  DateTime getStartTime(int index) {
+    return _getMeetingData(index).from;
+  }
+
+  @override
+  DateTime getEndTime(int index) {
+    return _getMeetingData(index).to;
+  }
+
+  @override
+  String getSubject(int index) {
+    return _getMeetingData(index).eventName;
+  }
+
+  @override
+  Color getColor(int index) {
+    return _getMeetingData(index).background;
+  }
+
+  @override
+  bool isAllDay(int index) {
+    return _getMeetingData(index).isAllDay;
+  }
+
+  Meeting _getMeetingData(int index) {
+    final dynamic meeting = appointments![index];
+    late final Meeting meetingData;
+    if (meeting is Meeting) {
+      meetingData = meeting;
     }
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          BigCard(pair: pair),
-          SizedBox(height: 10),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  appState.toggleFavorite();
-                },
-                icon: Icon(icon),
-                label: Text('Like'),
-              ),
-              SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  appState.getNext();
-                },
-                child: Text('Next'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+    return meetingData;
   }
 }
 
-class TimerPage extends StatelessWidget {
+class Meeting {
+  /// Creates a meeting class with required details.
+  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
+
+  /// Event name which is equivalent to subject property of [Appointment].
+  String eventName;
+
+  /// From which is equivalent to start time property of [Appointment].
+  DateTime from;
+
+  /// To which is equivalent to end time property of [Appointment].
+  DateTime to;
+
+  /// Background which is equivalent to color property of [Appointment].
+  Color background;
+
+  /// IsAllDay which is equivalent to isAllDay property of [Appointment].
+  bool isAllDay;
+}
+
+class TimerPage extends StatefulWidget {
+  @override
+  State<TimerPage> createState() => _TimerPageState();
+}
+
+class _TimerPageState extends State<TimerPage>{
+  late Timer _timer;
+  int _minutes = 0;
+  int _seconds = 0;
+  int _start = 0;
+  bool _isPaused = false;
+  TextEditingController _minutesController = TextEditingController();
+  TextEditingController _secondsController = TextEditingController();
+
+  void startTimer() {
+    _start = _minutes * 60 + _seconds;
+    if (_start <= 0) return; // Validate input
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (timer) {
+        if (_isPaused) return;
+        setState(() {
+          if (_start < 1) {
+            timer.cancel();
+            // Timer completed, you can handle it here
+          } else {
+            _start--;
+            _minutes = _start ~/ 60; // Update minutes
+            _seconds = _start % 60; // Update seconds
+          }
+        });
+      },
+    );
+  }
+
+  void pauseTimer() {
+    setState(() {
+      _isPaused = true;
+    });
+  }
+
+  void resumeTimer() {
+    setState(() {
+      _isPaused = false;
+    });
+  }
+
+  void resetTimer() {
+    setState(() {
+      _timer.cancel();
+      _start = 0;
+      _minutes = 0;
+      _seconds = 0;
+      _minutesController.clear(); // Clear minutes text field
+      _secondsController.clear(); // Clear seconds text field
+      _isPaused = false;
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    _minutesController.dispose(); // Dispose the minutes controller
+    _secondsController.dispose(); // Dispose the seconds controller
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<HomePageState>();
-    var pair = appState.current;
-
-    IconData icon;
-    if (appState.favorites.contains(pair)) {
-      icon = Icons.favorite;
-    } else {
-      icon = Icons.favorite_border;
-    }
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          BigCard(pair: pair),
-          SizedBox(height: 10),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  appState.toggleFavorite();
-                },
-                icon: Icon(icon),
-                label: Text('Like'),
-              ),
-              SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  appState.getNext();
-                },
-                child: Text('Next'),
-              ),
-            ],
-          ),
-        ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Pausable Timer'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  width: 80,
+                  child: TextField(
+                    controller: _minutesController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Min',
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _minutes = int.tryParse(value) ?? 0; // Parse minutes
+                      });
+                    },
+                  ),
+                ),
+                SizedBox(width: 20),
+                SizedBox(
+                  width: 80,
+                  child: TextField(
+                    controller: _secondsController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Sec',
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _seconds = int.tryParse(value) ?? 0; // Parse seconds
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Text(
+              '$_minutes:${_seconds.toString().padLeft(2, '0')}',
+              style: TextStyle(fontSize: 48),
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                ElevatedButton(
+                  onPressed: startTimer,
+                  child: Text('Start'),
+                ),
+                ElevatedButton(
+                  onPressed: pauseTimer,
+                  child: Text('Pause'),
+                ),
+                ElevatedButton(
+                  onPressed: resumeTimer,
+                  child: Text('Resume'),
+                ),
+                ElevatedButton(
+                  onPressed: resetTimer,
+                  child: Text('Reset'),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -445,12 +608,12 @@ class BigCard extends StatelessWidget {
     return Card(
       color: theme.colorScheme.primary,
       child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Text(
-            pair.asLowerCase,
-            style: style,
-            semanticsLabel: "${pair.first} ${pair.second}",
-          )),
+        padding: const EdgeInsets.all(20.0),
+        child: Text(
+          pair.asLowerCase,
+          style: style,
+          semanticsLabel: "${pair.first} ${pair.second}",
+        )),
     );
   }
 }
