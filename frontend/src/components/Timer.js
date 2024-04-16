@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-const Sound = require('../assets/TimesUp.mp3')
+const Sound = require('../assets/TimesUp.mp3');
 
 const Timer = () => {
   const initialTime = { hours: 0, minutes: 25, seconds: 0 };
@@ -66,13 +66,13 @@ const Timer = () => {
 
   const handleInputChange = (e, type) => {
     let value = parseInt(e.target.value) || 0;
-  
+
     if (type === 'hours') {
       value = Math.max(0, value); // Ensure hours are non-negative
     } else if (type === 'minutes' || type === 'seconds') {
       value = Math.max(0, Math.min(type === 'minutes' ? 59 : 59, value)); // Limit minutes/seconds to valid range
     }
-  
+
     setTime((prevTime) => ({
       ...prevTime,
       [type]: value,
@@ -98,18 +98,18 @@ const Timer = () => {
 
   useEffect(() => {
     let interval;
-  
+
     if (isRunning) {
       interval = setInterval(() => {
         setTime((prevTime) => {
           let { hours, minutes, seconds } = prevTime;
-  
+
           if (hours === 0 && minutes === 0 && seconds === 0) {
             playSound();
             setIsRunning(false);
             return initialTime; // Reset back to initial time after timer ends
           }
-  
+
           if (seconds === 0) {
             if (minutes === 0 && hours > 0) {
               hours--;
@@ -121,18 +121,49 @@ const Timer = () => {
           } else {
             seconds--;
           }
-  
+
           return { hours, minutes, seconds };
         });
       }, 1000);
     } else {
       clearInterval(interval);
     }
-  
+
     return () => clearInterval(interval);
   }, [isRunning]);
 
   const inputsDisabled = isRunning;
+
+  const CustomInput = ({ value, onChange, type, disabled }) => {
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+      if (inputRef.current) {
+        inputRef.current.focus(); // Keep the input focused after updates
+      }
+    }, [value]);
+
+    return (
+      <input
+        ref={inputRef}
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e, type)}
+        style={{
+          position: 'absolute',
+          top: 180,
+          left: type === 'hours' ? 50 : type === 'minutes' ? 150 : 255,
+          width: '50px',
+          textAlign: 'center',
+          fontSize: '42px',
+          background: '#EA7331',
+          fontFamily: 'Poppins',
+          fontWeight: '400',
+        }}
+        disabled={disabled}
+      />
+    );
+  };
 
   return (
     <div
@@ -205,38 +236,29 @@ const Timer = () => {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <input
-            type="text"
+          <CustomInput
             value={time.hours}
-            onChange={(e) => handleInputChange(e, 'hours')}
-            style={{ position: 'absolute', top: 180, left: 50, width: '50px', textAlign: 'center', fontSize: '42px', background: '#EA7331', fontFamily: 'Poppins', fontWeight: '400' }}
+            onChange={handleInputChange}
+            type="hours"
             disabled={inputsDisabled}
           />
           <span style={{ position: 'relative', top: -35, left: -38, fontSize: '42px', color: 'black', fontFamily: 'Poppins', fontWeight: '400', margin: '0 10px' }}>:</span>
-          <input
-            type="text"
+          <CustomInput
             value={time.minutes}
-            onChange={(e) => handleInputChange(e, 'minutes')}
-            style={{ position: 'absolute', top: 180, left: 150, width: '50px', textAlign: 'center', fontSize: '42px', background: '#EA7331', fontFamily: 'Poppins', fontWeight: '400' }}
+            onChange={handleInputChange}
+            type="minutes"
             disabled={inputsDisabled}
           />
           <span style={{ position: 'relative', top: -35, left: 32, fontSize: '42px', color: 'black', fontFamily: 'Poppins', fontWeight: '400', margin: '0 10px' }}>:</span>
-          <input
-            type="text"
+          <CustomInput
             value={time.seconds}
-            onChange={(e) => handleInputChange(e, 'seconds')}
-            style={{ position: 'absolute', top: 180, left: 255, width: '50px', textAlign: 'center', fontSize: '42px', background: '#EA7331', fontFamily: 'Poppins', fontWeight: '400' }}
+            onChange={handleInputChange}
+            type="seconds"
             disabled={inputsDisabled}
           />
         </div>
 
         <div style={{ display: 'flex', marginTop: '10px' }}>
-          <div style={{ position: 'absolute', top: 232, left: 60, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>hrs</div>
-          <div style={{ position: 'absolute', top: 232, left: 150, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400', marginRight: '20px' }}>mins</div>
-          <div style={{ position: 'absolute', top: 232, left: 255, fontSize: '28px', color: 'white', fontFamily: 'Poppins', fontWeight: '400' }}>secs</div>
-        </div>
-
-        <div style={{ display: 'flex' }}>
           <button
             style={{
               position: 'absolute',
