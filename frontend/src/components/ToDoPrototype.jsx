@@ -13,7 +13,8 @@ function ToDoPrototype()
     let _ud = localStorage.getItem('user_data');
     var ud = JSON.parse(_ud);
     
-    const [taskName, setTaskName] = useState(''); // Keeps track of the task name
+    const [taskName, setTaskName] = useState(''); // Keeps track of the added task name
+    const [updateTaskName, setUpdateTaskName] = useState(''); // Keeps track of the updated task name
     const [queryTask, setQueryTask] = useState(''); // current value of search 
     const [pageNumber, setPageNumber] = useState(1); // Default page number is 1
     const [tasks, setTasks] = useState([]); // Array of tasks
@@ -25,6 +26,11 @@ function ToDoPrototype()
 
     //Sets page number and calls search to re-render task array
     const changePage = page => {
+        page = parseInt(page);
+        if(page <= 0 || isNaN(page))
+        {
+            return;
+        }
         setPageNumber(page);
     }
 
@@ -88,6 +94,50 @@ function ToDoPrototype()
             }
     }
 
+    //Update a task given a task's _id
+    const updateTask = async (currTaskID) =>
+    {
+        var obj_updateTask = 
+        {
+            Task: updateTaskName
+        };
+        var js_updateTask = JSON.stringify(obj_updateTask);
+
+        try {
+            const response = await fetch(bp.buildPath(`api/task/update/${currTaskID}`), {
+                method: 'PUT',
+                body: js_updateTask,
+                headers:{'Content-Type': 'application/json'}
+            });
+
+            const res = await response.json();
+
+            //Success
+            if(response.ok){
+                console.log(res.message);
+                //Update text on frontend
+
+                // Find the index of the task with the given taskID
+                const taskIndex = tasks.findIndex(task => task._id === currTaskID);
+
+                // Create a reference copy of tasks array
+                const updatedTasks = [...tasks];
+
+                // Change the update field of the specific task
+                updatedTasks[taskIndex].Task = updateTaskName;
+
+                // Update the state with the modified tasks array
+                setTasks(updatedTasks);
+
+                setUpdateTaskName(''); // Clear task name input
+            } else {
+                console.log(res.error);
+            }
+        } catch (e) {
+            alert(e.toString());
+        }
+    }
+
     //Mark a task given a task's _id
     const onMark = async (currTaskID) =>
     {
@@ -122,40 +172,40 @@ function ToDoPrototype()
         }
     }
 
-        const deleteTask = async (currTaskID) =>
-        {
-            try {
-                const response = await fetch(bp.buildPath(`api/task/delete/${currTaskID}`), {
-                    method: 'DELETE',
+    const deleteTask = async (currTaskID) =>
+    {
+        try {
+            const response = await fetch(bp.buildPath(`api/task/delete/${currTaskID}`), {
+                method: 'DELETE',
+            });
+
+            const res = await response.json();
+            
+            //Success
+            if(response.ok) {
+                console.log(res.message);
+
+                //Delete animation
+                const delTask = document.getElementById(`task-${currTaskID}`)
+                console.log(delTask);
+                delTask.classList.add('fadeOutLeft');
+
+                // Wait for animation to finish
+                delTask.addEventListener('animationend', () => {
+                    // Remove the deleted task from the tasks array
+                    console.log('deleted');
+                    setTasks(prevTasks => prevTasks.filter(task => task._id !== currTaskID));
                 });
-
-                const res = await response.json();
-                
-                //Success
-                if(response.ok) {
-                    console.log(res.message);
-
-                    //Delete animation
-                    const delTask = document.getElementById(`task-${currTaskID}`)
-                    console.log(delTask);
-                    delTask.classList.add('fadeOutLeft');
-
-                    // Wait for animation to finish
-                    delTask.addEventListener('animationend', () => {
-                        // Remove the deleted task from the tasks array
-                        console.log('deleted');
-                        setTasks(prevTasks => prevTasks.filter(task => task._id !== currTaskID));
-                    });
-                } else {
-                    console.log(res.error);
-                }
-            } catch (e) {
-                alert(e.toString());
+            } else {
+                console.log(res.error);
             }
-
+        } catch (e) {
+            alert(e.toString());
         }
 
-    //IN-PROGRESS: Function that will clear all tasks that are marked done
+    }
+
+    //Function that will clear all rendered tasks that are marked done on the page 
     const clearCompleted = async event =>
     {
         event.preventDefault();
@@ -192,7 +242,7 @@ function ToDoPrototype()
                 />
                 <CheckboxGroup id="todoList" w="100%" size="lg" h="100%" minH="100vh">
                     {tasks.map((task) => (
-                        <ToDoItem key={task._id} taskName={task.Task} doneStatus={task.Done} taskID={task._id} onMark={onMark} deleteTask={deleteTask}/>
+                        <ToDoItem key={task._id} taskName={task.Task} doneStatus={task.Done} taskID={task._id} onMark={onMark} deleteTask={deleteTask} updateTask={updateTask} updateTaskName={updateTaskName} setUpdateTaskName={setUpdateTaskName}/>
                     ))}
                 </CheckboxGroup>
                 <ToDoAdd 
@@ -212,7 +262,16 @@ function ToDoPrototype()
                             <MdKeyboardArrowLeft />
                         </Button>
                     </InputLeftAddon>
-                    <Input className='hidden md:block' w='30%' placeholder={pageNumber}>
+                    <Input className='hidden md:block' w='30%' placeholder={pageNumber}
+                     onKeyDown={(e) => {
+                        if(e.key === 'Enter')
+                        {
+                            e.preventDefault();
+                            changePage(e.target.value);
+                            e.target.value = '';
+                        }
+                     }}
+                    >
 
                     </Input>
                     <InputRightAddon>

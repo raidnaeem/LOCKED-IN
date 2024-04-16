@@ -289,6 +289,36 @@ app.delete("/api/task/delete/:TaskID", async (req, res) => {
   }
 });
 
+// Update a task 
+app.put("/api/task/update/:TaskID", async (req, res) => {
+  const { TaskID } = req.params;
+  const updateFields = req.body;
+  const db = client.db("locked-in");
+
+  try {
+      // Verifys the input to make sure there is something to update
+      if(Object.keys(updateFields).length === 0) {
+          return res.status(400).json({ error: "No update fields provided" });
+      }
+
+      const result = await db.collection("To-Do").updateOne(
+          { _id: new mongodb.ObjectId(TaskID) },
+          { $set: updateFields }
+      );
+
+      if(result.matchedCount === 0) {
+          return res.status(404).json({ error: "Task not found" });
+      } else if (result.modifiedCount === 0) {
+          return res.status(304).send(); 
+      } else {
+          res.status(200).json({ message: "Task updated successfully" });
+      }
+  } catch (error) {
+      console.error("Error updating task:", error);
+      res.status(500).json({ error: "An error occurred while updating the task." });
+  }
+});
+
 // markDone
 app.put("/api/task/markDone/:TaskID", async (req, res) => {
   const { TaskID } = req.params;
