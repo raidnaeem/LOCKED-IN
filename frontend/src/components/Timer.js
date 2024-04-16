@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import debounce from 'lodash/debounce'; // Import debounce from lodash
 const Sound = require('../assets/TimesUp.mp3')
+
 
 const Timer = () => {
   const initialTime = { hours: 0, minutes: 25, seconds: 0 };
