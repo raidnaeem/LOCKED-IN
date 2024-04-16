@@ -173,7 +173,7 @@ const Timer = () => {
           padding: '20px',
         }}
       >
-        <div style={{ fontSize: '48px', color: 'white', fontFamily: 'Poppins', fontWeight: '700' }}>meditate</div>
+        <div style={{ fontSize: '48px', color: 'white', fontFamily: 'Poppins', fontWeight: '700' }}>Remember to take breaks</div>
         <textarea
           value={note}
           onChange={(e) => setNote(e.target.value)}

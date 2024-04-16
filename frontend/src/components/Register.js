@@ -29,7 +29,7 @@ function Register() {
 
         // Check length
         if (registerPassword.length < 8) {
-            passwordErrors.push('Password must be 10 characters.\n');
+            passwordErrors.push('Password must be 8 characters.\n');
         }
 
         // Check for uppercase letter
@@ -44,13 +44,13 @@ function Register() {
 
         // Check for both length and uppercase letter
         if (registerPassword.length < 10 && !/[A-Z]/.test(registerPassword)) {
-            setMessage('Password must be 10 characters and missing uppercase letter.\n');
+            setMessage('Password must be 8 characters and missing uppercase letter.\n');
             return;
         }
 
         // Check for both length and special character
         if (registerPassword.length < 10 && !/[!@#$%^&*]/.test(registerPassword)) {
-            setMessage('Password must be 10 characters and missing special character.\n');
+            setMessage('Password must be 8 characters and missing special character.\n');
             return;
         }
 
@@ -62,7 +62,7 @@ function Register() {
 
         // Check for all 3
         if (registerPassword.length < 10 && !/[!@#$%^&*]/.test(registerPassword) && !/[A-Z]/.test(registerPassword)) {
-            setMessage('Password must be 10 characters long, contain uppercase letter, a special character.\n');
+            setMessage('Password must be 8 characters, contain uppercase letter, a special character.\n');
             return;
         }
 
