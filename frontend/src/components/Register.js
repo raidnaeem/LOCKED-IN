@@ -25,11 +25,11 @@ function Register() {
         }
 
         // Password validation rules
-        const passwordErrors = [];
+        //const passwordErrors = [];
 
         // Check length
         if (registerPassword.length < 10) {
-            passwordErrors.push('Password must be at least 10 characters long\n');
+            passwordErrors.push('Password must be at least 10 characters long.\n');
         }
 
         // Check for uppercase letter
@@ -42,13 +42,30 @@ function Register() {
             passwordErrors.push('Password must contain a special character.\n');
         }
 
-        // If there are multiple errors, combine them into a single message
-        if (passwordErrors.length > 0) {
-            setMessage('Password must be at least 10 characters long.\n');
-            setMessage('Password must contain a uppercase letter.\n');
-            setMessage('Password must contain a special character.\n');
+        // Check for both length and uppercase letter
+        if (registerPassword.length < 10 && !/[A-Z]/.test(registerPassword)) {
+            setMessage('Password must be at least 10 characters long.\n Password must contain a uppercase letter.\n');
             return;
         }
+
+        // Check for both length and special character
+        if (registerPassword.length < 10 && !/[!@#$%^&*]/.test(registerPassword)) {
+            setMessage('Password must be at least 10 characters long.\n Password must contain a special character.\n');
+            return;
+        }
+
+        // Check uppercase letter and special character
+        if (!/[!@#$%^&*]/.test(registerPassword) && !/[A-Z]/.test(registerPassword)) {
+            setMessage('Password must contain a uppercase letter.\n Password must contain a special character.\n');
+            return;
+        }
+
+        // Check for all 3
+        if (registerPassword.length < 10 && !/[!@#$%^&*]/.test(registerPassword) && !/[A-Z]/.test(registerPassword)) {
+            setMessage('assword must be at least 10 characters long.\n Password must contain a uppercase letter.\n Password must contain a special character.\n');
+            return;
+        }
+
 
         var obj_register = 
         {
