@@ -24,48 +24,29 @@ function Register() {
             return;
         }
 
-        // Password validation rules
-        const passwordErrors = [];
+            // Password validation rules
+    const passwordErrors = [];
 
-        // Check length
-        if (registerPassword.length < 8) {
-            passwordErrors.push('Password must be 8 characters long.\n');
-        }
+    // Check length
+    if (registerPassword.length < 8) {
+        passwordErrors.push('Password must be at least 8 characters long.');
+    }
 
-        // Check for uppercase letter
-        if (!/[A-Z]/.test(registerPassword)) {
-            passwordErrors.push('Password must contain an uppercase letter.\n');
-        }
+    // Check for uppercase letter
+    if (!/[A-Z]/.test(registerPassword)) {
+        passwordErrors.push('Password must contain at least one uppercase letter.');
+    }
 
-        // Check for special character
-        if (!/[!@#$%^&*]/.test(registerPassword)) {
-            passwordErrors.push('Password must contain a special character.\n');
-        }
+    // Check for special character
+    if (!/[!@#$%^&*]/.test(registerPassword)) {
+        passwordErrors.push('Password must contain at least one special character (!@#$%^&*).');
+    }
 
-        // Check for all 3
-        if (registerPassword.length < 8 && !/[!@#$%^&*]/.test(registerPassword) && !/[A-Z]/.test(registerPassword)) {
-            setMessage('Password must be 8 characters, contain uppercase letter, and a special character.\n');
-            return;
-        }
-
-        // Check for both length and uppercase letter
-        if (registerPassword.length < 8 && !/[A-Z]/.test(registerPassword)) {
-            setMessage('Password must be 8 characters long and contain an uppercase letter.\n');
-            return;
-        }
-
-        // Check for both length and special character
-        if (registerPassword.length < 8 && !/[!@#$%^&*]/.test(registerPassword)) {
-            setMessage('Password must be 8 characters long and contain a special character.\n');
-            return;
-        }
-
-        // Check uppercase letter and special character
-        if (!/[!@#$%^&*]/.test(registerPassword) && !/[A-Z]/.test(registerPassword)) {
-            setMessage('Password must contain an uppercase letter and a special character.\n');
-            return;
-        }
-
+    // If there are multiple errors, combine them into a single message
+    if (passwordErrors.length > 0) {
+        setMessage(passwordErrors.join('\n'));
+        return;
+    }
 
         var obj_register = 
         {
