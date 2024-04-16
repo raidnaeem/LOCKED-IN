@@ -25,7 +25,7 @@ function Register() {
         }
 
         // Password validation rules
-        //const passwordErrors = [];
+        const passwordErrors = [];
 
         // Check length
         if (registerPassword.length < 10) {
