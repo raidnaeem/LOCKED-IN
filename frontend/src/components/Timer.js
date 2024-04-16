@@ -9,18 +9,12 @@ const Timer = () => {
   const [note, setNote] = useState('');
   const timerRef = useRef(null);
   const audioRef = useRef(null);
-  const initialTime = { hours: 0, minutes: 25, seconds: 0 };
-  const storedTime = JSON.parse(localStorage.getItem('timer')) || initialTime;
 
   const playSound = () => {
     if (audioRef.current) {
       audioRef.current.play();
     }
   };
-
-  useEffect(() => {
-    localStorage.setItem('timer', JSON.stringify(time));
-  }, [time]);
 
   const handleStartStop = () => {
     setIsRunning((prev) => !prev);
@@ -98,13 +92,6 @@ const Timer = () => {
       }));
     }
   };
-
-  // Reset timer when time changes
-  useEffect(() => {
-    if (!isRunning) {
-      setTime(storedTime); // Restore time when paused or stopped
-    }
-  }, [storedTime, isRunning]);
 
   useEffect(() => {
     document.addEventListener('mousemove', handleMouseMove);
