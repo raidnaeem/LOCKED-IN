@@ -34,12 +34,12 @@ function Register() {
 
     // Check for uppercase letter
     if (!/[A-Z]/.test(registerPassword)) {
-        passwordErrors.push('Password must contain at least one uppercase letter.');
+        passwordErrors.push('Password must contain a uppercase letter.');
     }
 
     // Check for special character
     if (!/[!@#$%^&*]/.test(registerPassword)) {
-        passwordErrors.push('Password must contain at least one special character (!@#$%^&*).');
+        passwordErrors.push('Password must contain a special character.');
     }
 
     // If there are multiple errors, combine them into a single message
