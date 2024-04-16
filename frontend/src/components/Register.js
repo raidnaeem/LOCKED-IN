@@ -24,6 +24,13 @@ function Register() {
             return;
         }
 
+        // Password validation rules
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{10,}$/;
+        if (!passwordRegex.test(registerPassword)) {
+            setMessage('Password must be at least 10 characters long, contain an uppercase letter, and a special character (!@#$%^&*)');
+            return;
+        }
+
         var obj_register = 
         {
             Email: registerEmail, 
