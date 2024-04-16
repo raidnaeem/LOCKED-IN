@@ -27,7 +27,9 @@ function Register() {
         // Password validation rules
         const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{10,}$/;
         if (!passwordRegex.test(registerPassword)) {
-            setMessage('Password must be at least 10 characters long, contain an uppercase letter, and a special character (!@#$%^&*)');
+            setMessage('Password must be at least 10 characters long');
+            setMessage('Password must contain a uppercase letter');
+            setMessage('Password must contain a special character');
             return;
         }
 
