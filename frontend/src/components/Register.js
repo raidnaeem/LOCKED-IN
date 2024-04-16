@@ -28,41 +28,41 @@ function Register() {
         const passwordErrors = [];
 
         // Check length
-        if (registerPassword.length < 10) {
-            passwordErrors.push('Password must be at least 10 characters long.\n');
+        if (registerPassword.length < 8) {
+            passwordErrors.push('Password must be 10 characters.\n');
         }
 
         // Check for uppercase letter
         if (!/[A-Z]/.test(registerPassword)) {
-            passwordErrors.push('Password must contain a uppercase letter.\n');
+            passwordErrors.push('Missing uppercase letter.\n');
         }
 
         // Check for special character
         if (!/[!@#$%^&*]/.test(registerPassword)) {
-            passwordErrors.push('Password must contain a special character.\n');
+            passwordErrors.push('Missing special character\n');
         }
 
         // Check for both length and uppercase letter
         if (registerPassword.length < 10 && !/[A-Z]/.test(registerPassword)) {
-            setMessage('Password must be at least 10 characters long.\n Password must contain a uppercase letter.\n');
+            setMessage('Password must be 10 characters and missing uppercase letter.\n');
             return;
         }
 
         // Check for both length and special character
         if (registerPassword.length < 10 && !/[!@#$%^&*]/.test(registerPassword)) {
-            setMessage('Password must be at least 10 characters long.\n Password must contain a special character.\n');
+            setMessage('Password must be 10 characters and missing special character.\n');
             return;
         }
 
         // Check uppercase letter and special character
         if (!/[!@#$%^&*]/.test(registerPassword) && !/[A-Z]/.test(registerPassword)) {
-            setMessage('Password must contain a uppercase letter.\n Password must contain a special character.\n');
+            setMessage('Missing uppercase letter and special character.\n');
             return;
         }
 
         // Check for all 3
         if (registerPassword.length < 10 && !/[!@#$%^&*]/.test(registerPassword) && !/[A-Z]/.test(registerPassword)) {
-            setMessage('assword must be at least 10 characters long.\n Password must contain a uppercase letter.\n Password must contain a special character.\n');
+            setMessage('Password must be 10 characters long, contain uppercase letter, a special character.\n');
             return;
         }
 
