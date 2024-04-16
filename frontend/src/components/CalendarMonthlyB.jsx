@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import DayGrid from './DayGrid';
 import './Calendar.css';
+import { Button } from '@chakra-ui/react';
 const addButton = require('../assets/AddButton.png');
 const searchButton = require('../assets/SearchEvent.png');
 
@@ -20,8 +21,14 @@ const CalendarMonthlyB = () =>  {
     <div className="bg-[#AAA06C]">
       {/*Calendar Header*/}
       <div className="header">
-          <div className="month p-2">{months[currentMonth]}</div>
+          <Button>
+            prev
+          </Button>
+          <div className="month p-2 ">{months[currentMonth]}</div>
           <div className="year p-2">{currentYear}</div>
+          <Button>
+            next
+          </Button>
       </div>
 
       {/*Calendar Body*/}
