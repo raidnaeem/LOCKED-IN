@@ -34,17 +34,19 @@ function Register() {
 
         // Check for uppercase letter
         if (!/[A-Z]/.test(registerPassword)) {
-            passwordErrors.push('Password must contain an uppercase letter\n');
+            passwordErrors.push('Password must contain a uppercase letter.\n');
         }
 
         // Check for special character
         if (!/[!@#$%^&*]/.test(registerPassword)) {
-            passwordErrors.push('Password must contain a special character (!@#$%^&*)\n');
+            passwordErrors.push('Password must contain a special character.\n');
         }
 
         // If there are multiple errors, combine them into a single message
         if (passwordErrors.length > 0) {
-            setMessage(passwordErrors.join(''));
+            setMessage('Password must be at least 10 characters long.\n');
+            setMessage('Password must contain a uppercase letter.\n');
+            setMessage('Password must contain a special character.\n');
             return;
         }
 
