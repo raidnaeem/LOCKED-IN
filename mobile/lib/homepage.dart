@@ -84,10 +84,7 @@ class _HomePageState extends State<HomePage> {
           bottomNavigationBar: BottomNavigationBar(
             items: [
               BottomNavigationBarItem(
-                icon: Badge(
-                  label: Text('1'),
-                  child: Icon(Icons.task),
-                ),
+                icon: Icon(Icons.task),
                 label: 'To-Do',
               ),
               BottomNavigationBarItem(
@@ -140,41 +137,41 @@ class _ToDoPageState extends State<ToDoPage> {
     return Scaffold(
       backgroundColor: Colors.deepOrange,
       body: Stack(
-      children: [
-        Container(
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              child: Column(
-                children: [
-                  Container(
-                      padding: EdgeInsets.only(top: 50), child: searchBox()),
-                  Expanded(
-                    child: ListView(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(
-                            top: 0,
-                            bottom: 20,
-                            left: 5,
-                          ),
-                          child: Text(
-                            'To-Do',
-                            style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.w600,
-                            ),
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: Column(
+              children: [
+                Container(
+                    padding: EdgeInsets.only(top: 50), child: searchBox()),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(
+                          top: 0,
+                          bottom: 20,
+                          left: 5,
+                        ),
+                        child: Text(
+                          'To-Do',
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        for (ToDo todo in _foundToDo.reversed)
-                          ToDoItem(
-                            todo: todo,
-                            onToDoChanged: _handleToDoChange,
-                            onDeleteItem: _deleteToDoItem,
-                          ),
-                      ],
-                    ),
-                  )
-                ],
-              )),
+                      ),
+                      for (ToDo todo in _foundToDo.reversed)
+                        ToDoItem(
+                          todo: todo,
+                          onToDoChanged: _handleToDoChange,
+                          onDeleteItem: _deleteToDoItem,
+                        ),
+                    ],
+                  ),
+                )
+              ],
+            )),
           Align(
             alignment: Alignment.bottomCenter,
             child: Row(children: [
@@ -211,7 +208,7 @@ class _ToDoPageState extends State<ToDoPage> {
               ),
               Container(
                 margin: EdgeInsets.only(
-                  bottom: 20, 
+                  bottom: 20,
                   right: 20
                 ),
                 child: ElevatedButton(
@@ -237,31 +234,37 @@ class _ToDoPageState extends State<ToDoPage> {
   }
 
   Widget searchBox() {
-  return Container(
-    padding: EdgeInsets.symmetric(horizontal: 20),
-    decoration: BoxDecoration(
-        color: Colors.white, borderRadius: BorderRadius.circular(20)),
-    child: TextField(
-      onChanged: (value) => _runFilter(value),
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.all(0),
-        prefixIcon: Icon(
-          Icons.search,
-          color: Color.fromARGB(255, 107, 104, 104),
-          size: 20,
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(20)),
+      child: TextField(
+        onChanged: (value) => _runFilter(value),
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.all(0),
+          prefixIcon: Icon(
+            Icons.search,
+            color: Color.fromARGB(255, 107, 104, 104),
+            size: 20,
+          ),
+          prefixIconConstraints: BoxConstraints(maxHeight: 20, minWidth: 25),
+          border: InputBorder.none,
+          hintText: 'Search',
+          hintStyle: TextStyle(color: Colors.grey),
         ),
-        prefixIconConstraints: BoxConstraints(maxHeight: 20, minWidth: 25),
-        border: InputBorder.none,
-        hintText: 'Search',
-        hintStyle: TextStyle(color: Colors.grey),
       ),
-    ),
-  );
-}
+    );
+  }
   
   void _handleToDoChange(ToDo todo) {
     setState (() {
       todo.isDone = !todo.isDone;
+    });
+  }
+
+  void _renameToDoItem(String todoText, id) {
+    setState(() {
+      todosList.where((item) => item.todoText == todoText);
     });
   }
 
@@ -649,26 +652,52 @@ class ToDoItem extends StatelessWidget {
             decoration: todo.isDone ? TextDecoration.lineThrough : null,
           ),
         ),
-        trailing: Container(
-          padding: EdgeInsets.all(0),
-          margin: EdgeInsets.symmetric(vertical: 12),
-          height: 35,
-          width: 35,
-          decoration: BoxDecoration(
-            color: Colors.red,
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: IconButton(
-            color: Colors.white,
-            iconSize: 18,
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              print('Pressed Delete button');
-              onDeleteItem(todo.id);
-            },
-          ),
-        ),      
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.all(0),
+              margin: EdgeInsets.symmetric(vertical: 12),
+              height: 35,
+              width: 35,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: IconButton(
+                color: Color.fromARGB(255, 169, 169, 169),
+                iconSize: 22,
+                icon: Icon(
+                  Icons.edit_outlined,
+                  color: const Color.fromARGB(255, 94, 94, 94),
+                ),
+                onPressed: () {
+                  print('Pressed Edit button');
+                },
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(0),
+              margin: EdgeInsets.symmetric(vertical: 12),
+              height: 35,
+              width: 35,
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: IconButton(
+                color: Colors.white,
+                iconSize: 18,
+                icon: Icon(Icons.delete),
+                onPressed: () {
+                  print('Pressed Delete button');
+                  onDeleteItem(todo.id);
+                },
+              ),
+            ),
+          ],
         ),
+      ),
     );
   }
 }
