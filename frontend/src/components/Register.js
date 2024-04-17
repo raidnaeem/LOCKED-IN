@@ -24,6 +24,30 @@ function Register() {
             return;
         }
 
+            // Password validation rules
+    const passwordErrors = [];
+
+    // Check length
+    if (registerPassword.length < 8) {
+        passwordErrors.push('Password must be 8 characters long.');
+    }
+
+    // Check for uppercase letter
+    if (!/[A-Z]/.test(registerPassword)) {
+        passwordErrors.push('Password must contain a uppercase letter.');
+    }
+
+    // Check for special character
+    if (!/[!@#$%^&*]/.test(registerPassword)) {
+        passwordErrors.push('Password must contain a special character.');
+    }
+
+    // If there are multiple errors, combine them into a single message
+    if (passwordErrors.length > 0) {
+        setMessage(passwordErrors.join('\n'));
+        return;
+    }
+
         var obj_register = 
         {
             Email: registerEmail, 

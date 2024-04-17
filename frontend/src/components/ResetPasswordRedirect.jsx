@@ -8,7 +8,7 @@ const emailIcon = require('../assets/email-icon.png')
 
 function ResetPasswordRedirect ({ passwordResetToken }) {
     const commonTextStyle = {
-        fontFamily: 'Roboto',
+        fontFamily: 'Poppins',
         wordWrap: 'break-word',
     };
 

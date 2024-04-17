@@ -7,7 +7,7 @@ const emailIcon = require('../assets/email-icon.png')
 
 const RegisterUI = ({doRegister, setRegisterFName, setRegisterLName, setRegisterEmail, setRegisterPassword, setConfirmPassword, registerMessage}) => {
     const commonTextStyle = {
-        fontFamily: 'Roboto',
+        fontFamily: 'Poppins',
         wordWrap: 'break-word',
     };
 
@@ -114,7 +114,7 @@ const RegisterUI = ({doRegister, setRegisterFName, setRegisterLName, setRegister
             </Button>
         </Stack>
             {/*Register Feedback Message*/}
-            <div id="registerResult" className='text-center text-red-600 text-md p-2' style={{commonTextStyle}}>{registerMessage}</div>
+            <div id="registerResult" className='text-center text-red-600 text-md p-2 max-w-[340px]' style={{commonTextStyle}}>{registerMessage}</div>
         </form>
 
         {/*Navigate to Login*/}
