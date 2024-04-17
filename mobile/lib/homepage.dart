@@ -1,13 +1,16 @@
+import 'dart:async';
+
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/token.dart';
 import 'package:provider/provider.dart';
-import 'todo.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';  
-import 'dart:async';
-import 'package:vibration/vibration.dart';
-import 'package:pausable_timer/pausable_timer.dart';
+import 'package:table_calendar/table_calendar.dart';
+
+import 'main.dart';
+import 'todo.dart';
+
+List<dynamic> userTodos = [];
 
 class HomePageScreen extends StatelessWidget {
   const HomePageScreen({super.key});
@@ -21,6 +24,7 @@ class HomePageScreen extends StatelessWidget {
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+          brightness: Brightness.light,
           fontFamily: 'Poppins',
         ),
         home: HomePage(),
@@ -55,7 +59,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var selectedIndex = 0; 
+  var selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -70,9 +74,6 @@ class _HomePageState extends State<HomePage> {
       case 2:
         page = TimerPage();
         break;
-      case 3:
-        page = AlarmPage();
-        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -80,9 +81,53 @@ class _HomePageState extends State<HomePage> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Scaffold(
+          appBar: AppBar(
+            title: const Padding(
+              padding: EdgeInsets.only(top: 8.0),
+              child: Text(
+                'LockedIn',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 60,
+                  fontFamily: 'Poppins',
+                ),
+              ),
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red, // Keep the original red color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 5.0), // Keep the original padding
+                ),
+                child: const SizedBox(
+                  width: 80,
+                  child: Text(
+                    'Logout',
+                    style: TextStyle(
+                      color: Colors.white, // Keep the original text color
+                      fontSize: 18, // Keep the original font size
+                      fontFamily: 'Poppins',
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ],
+          ),
           body: page,
           bottomNavigationBar: BottomNavigationBar(
-            items: [
+            items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.task),
                 label: 'To-Do',
@@ -94,10 +139,6 @@ class _HomePageState extends State<HomePage> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.timer),
                 label: 'Timer',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.alarm),
-                label: 'Alarm',
               ),
             ],
             currentIndex: selectedIndex,
@@ -129,35 +170,35 @@ class _ToDoPageState extends State<ToDoPage> {
   void initState() {
     _foundToDo = todosList;
     super.initState();
+    _updateToDoItem();
   }
 
   @override
   Widget build(BuildContext context) {
     //var appState = context.watch<HomePageState>();
     return Scaffold(
-      backgroundColor: Colors.deepOrange,
-      body: Stack(
-        children: [
-          Container(
+        body: Stack(
+      children: [
+        Container(
             padding: EdgeInsets.symmetric(horizontal: 15),
             child: Column(
               children: [
                 Container(
-                    padding: EdgeInsets.only(top: 50), child: searchBox()),
+                    padding: EdgeInsets.only(top: 20), child: searchBox()),
                 Expanded(
                   child: ListView(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(
-                          top: 0,
+                        margin: const EdgeInsets.only(
+                          top: 20,
                           bottom: 20,
                           left: 5,
                         ),
-                        child: Text(
-                          'To-Do',
+                        child: const Text(
+                          "Today's Tasks:",
                           style: TextStyle(
                             fontSize: 25,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w800,
                           ),
                         ),
                       ),
@@ -166,78 +207,80 @@ class _ToDoPageState extends State<ToDoPage> {
                           todo: todo,
                           onToDoChanged: _handleToDoChange,
                           onDeleteItem: _deleteToDoItem,
+                          onRenameItem: _renameToDoItem,
                         ),
                     ],
                   ),
                 )
               ],
             )),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Row(children: [
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(
-                    bottom: 20,
-                    right: 20,
-                    left: 20,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color.fromARGB(255, 161, 50, 111),
-                        offset: Offset(0.0, 0.0),
-                        blurRadius: 10.0,
-                        spreadRadius: 0.0,
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: TextField(
-                    controller: _todoController,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(
-                        left: 15
-                      ),
-                      hintText: 'Add a new todo item',
-                      border: InputBorder.none
-                    ),
-                  ),
-                ),
-              ),
-              Container(
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Row(children: [
+            Expanded(
+              child: Container(
                 margin: EdgeInsets.only(
                   bottom: 20,
-                  right: 20
+                  right: 20,
+                  left: 20,
                 ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color.fromARGB(255, 161, 50, 111),
+                      offset: Offset(0.0, 0.0),
+                      blurRadius: 2.0,
+                      spreadRadius: 0.0,
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: TextField(
+                  controller: _todoController,
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(left: 15),
+                      hintText: 'Add a new todo item',
+                      border: InputBorder.none),
+                ),
+              ),
+            ),
+            Container(
+                margin: EdgeInsets.only(bottom: 20, right: 20),
                 child: ElevatedButton(
-                  onPressed: () {
-                    _addToDoItem(_todoController.text);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.amber,
-                    minimumSize: Size(60,60),
-                    elevation: 10,
-                  ),
-                  child: Text(
-                    '+', 
-                    style: TextStyle(fontSize: 40),
-                  )
-                )
-              )
-            ]),
-          ),
-        ],
-      )
-    );
+                    onPressed: () {
+                      _addToDoItem(_todoController.text);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange[250],
+                      minimumSize: Size(60, 60),
+                      elevation: 10,
+                    ),
+                    child: const Text(
+                      '+',
+                      style: TextStyle(fontSize: 40),
+                    )))
+          ]),
+        ),
+      ],
+    ));
   }
 
   Widget searchBox() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(20)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromARGB(255, 161, 50, 111),
+            offset: Offset(0.0, 0.0),
+            blurRadius: 2.0,
+            spreadRadius: 0.0,
+          ),
+        ],
+      ),
       child: TextField(
         onChanged: (value) => _runFilter(value),
         decoration: InputDecoration(
@@ -255,33 +298,67 @@ class _ToDoPageState extends State<ToDoPage> {
       ),
     );
   }
-  
+
   void _handleToDoChange(ToDo todo) {
-    setState (() {
+    setState(() {
       todo.isDone = !todo.isDone;
     });
   }
 
-  void _renameToDoItem(String todoText, id) {
-    setState(() {
-      todosList.where((item) => item.todoText == todoText);
-    });
-  }
+  void _renameToDoItem(String id, String newText) {
+  setState(() {
+    int index = todosList.indexWhere((item) => item.id == id);
+    if (index != -1) {
+      todosList[index].todoText = newText;
+    }
+  });
+}
 
   void _deleteToDoItem(String id) {
-    setState (() {
+    setState(() {
       todosList.removeWhere((item) => item.id == id);
     });
   }
 
+  Future<void> _updateToDoItem() async {
+    try {
+      userTodos = await searchTasks("", userId);
+      for (var todo in userTodos) {
+        setState(() {
+          todosList.add(ToDo(
+            id: todo['Id'],
+            todoText: todo[
+                'Task'], // Assuming 'Task' is the text field in your todo object
+            isDone: todo[
+                'Done'], // Assuming 'Done' indicates whether the task is done or not
+          ));
+        });
+      }
+      print('Tasks retrieved successfully');
+    } catch (error) {
+      print('$error');
+    }
+  }
+
   void _addToDoItem(String toDo) {
-    setState (() {
+    setState(() {
       todosList.add(ToDo(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        todoText: toDo
+        todoText: toDo,
       ));
     });
-    _todoController.clear();
+    _todoController.clear(); // Clear the text field after adding the item
+
+    // Call addTask function to add the task to the backend
+    try {
+      addTask(toDo, "", false, userId).then((_) {
+        print('Task added successfully');
+      }).catchError((error) {
+        print('$error');
+      });
+    } catch (error) {
+      print('$error');
+    }
   }
 
   void _runFilter(String enteredKeyword) {
@@ -290,10 +367,10 @@ class _ToDoPageState extends State<ToDoPage> {
       results = todosList;
     } else {
       results = todosList
-        .where((item) => item.todoText!
-          .toLowerCase()
-          .contains(enteredKeyword.toLowerCase()))
-        .toList();
+          .where((item) => item.todoText!
+              .toLowerCase()
+              .contains(enteredKeyword.toLowerCase()))
+          .toList();
     }
     setState(() {
       _foundToDo = results;
@@ -307,39 +384,6 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  late final ValueNotifier<List<Event>> _selectedEvents;
-  late final Map<DateTime, List<Event>> _events;
-  late final TextEditingController _eventController;
-  late final CalendarFormat _calendarFormat;
-  late final DateTime _focusedDay;
-  late final DateTime _firstDay;
-  late final DateTime _lastDay;
-
-  @override
-  void initState() {
-    super.initState();
-    _focusedDay = DateTime.now();
-    _firstDay = DateTime.utc(2010, 10, 16);
-    _lastDay = DateTime.utc(2030, 3, 14);
-    _calendarFormat = CalendarFormat.month;
-    _events = {};
-    _selectedEvents = ValueNotifier([]);
-    _eventController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _eventController.dispose();
-    _selectedEvents.dispose();
-    super.dispose();
-  }
-
-  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-    setState(() {
-      _selectedEvents.value = _events[selectedDay] ?? [];
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -351,101 +395,78 @@ class _CalendarPageState extends State<CalendarPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             TableCalendar(
-              firstDay: _firstDay,
-              lastDay: _lastDay,
-              focusedDay: _focusedDay,
-              calendarFormat: _calendarFormat,
-              onFormatChanged: (format) {
-                setState(() {
-                  _calendarFormat = format;
-                });
-              },
-              onDaySelected: _onDaySelected,
-              eventLoader: _getEventsForDay,
-            ),
-            SizedBox(height: 20),
-            _buildEventList(),
+              firstDay: DateTime.utc(2010, 10, 16),
+              lastDay: DateTime.utc(2030, 3, 14),
+              focusedDay: DateTime.now(),
+            )
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: _showAddDialog,
-      ),
-    );
-  }
-
-  List<Event> _getEventsForDay(DateTime day) {
-    return _events[day] ?? [];
-  }
-
-  Widget _buildEventList() {
-    return ValueListenableBuilder<List<Event>>(
-      valueListenable: _selectedEvents,
-      builder: (context, events, _) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: events
-              .map((event) => ListTile(
-                    title: Text(event.title),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        setState(() {
-                          _events[_focusedDay]!.remove(event);
-                          _selectedEvents.value = _events[_focusedDay]!;
-                        });
-                      },
-                    ),
-                  ))
-              .toList(),
-        );
-      },
-    );
-  }
-
-  void _showAddDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Add Event'),
-        content: TextField(
-          controller: _eventController,
-          decoration: InputDecoration(labelText: 'Event Title'),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                final newEvent = Event(title: _eventController.text);
-                if (_events[_focusedDay] != null) {
-                  _events[_focusedDay]!.add(newEvent);
-                } else {
-                  _events[_focusedDay] = [newEvent];
-                }
-                _selectedEvents.value = _events[_focusedDay]!;
-                _eventController.clear();
-                Navigator.pop(context);
-              });
-            },
-            child: Text('Save'),
-          ),
-        ],
       ),
     );
   }
 }
 
-class Event {
-  final String title;
+class MeetingDataSource extends CalendarDataSource {
+  /// Creates a meeting data source, which used to set the appointment
+  /// collection to the calendar
+  MeetingDataSource(List<Meeting> source) {
+    appointments = source;
+  }
 
-  Event({required this.title});
+  @override
+  DateTime getStartTime(int index) {
+    return _getMeetingData(index).from;
+  }
+
+  @override
+  DateTime getEndTime(int index) {
+    return _getMeetingData(index).to;
+  }
+
+  @override
+  String getSubject(int index) {
+    return _getMeetingData(index).eventName;
+  }
+
+  @override
+  Color getColor(int index) {
+    return _getMeetingData(index).background;
+  }
+
+  @override
+  bool isAllDay(int index) {
+    return _getMeetingData(index).isAllDay;
+  }
+
+  Meeting _getMeetingData(int index) {
+    final dynamic meeting = appointments![index];
+    late final Meeting meetingData;
+    if (meeting is Meeting) {
+      meetingData = meeting;
+    }
+
+    return meetingData;
+  }
+}
+
+class Meeting {
+  /// Creates a meeting class with required details.
+  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
+
+  /// Event name which is equivalent to subject property of [Appointment].
+  String eventName;
+
+  /// From which is equivalent to start time property of [Appointment].
+  DateTime from;
+
+  /// To which is equivalent to end time property of [Appointment].
+  DateTime to;
+
+  /// Background which is equivalent to color property of [Appointment].
+  Color background;
+
+  /// IsAllDay which is equivalent to isAllDay property of [Appointment].
+  bool isAllDay;
 }
 
 class TimerPage extends StatefulWidget {
@@ -453,7 +474,7 @@ class TimerPage extends StatefulWidget {
   State<TimerPage> createState() => _TimerPageState();
 }
 
-class _TimerPageState extends State<TimerPage>{
+class _TimerPageState extends State<TimerPage> {
   late Timer _timer;
   int _minutes = 0;
   int _seconds = 0;
@@ -658,12 +679,12 @@ class BigCard extends StatelessWidget {
     return Card(
       color: theme.colorScheme.primary,
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Text(
-          pair.asLowerCase,
-          style: style,
-          semanticsLabel: "${pair.first} ${pair.second}",
-        )),
+          padding: const EdgeInsets.all(20.0),
+          child: Text(
+            pair.asLowerCase,
+            style: style,
+            semanticsLabel: "${pair.first} ${pair.second}",
+          )),
     );
   }
 }
@@ -672,9 +693,15 @@ class ToDoItem extends StatelessWidget {
   final ToDo todo;
   final onToDoChanged;
   final onDeleteItem;
+  final onRenameItem;
 
-  const ToDoItem({Key? key, required this.todo, required this.onToDoChanged, 
-                  required this.onDeleteItem}) : super(key: key);
+  const ToDoItem(
+      {Key? key,
+      required this.todo,
+      required this.onToDoChanged,
+      required this.onDeleteItem,
+      required this.onRenameItem})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -692,13 +719,14 @@ class ToDoItem extends StatelessWidget {
         tileColor: const Color.fromARGB(255, 163, 52, 18),
         leading: Icon(
           todo.isDone ? Icons.check_box : Icons.check_box_outline_blank,
-          color: Color.fromARGB(255, 107, 104, 104),
+          color: Colors.white,
         ),
         title: Text(
           todo.todoText!,
           style: TextStyle(
             fontSize: 16,
-            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
             decoration: todo.isDone ? TextDecoration.lineThrough : null,
           ),
         ),
@@ -723,6 +751,27 @@ class ToDoItem extends StatelessWidget {
                 ),
                 onPressed: () {
                   print('Pressed Edit button');
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      TextEditingController controller = TextEditingController(text: todo.todoText);
+                      return AlertDialog(
+                        content: TextField(
+                          controller: controller,
+                        ),
+                        actions: [
+                          TextButton(
+                            child: Text('Rename'),
+                            onPressed: () {
+                              String enteredText = controller.text;
+                              onRenameItem(todo.id, enteredText);
+                              Navigator.pop(context); // Close the dialog
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
               ),
             ),
@@ -751,5 +800,3 @@ class ToDoItem extends StatelessWidget {
     );
   }
 }
-
-

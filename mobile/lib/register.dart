@@ -1,12 +1,28 @@
-import 'verification.dart';
 import 'package:flutter/material.dart';
-import 'token.dart';
+
 import 'main.dart';
+import 'token.dart';
+import 'verification.dart';
 
 String firstName = '';
 String lastName = '';
 String email = '';
 String password = '';
+
+String? validatePassword(String password) {
+  if (password.isEmpty) {
+    return 'Please enter a password';
+  } else if (password.length < 8 || password.length > 20) {
+    return 'Password must be between 8 and 20 characters';
+  } else if (!password.contains(RegExp(r'[A-Z]'))) {
+    return 'Password must contain at least one uppercase letter';
+  } else if (!password.contains(RegExp(r'[0-9]'))) {
+    return 'Password must contain at least one number';
+  } else if (!password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+    return 'Password must contain at least one special character';
+  }
+  return null; // No error
+}
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -36,7 +52,7 @@ class _RegisterState extends State<Register> {
                       color: Colors.black,
                       fontWeight: FontWeight.w900,
                       fontSize: 60,
-                      fontFamily: 'Arial Narrow',
+                      fontFamily: 'Poppins',
                     ),
                   ),
                 ),
@@ -48,7 +64,7 @@ class _RegisterState extends State<Register> {
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 18,
-                      fontFamily: 'Arial Narrow',
+                      fontFamily: 'Poppins',
                     ),
                   ),
                 ),
@@ -60,7 +76,7 @@ class _RegisterState extends State<Register> {
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 16,
-                      fontFamily: 'Arial Narrow',
+                      fontFamily: 'Poppins',
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -74,7 +90,7 @@ class _RegisterState extends State<Register> {
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 16,
-                      fontFamily: 'Arial Narrow',
+                      fontFamily: 'Poppins',
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -88,7 +104,7 @@ class _RegisterState extends State<Register> {
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 16,
-                      fontFamily: 'Arial Narrow',
+                      fontFamily: 'Poppins',
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -102,7 +118,7 @@ class _RegisterState extends State<Register> {
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 16,
-                      fontFamily: 'Arial Narrow',
+                      fontFamily: 'Poppins',
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -129,7 +145,7 @@ class _RegisterState extends State<Register> {
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 18,
-                        fontFamily: 'Arial Narrow',
+                        fontFamily: 'Poppins',
                       ),
                     ),
                     Expanded(
@@ -189,8 +205,8 @@ class _PasswordInputState extends State<PasswordInput> {
                 borderRadius: BorderRadius.circular(10.0),
               ),
               hintText: 'At least 8 characters',
-              hintStyle: const TextStyle(
-                  color: Colors.black54, fontFamily: 'Arial Narrow'),
+              hintStyle:
+                  const TextStyle(color: Colors.black54, fontFamily: 'Poppins'),
               contentPadding: const EdgeInsets.fromLTRB(
                   12.0, 8.0, 12.0, 8.0), // Add left padding here
             ),
@@ -255,9 +271,9 @@ class _EmailInputState extends State<EmailInput> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              hintText: 'Example@gmail.com',
-              hintStyle: const TextStyle(
-                  color: Colors.black54, fontFamily: 'Arial Narrow'),
+              hintText: 'Example@email.com',
+              hintStyle:
+                  const TextStyle(color: Colors.black54, fontFamily: 'Poppins'),
               contentPadding: const EdgeInsets.fromLTRB(
                   12.0, 8.0, 12.0, 8.0), // Add left padding here
               errorText: _emailError,
@@ -341,8 +357,8 @@ class _FirstNameInputState extends State<FirstNameInput> {
                 borderRadius: BorderRadius.circular(10.0),
               ),
               hintText: 'John',
-              hintStyle: const TextStyle(
-                  color: Colors.black54, fontFamily: 'Arial Narrow'),
+              hintStyle:
+                  const TextStyle(color: Colors.black54, fontFamily: 'Poppins'),
               contentPadding: const EdgeInsets.fromLTRB(
                   12.0, 8.0, 12.0, 8.0), // Add left padding here
               errorText: _firstNameError,
@@ -416,8 +432,8 @@ class _LastNameInputState extends State<LastNameInput> {
                 borderRadius: BorderRadius.circular(10.0),
               ),
               hintText: 'Doe',
-              hintStyle: const TextStyle(
-                  color: Colors.black54, fontFamily: 'Arial Narrow'),
+              hintStyle:
+                  const TextStyle(color: Colors.black54, fontFamily: 'Poppins'),
               contentPadding: const EdgeInsets.fromLTRB(
                   12.0, 8.0, 12.0, 8.0), // Add left padding here
               errorText: _lastNameError,
@@ -470,7 +486,7 @@ class SignIn extends StatelessWidget {
         'Sign into LockedIn',
         style: TextStyle(
           color: Colors.blue,
-          fontFamily: 'Arial Narrow',
+          fontFamily: 'Poppins',
           fontSize: 18,
         ),
       ),
@@ -497,8 +513,18 @@ class RegisterButton extends StatelessWidget {
           // Display error message to the user
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              backgroundColor: Colors.red, // Set background color to red
               content: Center(
-                child: Text(check, textAlign: TextAlign.center),
+                child: Text(
+                  check,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontFamily: 'Poppins', // Use the Poppins font
+                    fontSize: 18, // Set the font size to 18
+                    fontWeight: FontWeight.bold, // Set the font weight to bold
+                    color: Colors.white, // Set text color to white
+                  ),
+                ),
               ),
             ),
           );
@@ -514,7 +540,7 @@ class RegisterButton extends StatelessWidget {
         child: Text(
           'Register',
           style: TextStyle(
-              color: Colors.white, fontSize: 18, fontFamily: 'Arial Narrow'),
+              color: Colors.white, fontSize: 18, fontFamily: 'Poppins'),
           textAlign: TextAlign.center, // Align text in the center horizontally
         ),
       ),
