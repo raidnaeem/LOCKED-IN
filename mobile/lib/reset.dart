@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'main.dart';
 import 'token.dart';
 
@@ -41,7 +42,7 @@ class _ResetPageState extends State<ResetPage> {
                     color: Colors.black,
                     fontWeight: FontWeight.w900,
                     fontSize: 60,
-                    fontFamily: 'Arial Narrow',
+                    fontFamily: 'Poppins',
                   ),
                 ),
               ),
@@ -53,7 +54,8 @@ class _ResetPageState extends State<ResetPage> {
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
                   ),
-                  textAlign: TextAlign.center, // Optional, to center the text within its container
+                  textAlign: TextAlign
+                      .center, // Optional, to center the text within its container
                 ),
               ),
               const SizedBox(height: 30.0),
@@ -67,12 +69,12 @@ class _ResetPageState extends State<ResetPage> {
                     decoration: InputDecoration(
                       hintText: 'Example@email.com',
                       hintStyle: const TextStyle(
-                          color: Colors.black54, fontFamily: 'Arial Narrow'),
+                          color: Colors.black54, fontFamily: 'Poppins'),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      contentPadding: const EdgeInsets.fromLTRB(
-                          12.0, 8.0, 12.0, 8.0),
+                      contentPadding:
+                          const EdgeInsets.fromLTRB(12.0, 8.0, 12.0, 8.0),
                     ),
                   ),
                 ),
@@ -94,7 +96,7 @@ class _ResetPageState extends State<ResetPage> {
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
-                      fontFamily: 'Arial Narrow',
+                      fontFamily: 'Poppins',
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -111,21 +113,29 @@ class _ResetPageState extends State<ResetPage> {
   void _handleSubmit(BuildContext context) async {
     try {
       await requestPasswordReset(email); // Assuming `code` is defined somewhere
-
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          backgroundColor: Colors.red, // Set background color to red
           content: Center(
             child: Text(
-              '$e',
-              textAlign: TextAlign.center,
+              '$e', // Convert the error to a string to display
+              textAlign: TextAlign.center, // Center the text horizontally
+              style: const TextStyle(
+                fontFamily: 'Poppins', // Use the Poppins font
+                fontSize: 18, // Set the font size to 18
+                fontWeight: FontWeight.bold, // Set the font weight to bold
+                color: Colors.white, // Set text color to white
+              ),
             ),
           ),
-          duration: const Duration(seconds: 5),
+          duration: const Duration(seconds: 5), // Adjust the duration as needed
         ),
       );
 
-      if (validEmail == 200){
+      print(validEmail);
+
+      if (validEmail == 200) {
         Future.delayed(Duration(seconds: 5), () {
           Navigator.push(
             context,
