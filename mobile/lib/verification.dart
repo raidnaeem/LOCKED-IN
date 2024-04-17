@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/homepage.dart';
+
 import 'main.dart';
-import 'register.dart';
 import 'token.dart';
 
 class VerificationPage extends StatefulWidget {
@@ -18,33 +17,36 @@ class _VerificationPageState extends State<VerificationPage> {
     // Call sendVerification when the page is initialized
   }
 
-
   void _handleSubmit(BuildContext context) async {
     try {
       await verifyUser(emailVerify, code);
-
     } catch (e) {
-
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          backgroundColor: Colors.red, // Set background color to red
           content: Center(
             child: Text(
               '$e', // Convert the error to a string to display
               textAlign: TextAlign.center, // Center the text horizontally
+              style: const TextStyle(
+                fontFamily: 'Poppins', // Use the Poppins font
+                fontSize: 18, // Set the font size to 18
+                fontWeight: FontWeight.bold, // Set the font weight to bold
+                color: Colors.white, // Set text color to white
+              ),
             ),
           ),
           duration: const Duration(seconds: 5), // Adjust the duration as needed
         ),
       );
-        Future.delayed(Duration(seconds: 5), () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const LoginPage()),
-          );
-        });
+      Future.delayed(Duration(seconds: 5), () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+        );
+      });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +71,7 @@ class _VerificationPageState extends State<VerificationPage> {
                     color: Colors.black,
                     fontWeight: FontWeight.w900,
                     fontSize: 60,
-                    fontFamily: 'Arial Narrow',
+                    fontFamily: 'Poppins',
                   ),
                 ),
               ), // Added Align
@@ -81,7 +83,8 @@ class _VerificationPageState extends State<VerificationPage> {
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
                   ),
-                  textAlign: TextAlign.center, // Optional, to center the text within its container
+                  textAlign: TextAlign
+                      .center, // Optional, to center the text within its container
                 ),
               ),
               const SizedBox(height: 30.0),
@@ -101,7 +104,7 @@ class _VerificationPageState extends State<VerificationPage> {
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
-                      fontFamily: 'Arial Narrow',
+                      fontFamily: 'Poppins',
                     ),
                     textAlign: TextAlign.center,
                   ),
