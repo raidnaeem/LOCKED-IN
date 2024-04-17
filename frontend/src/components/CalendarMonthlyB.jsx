@@ -72,17 +72,17 @@ const CalendarMonthlyB = () =>  {
           <Button onClick={() => changeMonth(currentMonth - 1)}>
             prev
           </Button>
-          <div className="month p-2 w-1/3 md:w-1/4 font-poppins">
+          <div className="month p-2 w-1/3 md:w-1/4">
             <Select value={currentMonth} onChange={(e) => changeMonth(e.target.value)}>
               {months.map((month, index) => (
                 <option key={index} value={index}>{month}</option>
               ))}
             </Select>
           </div>
-          <div className="year p-2 w-1/3 md:w-1/4 font-poppins">
+          <div className="year p-2 w-1/3 md:w-1/4">
             <Select value={currentYear} onChange={(e) => setCurrentYear(e.target.value)}>
-              {years.map((year, index) => (
-                <option key={year} value={year}>{year}</option>
+              {years.map((year) => (
+                <option key={year} value={year} fontFamily={'Poppins'}>{year}</option>
               ))}
             </Select>
           </div>

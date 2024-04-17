@@ -6,7 +6,6 @@ function DayGrid({currentDay, currentMonth, currentYear, events}) {
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
     const startingWeekday = firstDayOfMonth.getDay() === 0 ? 7 : firstDayOfMonth.getDay(); 
     const currentDays = [];
-    const eventStarts = [];
 
     const ParseDate = (eventDate) => {
       //eventDate comes in format MM/DD/YYYY
@@ -15,6 +14,7 @@ function DayGrid({currentDay, currentMonth, currentYear, events}) {
       return new Date(dateValues[2], dateValues[0] - 1, dateValues[1])
     }
 
+    /*
     const DayComparison = (date, otherDate) => {
       if(date.getFullYear() === otherDate.getFullYear() && date.getDate() === otherDate.getDate() && date.getMonth() === otherDate.getMonth())
       {
@@ -22,12 +22,13 @@ function DayGrid({currentDay, currentMonth, currentYear, events}) {
       }
       return false;
     }
+    */
 
-    //Parse dates for events
-    for(let i = 0; i < events.length; i++) {
-      eventStarts.push(ParseDate(events[i].StartDate));
-    }
-  
+    // Parse dates for events
+    const eventDates = events.map(event => ({
+      startDay: new Date(ParseDate(event.StartDate)),
+      endDay: new Date(ParseDate(event.EndDate)),
+    }));
     //up to 6 weeks (42 days) to show prev and next weeks of month
     for (let i = 0; i < 42; i++) {
 
@@ -45,15 +46,15 @@ function DayGrid({currentDay, currentMonth, currentYear, events}) {
             number: firstDayOfMonth.getDate(),
             today: (firstDayOfMonth.toDateString() === currentDay.toDateString()),
             year: firstDayOfMonth.getFullYear(),
-            eventStart: false,
+            hasEvent: false,
             dayEventList: [],
         }
 
         //Assigning Events to calendarDay
         for(let i = 0; i < events.length; i++) {
-          if(DayComparison(eventStarts[i], calendarDay.date))
+          if(calendarDay.date >= eventDates[i].startDay && calendarDay.date <= eventDates[i].endDay )
           {
-            calendarDay.eventStart = true;
+            calendarDay.hasEvent = true;
             calendarDay.dayEventList.push(events[i]);
           }
         }

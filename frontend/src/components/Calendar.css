@@ -100,6 +100,11 @@
 }
 
 .today p {
-  color: #cc0000;
-  font-weight: bold;
+  margin-top: 2%;
+  width: 28px; 
+  line-height: 28px; 
+  border-radius: 50%; 
+  text-align: center; 
+  background-color: rgb(124, 124, 6); 
+  color: white;
 }
