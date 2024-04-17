@@ -559,16 +559,9 @@ class _TimerPageState extends State<TimerPage> {
   }
 
   void pauseTimer() {
-    if(_isPaused){
       setState(() {
-        _isPaused = false;
+        _isPaused = !_isPaused;
       });
-    }
-    else{
-      setState(() {
-        _isPaused = true;
-      });
-    }
   }
 
   void resetTimer() {
@@ -652,7 +645,7 @@ class _TimerPageState extends State<TimerPage> {
                 ),
                 ElevatedButton(
                   onPressed: pauseTimer,
-                  child: Text('Pause/Resume'),
+                  child: Text(_isPaused ? 'Resume' : 'Pause'),
                 ),
                 ElevatedButton(
                   onPressed: resetTimer,
