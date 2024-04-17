@@ -1,10 +1,32 @@
 import React from 'react';
+import Day from './Day';
 import './Calendar.css';
 
-function DayGrid({currentDay, currentMonth, currentYear}) {
+function DayGrid({currentDay, currentMonth, currentYear, events}) {
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
     const startingWeekday = firstDayOfMonth.getDay() === 0 ? 7 : firstDayOfMonth.getDay(); 
-    let currentDays = [];
+    const currentDays = [];
+    const eventStarts = [];
+
+    const ParseDate = (eventDate) => {
+      //eventDate comes in format MM/DD/YYYY
+      const dateValues = eventDate.split('/');
+      //When constructing Date the order is year, monthIndex, day
+      return new Date(dateValues[2], dateValues[0] - 1, dateValues[1])
+    }
+
+    const DayComparison = (date, otherDate) => {
+      if(date.getFullYear() === otherDate.getFullYear() && date.getDate() === otherDate.getDate() && date.getMonth() === otherDate.getMonth())
+      {
+        return true;
+      }
+      return false;
+    }
+
+    //Parse dates for events
+    for(let i = 0; i < events.length; i++) {
+      eventStarts.push(ParseDate(events[i].StartDate));
+    }
   
     //up to 6 weeks (42 days) to show prev and next weeks of month
     for (let i = 0; i < 42; i++) {
@@ -22,7 +44,18 @@ function DayGrid({currentDay, currentMonth, currentYear}) {
             month: firstDayOfMonth.getMonth(),
             number: firstDayOfMonth.getDate(),
             today: (firstDayOfMonth.toDateString() === currentDay.toDateString()),
-            year: firstDayOfMonth.getFullYear()
+            year: firstDayOfMonth.getFullYear(),
+            eventStart: false,
+            dayEventList: [],
+        }
+
+        //Assigning Events to calendarDay
+        for(let i = 0; i < events.length; i++) {
+          if(DayComparison(eventStarts[i], calendarDay.date))
+          {
+            calendarDay.eventStart = true;
+            calendarDay.dayEventList.push(events[i]);
+          }
         }
 
         currentDays.push(calendarDay);
@@ -33,11 +66,7 @@ function DayGrid({currentDay, currentMonth, currentYear}) {
         {
           currentDays.map((day) => {
             return (
-              <div className={"calendar-day" + (day.currentMonth ? " current-month" : "") + (day.today ? " today" : "")}>
-                <p>
-                    {day.number}
-                </p>
-              </div>
+              <Day key={day.date} day={day}/>
             )
           })
         }
