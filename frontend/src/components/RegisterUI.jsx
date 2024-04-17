@@ -20,8 +20,8 @@ const RegisterUI = ({doRegister, setRegisterFName, setRegisterLName, setRegister
         
         {/*Rectangles*/}
         <div className="bg-gray relative w-full h-[250px]">
-        <div className="bg-blue relative z-10 top-10 left-12 h-[620px] max-w-lg" style={{boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.12)' }}>
-        <div className="bg-white relative z-10 bottom-3 right-3 h-[620px] max-w-lg flex flex-col justify-start items-center" style={{boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.12)' }}>
+        <div className="bg-blue relative z-10 top-10 left-12 h-[700px] max-w-lg" style={{boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.12)' }}>
+        <div className="bg-white relative z-10 bottom-3 right-3 h-[700px] max-w-lg flex flex-col justify-start items-center" style={{boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.12)' }}>
 
         {/*Heading*/}
         <img className="w-[80px] h-[120px] relative z-20 -top-5" src={logo} alt='logo'/>
@@ -114,7 +114,7 @@ const RegisterUI = ({doRegister, setRegisterFName, setRegisterLName, setRegister
             </Button>
         </Stack>
             {/*Register Feedback Message*/}
-            <div id="registerResult" className='text-center text-red-600 text-md p-2 max-w-[340px]' style={{commonTextStyle}}>{registerMessage}</div>
+            <div id="registerResult" className='text-center text-red-600 text-md p-2 max-w-[340px] h-[100px]' style={{commonTextStyle}}>{registerMessage}</div>
         </form>
 
         {/*Navigate to Login*/}

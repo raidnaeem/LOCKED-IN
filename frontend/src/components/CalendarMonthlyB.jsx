@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { Select } from '@chakra-ui/react'
 import DayGrid from './DayGrid';
 import './Calendar.css';
 import { Button } from '@chakra-ui/react';
@@ -14,6 +15,11 @@ const CalendarMonthlyB = () =>  {
   const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const months = ['January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'];
+  const years = [];
+  for(let i = 0; i <= 30; i++)
+  {
+    years.push((currentYear - 15) + i);
+  }
 
   const changeMonth = async month => {
     month = parseInt(month);
@@ -38,8 +44,20 @@ const CalendarMonthlyB = () =>  {
           <Button onClick={() => changeMonth(currentMonth - 1)}>
             prev
           </Button>
-          <div className="month p-2 w-1/3 md:w-1/4 font-poppins">{months[currentMonth]}</div>
-          <div className="year p-2 w-1/3 md:w-1/4 font-poppins">{currentYear}</div>
+          <div className="month p-2 w-1/3 md:w-1/4 font-poppins">
+            <Select value={currentMonth} onChange={(e) => changeMonth(e.target.value)}>
+              {months.map((month, index) => (
+                <option key={index} value={index}>{month}</option>
+              ))}
+            </Select>
+          </div>
+          <div className="year p-2 w-1/3 md:w-1/4 font-poppins">
+            <Select value={currentYear} onChange={(e) => setCurrentYear(e.target.value)}>
+              {years.map((year, index) => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </Select>
+          </div>
           <Button onClick={() => changeMonth(currentMonth + 1)}>
             next
           </Button>
