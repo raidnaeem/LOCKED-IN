@@ -207,6 +207,7 @@ class _ToDoPageState extends State<ToDoPage> {
                           todo: todo,
                           onToDoChanged: _handleToDoChange,
                           onDeleteItem: _deleteToDoItem,
+                          onRenameItem: _renameToDoItem,
                         ),
                     ],
                   ),
@@ -304,11 +305,14 @@ class _ToDoPageState extends State<ToDoPage> {
     });
   }
 
-  void _renameToDoItem(String todoText, id) {
-    setState(() {
-      todosList.where((item) => item.todoText == todoText);
-    });
-  }
+  void _renameToDoItem(String id, String newText) {
+  setState(() {
+    int index = todosList.indexWhere((item) => item.id == id);
+    if (index != -1) {
+      todosList[index].todoText = newText;
+    }
+  });
+}
 
   void _deleteToDoItem(String id) {
     setState(() {
@@ -689,12 +693,14 @@ class ToDoItem extends StatelessWidget {
   final ToDo todo;
   final onToDoChanged;
   final onDeleteItem;
+  final onRenameItem;
 
   const ToDoItem(
       {Key? key,
       required this.todo,
       required this.onToDoChanged,
-      required this.onDeleteItem})
+      required this.onDeleteItem,
+      required this.onRenameItem})
       : super(key: key);
 
   @override
@@ -745,6 +751,27 @@ class ToDoItem extends StatelessWidget {
                 ),
                 onPressed: () {
                   print('Pressed Edit button');
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      TextEditingController controller = TextEditingController(text: todo.todoText);
+                      return AlertDialog(
+                        content: TextField(
+                          controller: controller,
+                        ),
+                        actions: [
+                          TextButton(
+                            child: Text('Rename'),
+                            onPressed: () {
+                              String enteredText = controller.text;
+                              onRenameItem(todo.id, enteredText);
+                              Navigator.pop(context); // Close the dialog
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
               ),
             ),
