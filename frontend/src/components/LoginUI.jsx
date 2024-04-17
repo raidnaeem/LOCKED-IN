@@ -6,7 +6,7 @@ const passwordIcon = require('../assets/password-icon.png')
 
 const LoginUI = ({ doLogin, setLoginEmail, setLoginPassword, loginMessage }) => {
     const commonTextStyle = {
-        fontFamily: 'Roboto',
+        fontFamily: 'Poppins',
         wordWrap: 'break-word',
     };
 

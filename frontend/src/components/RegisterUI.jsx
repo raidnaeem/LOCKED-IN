@@ -7,7 +7,7 @@ const emailIcon = require('../assets/email-icon.png')
 
 const RegisterUI = ({doRegister, setRegisterFName, setRegisterLName, setRegisterEmail, setRegisterPassword, setConfirmPassword, registerMessage}) => {
     const commonTextStyle = {
-        fontFamily: 'Roboto',
+        fontFamily: 'Poppins',
         wordWrap: 'break-word',
     };
 
