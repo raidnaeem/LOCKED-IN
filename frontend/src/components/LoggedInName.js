@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from '@chakra-ui/react';
 
 function LoggedIn()
 {
@@ -25,15 +26,13 @@ function LoggedIn()
     };    
 
   return(
-    <div id="loggedInDiv" style={{textAlign: 'right', paddingRight: '3%', position: 'relative'}}>
-      <div id="userName">
+    <div id="loggedInDiv" className='p-3 text-right relative w-full'>
+      <div id="userName" className='mb-2 text-lg'>
         Welcome, {firstName} {lastName}
       </div>
-      <br />
-
-      <button type="button" id="logoutButton" className="buttons" 
+      <Button type="button" id="logoutButton" className="right-5" 
         onClick={doLogout}> Log Out
-      </button>
+      </Button>
    </div>
   );
 

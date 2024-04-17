@@ -17,17 +17,19 @@
 }
 
 .header {
-  width: 100%;
+  width: 80%;
   height: 20%;
+  margin-left: 10%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .month, .year {
-  padding-inline: 30px;
+  padding-inline: 20px;
   font-size: 50px;
-  font-family: 'Montagu Slab', sans-serif;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
 }
 
 .footer {

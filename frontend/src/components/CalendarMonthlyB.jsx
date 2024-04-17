@@ -15,18 +15,32 @@ const CalendarMonthlyB = () =>  {
   const months = ['January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'];
 
+  const changeMonth = async month => {
+    month = parseInt(month);
+    if(month < 0)
+    {
+      setCurrentMonth(11);
+      setCurrentYear(currentYear - 1);
+    }
+    else if(month > 11){
+      setCurrentMonth(0);
+      setCurrentYear(currentYear + 1);
+    } else{
+      setCurrentMonth(month);
+    }
+  }
   
 
   return (
     <div className="bg-[#AAA06C]">
       {/*Calendar Header*/}
-      <div className="header">
-          <Button>
+      <div className="header w-[90%] md:w-[80%]">
+          <Button onClick={() => changeMonth(currentMonth - 1)}>
             prev
           </Button>
-          <div className="month p-2 ">{months[currentMonth]}</div>
-          <div className="year p-2">{currentYear}</div>
-          <Button>
+          <div className="month p-2 w-1/3 md:w-1/4 font-poppins">{months[currentMonth]}</div>
+          <div className="year p-2 w-1/3 md:w-1/4 font-poppins">{currentYear}</div>
+          <Button onClick={() => changeMonth(currentMonth + 1)}>
             next
           </Button>
       </div>

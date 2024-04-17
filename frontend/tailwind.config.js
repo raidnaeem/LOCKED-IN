@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 const colors = require('tailwindcss/colors')
 
+
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}",],
   theme: {
@@ -26,6 +27,9 @@ module.exports = {
       zinc: colors.zinc,
       pink: colors.pink,
       bamboo: '#F0DCB4',
+    },
+    fontFamily: {
+      'poppins': ['Poppins']
     },
     extend: {},
   },

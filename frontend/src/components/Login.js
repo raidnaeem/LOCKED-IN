@@ -33,7 +33,7 @@ function Login() {
             if (response.status === 200) {
                 //If email verified, navigate to Planner page
                 console.log(res);
-                if(res.verified == true) {
+                if(res.verified === true) {
                     var user =
                     { 
                         FirstName: res.FirstName, 

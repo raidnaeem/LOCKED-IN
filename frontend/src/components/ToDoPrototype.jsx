@@ -228,7 +228,7 @@ function ToDoPrototype()
         <div className='w-1/2 relative left-1/4 bg-white rounded-xl'>
             {/*Title and Clear Button*/}
             <div className='flex items-center justify-between pl-5 pr-5 rounded-t-xl bg-brown bg-opacity-70'>
-                <h1 className='text-[50px] text-bold text-white underline'>
+                <h1 className='text-[50px] text-bold font-poppins text-white underline'>
                     To-Do List
                 </h1>
                 <Button onClick={clearCompleted} colorScheme='yellow'>
