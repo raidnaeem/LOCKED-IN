@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import { Select } from '@chakra-ui/react'
+import { HStack, Select, Button} from '@chakra-ui/react'
 import DayGrid from './DayGrid';
 import bp from './Path.js'; 
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import './Calendar.css';
-import { Button } from '@chakra-ui/react';
 const addButton = require('../assets/AddButton.png');
 const searchButton = require('../assets/SearchEvent.png');
 
@@ -69,25 +69,25 @@ const CalendarMonthlyB = () =>  {
     <div className="bg-[#AAA06C]">
       {/*Calendar Header*/}
       <div className="header w-[90%] md:w-[80%]">
-          <Button onClick={() => changeMonth(currentMonth - 1)}>
-            prev
+          <Button onClick={() => changeMonth(currentMonth - 1)} opacity='70%'>
+            <FaArrowLeft/>
           </Button>
           <div className="month p-2 w-1/3 md:w-1/4">
-            <Select value={currentMonth} onChange={(e) => changeMonth(e.target.value)}>
+            <Select value={currentMonth} onChange={(e) => changeMonth(e.target.value)} size={{base: "lg", md: 'xl'}} borderWidth='0px'>
               {months.map((month, index) => (
                 <option key={index} value={index}>{month}</option>
               ))}
             </Select>
           </div>
           <div className="year p-2 w-1/3 md:w-1/4">
-            <Select value={currentYear} onChange={(e) => setCurrentYear(e.target.value)}>
+            <Select value={currentYear} onChange={(e) => setCurrentYear(e.target.value)} size={{base: "lg", md: 'xl'}} borderWidth='0px'>
               {years.map((year) => (
-                <option key={year} value={year} fontFamily={'Poppins'}>{year}</option>
+                <option key={year} value={year}>{year}</option>
               ))}
             </Select>
           </div>
-          <Button onClick={() => changeMonth(currentMonth + 1)}>
-            next
+          <Button onClick={() => changeMonth(currentMonth + 1)} opacity='70%'>
+            <FaArrowRight/>
           </Button>
       </div>
 
@@ -107,9 +107,16 @@ const CalendarMonthlyB = () =>  {
           <DayGrid currentDay={currentDay} currentMonth={currentMonth} currentYear={currentYear} events={events}/>
         </div>
 
-      {/*Calendar Header*/}
+      {/*Calendar Footer/Actions*/}
       <div className="footer">
-
+          <HStack spacing={10}>
+            <Button>
+              Add Event
+            </Button>
+            <Button>
+              Search Event
+            </Button>
+          </HStack>
       </div>
     </div>
   );
