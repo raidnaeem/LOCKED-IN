@@ -221,11 +221,12 @@ Future<void> deleteTask(String taskID) async {
 }
 
 Future<void> updateTask(String taskId, String newText) async {
+  print(newText);
   final baseUrl =
       'https://locked-in-561ee2a901c9.herokuapp.com'; // Replace with your API base URL
   final endpoint = '/api/task/update/$taskId';
 
-  final updateFields = {'todoText': newText}; // Construct update fields
+  final updateFields = {'Task': newText}; // Construct update fields
 
   try {
     final response = await http.put(
@@ -235,7 +236,7 @@ Future<void> updateTask(String taskId, String newText) async {
     );
 
     if (response.statusCode == 200) {
-      throw ('Task updated successfully');
+      throw ('Task updated successfully: ${response.statusCode}');
     } else if (response.statusCode == 404) {
       throw ('Task not found');
     } else if (response.statusCode == 304) {
