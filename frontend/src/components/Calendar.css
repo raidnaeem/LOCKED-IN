@@ -85,6 +85,7 @@
   position: relative;
   background-color: #F0DCB4;
   border: 1px solid black;
+  opacity: 70%;
 }
 
 .calendar-day:hover {
@@ -95,7 +96,11 @@
   position: absolute;
   right: 15px;
   font-size: 20px;
-  color: #a6a6a6;
+  color: #837f7f;
+}
+
+.current-month {
+  opacity: 100%;
 }
 
 .current-month p {
