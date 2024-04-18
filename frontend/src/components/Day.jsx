@@ -11,6 +11,9 @@ function Day({day}) {
         //When constructing Date the order is year, monthIndex, day, hour, minute
         return new Date(dateValues[2], dateValues[0] - 1, dateValues[1], timeValues[0], timeValues[1])
       }
+
+    const colors = ['white', 'blue'];
+    const colorsText = ['black', 'white'];
     
     return (
         <div className={`calendar-day ${day.currentMonth ? "current-month" : ""} ${day.today ? "today" : ""}`}>
@@ -19,9 +22,10 @@ function Day({day}) {
             </p>
             <div className={` ${day.hasEvent ? "inline-block" : "hidden"}`}>
                 {
-                    day.dayEventList.map((event) => {
+                    day.dayEventList.map((event, index) => {
+                        const colorIndex = index % 2;
                         return (
-                            <div key={event._id}>
+                            <div key={event._id} className={`eventContainer bg-${colors[colorIndex]} text-${colorsText[colorIndex]}`}>
                                 {event.Event}
                             </div>
                         )

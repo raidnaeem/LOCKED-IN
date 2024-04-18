@@ -477,7 +477,7 @@ app.get("/api/calendar/search", async (req, res) => {
                                   UserID: parseInt(userID),
                                   Event: { $regex: regex }
                               })
-                              .limit(5)
+                              .limit(10)
                               .toArray();
       res.status(200).json(events);
   } catch (error) {
