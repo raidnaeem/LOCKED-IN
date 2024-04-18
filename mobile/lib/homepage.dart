@@ -186,6 +186,7 @@ class _ToDoPageState extends State<ToDoPage> {
                     padding: EdgeInsets.only(top: 20), child: searchBox()),
                 Expanded(
                   child: ListView(
+                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 80),
                     children: [
                       Container(
                         margin: const EdgeInsets.only(
