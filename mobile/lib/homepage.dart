@@ -19,6 +19,7 @@ class HomePageScreen extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => HomePageState(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Locked In',
         theme: ThemeData(
           useMaterial3: true,
