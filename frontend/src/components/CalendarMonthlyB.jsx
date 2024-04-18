@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import { HStack, Select, Button} from '@chakra-ui/react'
+import { HStack, Select, Button, useDisclosure} from '@chakra-ui/react'
 import DayGrid from './DayGrid';
+import CalendarAdd from './CalendarAdd';
 import bp from './Path.js'; 
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import './Calendar.css';
@@ -17,6 +18,8 @@ const CalendarMonthlyB = () =>  {
   const [currentYear, setCurrentYear] = useState(currentDay.getFullYear());
   const [events, setEvents] = useState([]); // Array of events
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const months = ['January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'];
@@ -28,7 +31,7 @@ const CalendarMonthlyB = () =>  {
 
   useEffect(() => {
     // Fetch events when component mounts
-    fetchTasks();
+    fetchEvents();
   }, []);
 
   const changeMonth = async month => {
@@ -47,7 +50,7 @@ const CalendarMonthlyB = () =>  {
   }
   
   //Fetch Events; uses UserID
-  const fetchTasks = async event => {
+  const fetchEvents = async event => {
     try {
         const response = await fetch(bp.buildPath(`api/calendar/events/${ud.UserID}`), {
             method: 'GET',
@@ -110,7 +113,7 @@ const CalendarMonthlyB = () =>  {
       {/*Calendar Footer/Actions*/}
       <div className="footer">
           <HStack spacing={10}>
-            <Button>
+            <Button onClick={onOpen}>
               Add Event
             </Button>
             <Button>
@@ -118,6 +121,7 @@ const CalendarMonthlyB = () =>  {
             </Button>
           </HStack>
       </div>
+      <CalendarAdd isOpen={isOpen} onClose={onClose}/>
     </div>
   );
 };

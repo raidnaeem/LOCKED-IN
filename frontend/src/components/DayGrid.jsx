@@ -72,7 +72,7 @@ function DayGrid({currentDay, currentMonth, currentYear, events}) {
           })
         }
       </div>
-    )
+    );
   }
   
   export default DayGrid;
