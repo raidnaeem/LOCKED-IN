@@ -41,7 +41,7 @@ class _ResetPageState extends State<ResetPage> {
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w900,
-                    fontSize: 60,
+                    fontSize: 53,
                     fontFamily: 'Poppins',
                   ),
                 ),
