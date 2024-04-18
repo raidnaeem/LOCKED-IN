@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w900,
-                  fontSize: 60,
+                  fontSize: 50,
                   fontFamily: 'Poppins',
                 ),
               ),
