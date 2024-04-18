@@ -7,9 +7,9 @@ const searchIcon = require('../assets/search-icon.png')
 
 
 
-const CalendarSearch = ({searchIsOpen, searchOnClose}) =>  {
+const CalendarSearch = ({searchIsOpen, searchOnClose, setEvents}) =>  {
 
-  const [events, setEvents] = useState([]); // Array of events for search menu
+  const [localEvents, setLocalEvents] = useState([]); // Array of events for search menu
   const [queryEvent, setQueryEvent] = useState('');
 
   let _ud = localStorage.getItem('user_data');
@@ -30,7 +30,7 @@ const CalendarSearch = ({searchIsOpen, searchOnClose}) =>  {
 
         if (response.ok) {
             const data = await response.json();
-            setEvents(data); // Update tasks state with fetched tasks
+            setLocalEvents(data); // Update tasks state with fetched tasks
         } else {
             console.log('Failed to fetch events');
         }
@@ -38,6 +38,32 @@ const CalendarSearch = ({searchIsOpen, searchOnClose}) =>  {
         console.error('Error fetching events:', error);
     }
 };
+
+//Delete Event by it's _id
+const deleteEvent = async (currEventID) =>
+{
+    try {
+        const response = await fetch(bp.buildPath(`api/calendar/delete/${currEventID}`), {
+            method: 'DELETE',
+        });
+
+        const res = await response.json();
+        
+        //Success
+        if(response.ok) {
+            console.log(res.message);
+
+            // Remove the deleted event from the events array
+            console.log('deleted');
+            setLocalEvents(prevEvents => prevEvents.filter(event => event._id !== currEventID));
+            setEvents(prevEvents => prevEvents.filter(event => event._id !== currEventID));
+        } else {
+            console.log(res.error);
+        }
+    } catch (e) {
+        alert(e.toString());
+    }
+}
 
   return (
     <div>
@@ -68,8 +94,8 @@ const CalendarSearch = ({searchIsOpen, searchOnClose}) =>  {
                 </InputGroup>
             </Stack>
                 <div className='flex flex-wrap grid-cols-2 ml-8 md:ml-5'>
-                    {events.map((event) => (
-                            <CalendarEventCard key={event._id} event={event}/>
+                    {localEvents.map((event) => (
+                            <CalendarEventCard key={event._id} event={event} deleteEvent={deleteEvent}/>
                     ))}
                 </div>
           </DrawerBody>

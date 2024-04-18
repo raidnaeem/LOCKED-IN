@@ -43,7 +43,7 @@ const CalendarMonthlyB = () =>  {
   useEffect(() => {
     // Fetch events when component mounts
     fetchEvents();
-  }, []);
+  }, [events]);
 
   const changeMonth = async month => {
     month = parseInt(month);
@@ -176,31 +176,6 @@ const CalendarMonthlyB = () =>  {
       }
   }
 
-  //Delete Event by it's _id
-  const deleteEvent = async (currEventID) =>
-  {
-      try {
-          const response = await fetch(bp.buildPath(`api/calendar/delete/${currEventID}`), {
-              method: 'DELETE',
-          });
-
-          const res = await response.json();
-          
-          //Success
-          if(response.ok) {
-              console.log(res.message);
-
-              // Remove the deleted event from the events array
-              console.log('deleted');
-              setEvents(prevTasks => prevTasks.filter(task => task._id !== currEventID));
-          } else {
-              console.log(res.error);
-          }
-      } catch (e) {
-          alert(e.toString());
-      }
-  }
-
   return (
     <div className="bg-[#AAA06C]">
       {/*Calendar Header*/}
@@ -255,7 +230,7 @@ const CalendarMonthlyB = () =>  {
           </HStack>
       </div>
       <CalendarAdd isOpen={isOpen} onClose={onClose} setEventName={setEventName} setEventStart={setEventStart} setEventEnd={setEventEnd} createEvent={createEvent}/>
-      <CalendarSearch searchIsOpen={searchIsOpen} searchOnClose={searchOnClose}/>
+      <CalendarSearch searchIsOpen={searchIsOpen} searchOnClose={searchOnClose} setEvents={setEvents}/>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { Card, CardHeader, CardBody, CardFooter,
          Stack, ButtonGroup, Button, Input, InputGroup, InputLeftElement} from '@chakra-ui/react';
 import bp from './Path.js'; 
 
-const CalendarEventCard = ({event}) =>  {
+const CalendarEventCard = ({event, deleteEvent}) =>  {
 
   return (
     <div className='col-span-1 min-w-[90%] md:min-w-[50%]'>
@@ -30,7 +30,7 @@ const CalendarEventCard = ({event}) =>  {
                 <Button variant='ghost' colorScheme='blue'>
                     Edit
                 </Button>
-                <Button variant='solid' colorScheme='red'>
+                <Button variant='solid' colorScheme='red' onClick={() => deleteEvent(event._id)}>
                     Delete
                 </Button>
                 </ButtonGroup>
