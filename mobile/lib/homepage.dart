@@ -594,6 +594,26 @@ class _CalendarPageState extends State<CalendarPage> {
               },
             ),
           ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 20, right: 20),
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: ElevatedButton(
+                onPressed: () {
+                  // Button onPressed logic
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange[250],
+                  minimumSize: Size(60, 60),
+                  elevation: 10,
+                ),
+                child: const Text(
+                  '+',
+                  style: TextStyle(fontSize: 40),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
