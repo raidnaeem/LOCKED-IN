@@ -97,31 +97,34 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             actions: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red, // Keep the original red color
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 5.0), // Keep the original padding
-                ),
-                child: const SizedBox(
-                  width: 80,
-                  child: Text(
-                    'Logout',
-                    style: TextStyle(
-                      color: Colors.white, // Keep the original text color
-                      fontSize: 18, // Keep the original font size
-                      fontFamily: 'Poppins',
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const LoginPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red, // Keep the original red color
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    textAlign: TextAlign.center,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 5.0), // Keep the original padding
+                  ),
+                  child: const SizedBox(
+                    width: 80,
+                    child: Text(
+                      'Logout',
+                      style: TextStyle(
+                        color: Colors.white, // Keep the original text color
+                        fontSize: 18, // Keep the original font size
+                        fontFamily: 'Poppins',
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
               ),
