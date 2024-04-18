@@ -187,7 +187,6 @@ Future<List<dynamic>> searchTasks(String query, int userID) async {
     'query': query,
     'userID': userID.toString(),
     'page': page.toString(),
-    'pageSize': '5',
   };
 
   final Uri uri = Uri.parse(apiUrl).replace(queryParameters: queryParams);

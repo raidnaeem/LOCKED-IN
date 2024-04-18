@@ -19,6 +19,7 @@ class HomePageScreen extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => HomePageState(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Locked In',
         theme: ThemeData(
           useMaterial3: true,
@@ -88,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w900,
-                  fontSize: 60,
+                  fontSize: 50,
                   fontFamily: 'Poppins',
                 ),
               ),
@@ -604,12 +605,14 @@ class TimerPage extends StatefulWidget {
   State<TimerPage> createState() => _TimerPageState();
 }
 
-class _TimerPageState extends State<TimerPage> {
-  late Timer _timer;
+late Timer _timer;
   int _minutes = 0;
   int _seconds = 0;
   int _start = 0;
   bool _isPaused = false;
+
+class _TimerPageState extends State<TimerPage> {
+  
   TextEditingController _minutesController = TextEditingController();
   TextEditingController _secondsController = TextEditingController();
 
@@ -636,15 +639,9 @@ class _TimerPageState extends State<TimerPage> {
   }
 
   void pauseTimer() {
-    if (_isPaused) {
       setState(() {
-        _isPaused = false;
+        _isPaused = !_isPaused;
       });
-    } else {
-      setState(() {
-        _isPaused = true;
-      });
-    }
   }
 
   void resetTimer() {
@@ -728,7 +725,7 @@ class _TimerPageState extends State<TimerPage> {
                 ),
                 ElevatedButton(
                   onPressed: pauseTimer,
-                  child: Text('Pause/Resume'),
+                  child: Text(_isPaused ? 'Resume' : 'Pause'),
                 ),
                 ElevatedButton(
                   onPressed: resetTimer,
