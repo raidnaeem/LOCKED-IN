@@ -7,6 +7,7 @@ dynamic verify;
 dynamic sent;
 dynamic validEmail;
 dynamic userId;
+dynamic taskId;
 
 String emailVerify = '';
 String code = '';
@@ -145,12 +146,11 @@ Future<void> verifyUser(String email, String verificationToken) async {
   }
 }
 
-Future<void> addTask(
+Future<String> addTask(
     String task, String taskImage, bool done, int userId) async {
   const String apiUrl =
       'https://locked-in-561ee2a901c9.herokuapp.com/api/task/add';
 
-  print("Task: $task");
   final Map<String, dynamic> requestBody = {
     'Task': task,
     'TaskImage': null, // Ensure this object is structured correctly
@@ -165,9 +165,10 @@ Future<void> addTask(
       body: jsonEncode(requestBody),
     );
 
-    //print(response.body);
-
     if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      final taskId = jsonResponse['TaskID'] as String;
+      return taskId;
       throw 'Task added successfully';
     } else {
       throw 'Failed to add task. Status Code: ${response.statusCode}';
@@ -196,5 +197,76 @@ Future<List<dynamic>> searchTasks(String query, int userID) async {
     return jsonDecode(response.body);
   } catch (error) {
     throw '$error';
+  }
+}
+
+Future<void> deleteTask(String taskID) async {
+  const baseUrl =
+      'https://locked-in-561ee2a901c9.herokuapp.com'; // Replace with your API base URL
+  final endpoint = '/api/task/delete/$taskID';
+
+  try {
+    final response = await http.delete(Uri.parse(baseUrl + endpoint));
+
+    if (response.statusCode == 200) {
+      print('Task deleted successfully');
+    } else if (response.statusCode == 404) {
+      print('Task not found');
+    } else {
+      print('Error deleting task: ${response.body}');
+    }
+  } catch (error) {
+    print('An error occurred while deleting the task: $error');
+  }
+}
+
+Future<void> updateTask(String taskId, String newText) async {
+  print(newText);
+  final baseUrl =
+      'https://locked-in-561ee2a901c9.herokuapp.com'; // Replace with your API base URL
+  final endpoint = '/api/task/update/$taskId';
+
+  final updateFields = {'Task': newText}; // Construct update fields
+
+  try {
+    final response = await http.put(
+      Uri.parse(baseUrl + endpoint),
+      headers: <String, String>{'Content-Type': 'application/json'},
+      body: jsonEncode(updateFields),
+    );
+
+    if (response.statusCode == 200) {
+      throw ('Task updated successfully: ${response.statusCode}');
+    } else if (response.statusCode == 404) {
+      throw ('Task not found');
+    } else if (response.statusCode == 304) {
+      throw ('Task not modified');
+    } else {
+      print('Error updating task: ${response.statusCode}');
+    }
+  } catch (error) {
+    print('$error');
+  }
+}
+
+Future<void> markDone(String taskId) async {
+  const String baseUrl =
+      'https://locked-in-561ee2a901c9.herokuapp.com'; // Replace with your API base URL
+  final String endpoint = '/api/task/markDone/$taskId';
+
+  try {
+    final response = await http.put(
+      Uri.parse(baseUrl + endpoint),
+    );
+
+    if (response.statusCode == 200) {
+      throw ('Task marked as done successfully');
+    } else if (response.statusCode == 404) {
+      throw ('Task not found or already marked as done');
+    } else {
+      print('Error marking task as done: ${response.statusCode}');
+    }
+  } catch (error) {
+    print('$error');
   }
 }

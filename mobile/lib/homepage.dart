@@ -4,7 +4,6 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/token.dart';
 import 'package:provider/provider.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'main.dart';
@@ -173,20 +172,27 @@ class _ToDoPageState extends State<ToDoPage> {
     _updateToDoItem();
   }
 
+  bool isButtonPressed = false;
+
   @override
   Widget build(BuildContext context) {
-    //var appState = context.watch<HomePageState>();
+    bool isHintVisible = _todoController.text.trim().isEmpty && isButtonPressed;
+    Color borderColor = isHintVisible ? Colors.red : Colors.grey;
+
     return Scaffold(
-        body: Stack(
-      children: [
-        Container(
+      body: Stack(
+        children: [
+          Container(
             padding: EdgeInsets.symmetric(horizontal: 15),
             child: Column(
               children: [
                 Container(
-                    padding: EdgeInsets.only(top: 20), child: searchBox()),
+                  padding: EdgeInsets.only(top: 20),
+                  child: searchBox(),
+                ),
                 Expanded(
                   child: ListView(
+                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 80),
                     children: [
                       Container(
                         margin: const EdgeInsets.only(
@@ -198,7 +204,8 @@ class _ToDoPageState extends State<ToDoPage> {
                           "Today's Tasks:",
                           style: TextStyle(
                             fontSize: 25,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w700,
+                            fontStyle: FontStyle.italic,
                           ),
                         ),
                       ),
@@ -213,43 +220,81 @@ class _ToDoPageState extends State<ToDoPage> {
                   ),
                 )
               ],
-            )),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Row(children: [
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.only(
-                  bottom: 20,
-                  right: 20,
-                  left: 20,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color.fromARGB(255, 161, 50, 111),
-                      offset: Offset(0.0, 0.0),
-                      blurRadius: 2.0,
-                      spreadRadius: 0.0,
-                    ),
-                  ],
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: TextField(
-                  controller: _todoController,
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(left: 15),
-                      hintText: 'Add a new todo item',
-                      border: InputBorder.none),
-                ),
-              ),
             ),
-            Container(
-                margin: EdgeInsets.only(bottom: 20, right: 20),
-                child: ElevatedButton(
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      bottom: 20,
+                      right: 20,
+                      left: 20,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color.fromARGB(255, 161, 50, 111),
+                          offset: Offset(0.0, 0.0),
+                          blurRadius: 2.0,
+                          spreadRadius: 0.0,
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: TextField(
+                      controller: _todoController,
+                      onChanged: (value) {
+                        setState(() {
+                          isHintVisible = _todoController.text.trim().isEmpty &&
+                              isButtonPressed;
+                          borderColor =
+                              isHintVisible ? Colors.red : Colors.grey;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 15),
+                        hintText: isHintVisible
+                            ? 'Enter a Non-Empty Task' // Display issue if the entered text is blank and the button has been pressed
+                            : 'Add a new todo item',
+                        hintStyle: TextStyle(
+                          color: isHintVisible
+                              ? Colors.red // Change hint text color to red
+                              : Colors.grey, // Use default hint text color
+                        ),
+                        border: InputBorder.none,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: borderColor), // Change border color to red
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: borderColor), // Change border color to red
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 20, right: 20),
+                  child: ElevatedButton(
                     onPressed: () {
-                      _addToDoItem(_todoController.text);
+                      if (_todoController.text.trim().isNotEmpty) {
+                        _addToDoItem(_todoController.text);
+                        _todoController.clear(); // Clear the text field
+                        setState(() {
+                          isButtonPressed = false; // Reset the flag
+                        });
+                      } else {
+                        setState(() {
+                          isButtonPressed = true;
+                        });
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange[250],
@@ -259,11 +304,15 @@ class _ToDoPageState extends State<ToDoPage> {
                     child: const Text(
                       '+',
                       style: TextStyle(fontSize: 40),
-                    )))
-          ]),
-        ),
-      ],
-    ));
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget searchBox() {
@@ -301,23 +350,50 @@ class _ToDoPageState extends State<ToDoPage> {
 
   void _handleToDoChange(ToDo todo) {
     setState(() {
-      todo.isDone = !todo.isDone;
+      if (!todo.isDone) {
+        todo.isDone = !todo.isDone;
+        final todoId = todo
+            .id!; // Use the null-aware operator to assert that todo.id is not null
+        markDone(todoId).then((_) {
+          print('Task marked as done successfully');
+        }).catchError((error) {
+          print('Error marking task as done: $error');
+          // Optionally, you can revert the changes made to the todo object if the marking process fails.
+          todo.isDone = !todo.isDone;
+        });
+      }
     });
   }
 
   void _renameToDoItem(String id, String newText) {
-  setState(() {
-    int index = todosList.indexWhere((item) => item.id == id);
-    if (index != -1) {
-      todosList[index].todoText = newText;
-    }
-  });
-}
+    updateTask(id, newText).then((_) {
+      setState(() {
+        final index = todosList.indexWhere((item) => item.id == id);
+        if (index != -1) {
+          todosList[index].todoText = newText;
+        }
+      });
+    }).catchError((error) {
+      print('Error renaming ToDo item: $error');
+    });
+  }
 
   void _deleteToDoItem(String id) {
     setState(() {
       todosList.removeWhere((item) => item.id == id);
     });
+
+    if (id != '01') {
+      try {
+        deleteTask(id).then((_) {
+          print('Task deleted successfully');
+        }).catchError((error) {
+          print('$error');
+        });
+      } catch (error) {
+        print('$error');
+      }
+    }
   }
 
   Future<void> _updateToDoItem() async {
@@ -326,7 +402,7 @@ class _ToDoPageState extends State<ToDoPage> {
       for (var todo in userTodos) {
         setState(() {
           todosList.add(ToDo(
-            id: todo['Id'],
+            id: todo['_id'],
             todoText: todo[
                 'Task'], // Assuming 'Task' is the text field in your todo object
             isDone: todo[
@@ -341,24 +417,23 @@ class _ToDoPageState extends State<ToDoPage> {
   }
 
   void _addToDoItem(String toDo) {
-    setState(() {
-      todosList.add(ToDo(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        todoText: toDo,
-      ));
-    });
-    _todoController.clear(); // Clear the text field after adding the item
-
-    // Call addTask function to add the task to the backend
     try {
-      addTask(toDo, "", false, userId).then((_) {
+      addTask(toDo, "", false, userId).then((taskId) {
         print('Task added successfully');
+        setState(() {
+          todosList.add(ToDo(
+            id: taskId,
+            todoText: toDo,
+          ));
+        });
       }).catchError((error) {
         print('$error');
       });
     } catch (error) {
       print('$error');
     }
+
+    _todoController.clear(); // Clear the text field after adding the item
   }
 
   void _runFilter(String enteredKeyword) {
@@ -384,6 +459,39 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
+  late final ValueNotifier<List<Event>> _selectedEvents;
+  late final Map<DateTime, List<Event>> _events;
+  late final TextEditingController _eventController;
+  late final CalendarFormat _calendarFormat;
+  late final DateTime _focusedDay;
+  late final DateTime _firstDay;
+  late final DateTime _lastDay;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusedDay = DateTime.now();
+    _firstDay = DateTime.utc(2010, 10, 16);
+    _lastDay = DateTime.utc(2030, 3, 14);
+    _calendarFormat = CalendarFormat.month;
+    _events = {};
+    _selectedEvents = ValueNotifier([]);
+    _eventController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _eventController.dispose();
+    _selectedEvents.dispose();
+    super.dispose();
+  }
+
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    setState(() {
+      _selectedEvents.value = _events[selectedDay] ?? [];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -395,78 +503,100 @@ class _CalendarPageState extends State<CalendarPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             TableCalendar(
-              firstDay: DateTime.utc(2010, 10, 16),
-              lastDay: DateTime.utc(2030, 3, 14),
-              focusedDay: DateTime.now(),
-            )
+              firstDay: _firstDay,
+              lastDay: _lastDay,
+              focusedDay: _focusedDay,
+              calendarFormat: _calendarFormat,
+              onFormatChanged: (format) {
+                setState(() {
+                  _calendarFormat = format;
+                });
+              },
+              onDaySelected: _onDaySelected,
+              eventLoader: _getEventsForDay,
+            ),
+            SizedBox(height: 20),
+            _buildEventList(),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: _showAddDialog,
+      ),
+    );
+  }
+
+  List<Event> _getEventsForDay(DateTime day) {
+    return _events[day] ?? [];
+  }
+
+  Widget _buildEventList() {
+    return ValueListenableBuilder<List<Event>>(
+      valueListenable: _selectedEvents,
+      builder: (context, events, _) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: events
+              .map((event) => ListTile(
+                    title: Text(event.title),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        setState(() {
+                          _events[_focusedDay]!.remove(event);
+                          _selectedEvents.value = _events[_focusedDay]!;
+                        });
+                      },
+                    ),
+                  ))
+              .toList(),
+        );
+      },
+    );
+  }
+
+  void _showAddDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Add Event'),
+        content: TextField(
+          controller: _eventController,
+          decoration: InputDecoration(labelText: 'Event Title'),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                final newEvent = Event(title: _eventController.text);
+                if (_events[_focusedDay] != null) {
+                  _events[_focusedDay]!.add(newEvent);
+                } else {
+                  _events[_focusedDay] = [newEvent];
+                }
+                _selectedEvents.value = _events[_focusedDay]!;
+                _eventController.clear();
+                Navigator.pop(context);
+              });
+            },
+            child: Text('Save'),
+          ),
+        ],
       ),
     );
   }
 }
 
-class MeetingDataSource extends CalendarDataSource {
-  /// Creates a meeting data source, which used to set the appointment
-  /// collection to the calendar
-  MeetingDataSource(List<Meeting> source) {
-    appointments = source;
-  }
-
-  @override
-  DateTime getStartTime(int index) {
-    return _getMeetingData(index).from;
-  }
-
-  @override
-  DateTime getEndTime(int index) {
-    return _getMeetingData(index).to;
-  }
-
-  @override
-  String getSubject(int index) {
-    return _getMeetingData(index).eventName;
-  }
-
-  @override
-  Color getColor(int index) {
-    return _getMeetingData(index).background;
-  }
-
-  @override
-  bool isAllDay(int index) {
-    return _getMeetingData(index).isAllDay;
-  }
-
-  Meeting _getMeetingData(int index) {
-    final dynamic meeting = appointments![index];
-    late final Meeting meetingData;
-    if (meeting is Meeting) {
-      meetingData = meeting;
-    }
-
-    return meetingData;
-  }
-}
-
-class Meeting {
-  /// Creates a meeting class with required details.
-  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
-
-  /// Event name which is equivalent to subject property of [Appointment].
-  String eventName;
-
-  /// From which is equivalent to start time property of [Appointment].
-  DateTime from;
-
-  /// To which is equivalent to end time property of [Appointment].
-  DateTime to;
-
-  /// Background which is equivalent to color property of [Appointment].
-  Color background;
-
-  /// IsAllDay which is equivalent to isAllDay property of [Appointment].
-  bool isAllDay;
+class Event {
+  final String title;
+  Event({required this.title});
 }
 
 class TimerPage extends StatefulWidget {
@@ -506,15 +636,15 @@ class _TimerPageState extends State<TimerPage> {
   }
 
   void pauseTimer() {
-    setState(() {
-      _isPaused = true;
-    });
-  }
-
-  void resumeTimer() {
-    setState(() {
-      _isPaused = false;
-    });
+    if (_isPaused) {
+      setState(() {
+        _isPaused = false;
+      });
+    } else {
+      setState(() {
+        _isPaused = true;
+      });
+    }
   }
 
   void resetTimer() {
@@ -541,7 +671,7 @@ class _TimerPageState extends State<TimerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pausable Timer'),
+        title: Text('Timer'),
       ),
       body: Center(
         child: Column(
@@ -598,11 +728,7 @@ class _TimerPageState extends State<TimerPage> {
                 ),
                 ElevatedButton(
                   onPressed: pauseTimer,
-                  child: Text('Pause'),
-                ),
-                ElevatedButton(
-                  onPressed: resumeTimer,
-                  child: Text('Resume'),
+                  child: Text('Pause/Resume'),
                 ),
                 ElevatedButton(
                   onPressed: resetTimer,
@@ -695,13 +821,13 @@ class ToDoItem extends StatelessWidget {
   final onDeleteItem;
   final onRenameItem;
 
-  const ToDoItem(
-      {Key? key,
-      required this.todo,
-      required this.onToDoChanged,
-      required this.onDeleteItem,
-      required this.onRenameItem})
-      : super(key: key);
+  const ToDoItem({
+    Key? key,
+    required this.todo,
+    required this.onToDoChanged,
+    required this.onDeleteItem,
+    required this.onRenameItem,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -750,28 +876,45 @@ class ToDoItem extends StatelessWidget {
                   color: const Color.fromARGB(255, 94, 94, 94),
                 ),
                 onPressed: () {
-                  print('Pressed Edit button');
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      TextEditingController controller = TextEditingController(text: todo.todoText);
-                      return AlertDialog(
-                        content: TextField(
-                          controller: controller,
-                        ),
-                        actions: [
-                          TextButton(
-                            child: Text('Rename'),
-                            onPressed: () {
-                              String enteredText = controller.text;
-                              onRenameItem(todo.id, enteredText);
-                              Navigator.pop(context); // Close the dialog
-                            },
+                  if (!todo.isDone) {
+                    print('Pressed Edit button');
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        TextEditingController controller =
+                            TextEditingController(text: todo.todoText);
+                        return AlertDialog(
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextField(
+                                controller: controller,
+                              ),
+                              if (controller.text.trim().isEmpty)
+                                Text(
+                                  'Please enter a valid task',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                            ],
                           ),
-                        ],
-                      );
-                    },
-                  );
+                          actions: [
+                            TextButton(
+                              child: const Text('Rename'),
+                              onPressed: () {
+                                String enteredText = controller.text;
+                                if (enteredText.trim().isNotEmpty) {
+                                  onRenameItem(todo.id, enteredText);
+                                  Navigator.pop(context); // Close the dialog
+                                }
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
               ),
             ),
