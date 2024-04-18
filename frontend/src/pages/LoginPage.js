@@ -8,7 +8,9 @@ const LoginPage = () =>
 
     return(
       <div>
-        <PageTitle />
+        <div className='font-poppins font-bold text-6xl text-center m-7 text-[#EA7331]'>
+            Locked In
+        </div>
         <Login />
       </div>
     );

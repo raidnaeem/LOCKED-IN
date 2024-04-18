@@ -66,7 +66,43 @@ const CalendarMonthlyB = () =>  {
     } catch (error) {
         console.error('Error fetching events:', error);
     }
-};
+  };
+
+  //Create Event
+  const createTask = async event =>
+  {
+      event.preventDefault();
+
+      var obj_newEvent = 
+      {
+          
+          "UserID": ud.UserID
+      };
+      var js_newEvent = JSON.stringify(obj_newEvent);
+
+      try {
+          const response = await fetch(bp.buildPath('api/calendar/create'), {
+              method: 'POST',
+              body: js_newEvent,
+              headers:{'Content-Type': 'application/json'}
+          });
+
+          const res = await response.json();
+          //obj_newTask._id = res.TaskID; //return newly created event's _id
+
+          //Success
+          if(response.ok){
+              console.log(res);
+              //setTasks([...tasks, obj_newTask]); // Add newly created task to tasks state
+              //setTaskName(''); // Clear task name input
+
+          } else {
+              console.log(res);
+          }
+          } catch (e) {
+              alert(e.toString());
+          }
+  }
 
   return (
     <div className="bg-[#AAA06C]">

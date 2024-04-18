@@ -7,6 +7,7 @@ import LoggedInName from '../components/LoggedInName';
 
 const TimerPage = () =>
 {
+    document.body.style.backgroundColor = '#5db893';
 
     return(
       <div>
