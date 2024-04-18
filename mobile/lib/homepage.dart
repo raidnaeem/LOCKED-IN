@@ -4,7 +4,6 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/token.dart';
 import 'package:provider/provider.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'main.dart';
@@ -306,18 +305,34 @@ class _ToDoPageState extends State<ToDoPage> {
   }
 
   void _renameToDoItem(String id, String newText) {
-  setState(() {
-    int index = todosList.indexWhere((item) => item.id == id);
-    if (index != -1) {
-      todosList[index].todoText = newText;
-    }
-  });
-}
+    updateTask(id, newText).then((_) {
+      setState(() {
+        final index = todosList.indexWhere((item) => item.id == id);
+        if (index != -1) {
+          todosList[index].todoText = newText;
+        }
+      });
+    }).catchError((error) {
+      print('Error renaming ToDo item: $error');
+    });
+  }
 
   void _deleteToDoItem(String id) {
     setState(() {
       todosList.removeWhere((item) => item.id == id);
     });
+
+    if (id != '01') {
+      try {
+        deleteTask(id).then((_) {
+          print('Task deleted successfully');
+        }).catchError((error) {
+          print('$error');
+        });
+      } catch (error) {
+        print('$error');
+      }
+    }
   }
 
   Future<void> _updateToDoItem() async {
@@ -326,7 +341,7 @@ class _ToDoPageState extends State<ToDoPage> {
       for (var todo in userTodos) {
         setState(() {
           todosList.add(ToDo(
-            id: todo['Id'],
+            id: todo['_id'],
             todoText: todo[
                 'Task'], // Assuming 'Task' is the text field in your todo object
             isDone: todo[
@@ -341,24 +356,23 @@ class _ToDoPageState extends State<ToDoPage> {
   }
 
   void _addToDoItem(String toDo) {
-    setState(() {
-      todosList.add(ToDo(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        todoText: toDo,
-      ));
-    });
-    _todoController.clear(); // Clear the text field after adding the item
-
-    // Call addTask function to add the task to the backend
     try {
-      addTask(toDo, "", false, userId).then((_) {
+      addTask(toDo, "", false, userId).then((taskId) {
         print('Task added successfully');
+        setState(() {
+          todosList.add(ToDo(
+            id: taskId,
+            todoText: toDo,
+          ));
+        });
       }).catchError((error) {
         print('$error');
       });
     } catch (error) {
       print('$error');
     }
+
+    _todoController.clear(); // Clear the text field after adding the item
   }
 
   void _runFilter(String enteredKeyword) {
@@ -451,6 +465,7 @@ class _CalendarPageState extends State<CalendarPage> {
       ),
     );
   }
+
   List<Event> _getEventsForDay(DateTime day) {
     return _events[day] ?? [];
   }
@@ -479,6 +494,7 @@ class _CalendarPageState extends State<CalendarPage> {
       },
     );
   }
+
   void _showAddDialog() {
     showDialog(
       context: context,
@@ -559,9 +575,15 @@ class _TimerPageState extends State<TimerPage> {
   }
 
   void pauseTimer() {
+    if (_isPaused) {
       setState(() {
-        _isPaused = !_isPaused;
+        _isPaused = false;
       });
+    } else {
+      setState(() {
+        _isPaused = true;
+      });
+    }
   }
 
   void resetTimer() {
@@ -645,7 +667,7 @@ class _TimerPageState extends State<TimerPage> {
                 ),
                 ElevatedButton(
                   onPressed: pauseTimer,
-                  child: Text(_isPaused ? 'Resume' : 'Pause'),
+                  child: Text('Pause/Resume'),
                 ),
                 ElevatedButton(
                   onPressed: resetTimer,
@@ -797,7 +819,8 @@ class ToDoItem extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (context) {
-                      TextEditingController controller = TextEditingController(text: todo.todoText);
+                      TextEditingController controller =
+                          TextEditingController(text: todo.todoText);
                       return AlertDialog(
                         content: TextField(
                           controller: controller,
