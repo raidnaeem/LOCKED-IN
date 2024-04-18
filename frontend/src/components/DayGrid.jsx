@@ -8,6 +8,10 @@ function DayGrid({currentDay, currentMonth, currentYear, events}) {
     const currentDays = [];
 
     const ParseDate = (eventDate) => {
+      if(typeof(eventDate) !== 'string')
+      {
+        return new Date(0, 0, 0);
+      }
       //eventDate comes in format MM/DD/YYYY
       const dateValues = eventDate.split('/');
       //When constructing Date the order is year, monthIndex, day
