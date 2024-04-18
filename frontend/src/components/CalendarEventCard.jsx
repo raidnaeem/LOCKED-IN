@@ -27,9 +27,6 @@ const CalendarEventCard = ({event, deleteEvent}) =>  {
 
             <CardFooter bg='#F0DCB4' className='rounded-b-xl'>
                 <ButtonGroup spacing='3' textAlign='right'>
-                <Button variant='ghost' colorScheme='blue'>
-                    Edit
-                </Button>
                 <Button variant='solid' colorScheme='red' onClick={() => deleteEvent(event._id)}>
                     Delete
                 </Button>

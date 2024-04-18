@@ -230,7 +230,7 @@ const CalendarMonthlyB = () =>  {
           </HStack>
       </div>
       <CalendarAdd isOpen={isOpen} onClose={onClose} setEventName={setEventName} setEventStart={setEventStart} setEventEnd={setEventEnd} createEvent={createEvent}/>
-      <CalendarSearch searchIsOpen={searchIsOpen} searchOnClose={searchOnClose} setEvents={setEvents}/>
+      <CalendarSearch searchIsOpen={searchIsOpen} searchOnClose={searchOnClose} events={events} setEvents={setEvents}/>
     </div>
   );
 };
