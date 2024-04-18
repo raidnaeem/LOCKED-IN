@@ -67,9 +67,11 @@ const CalendarSearch = ({searchIsOpen, searchOnClose}) =>  {
                     />
                 </InputGroup>
             </Stack>
-            {events.map((event) => (
-                <CalendarEventCard key={event._id} event={event}/>
-            ))}
+                <div className='flex flex-wrap grid-cols-2 ml-8 md:ml-5'>
+                    {events.map((event) => (
+                            <CalendarEventCard key={event._id} event={event}/>
+                    ))}
+                </div>
           </DrawerBody>
 
           <DrawerFooter>
