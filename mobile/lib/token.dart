@@ -248,3 +248,25 @@ Future<void> updateTask(String taskId, String newText) async {
     print('$error');
   }
 }
+
+Future<void> markDone(String taskId) async {
+  const String baseUrl =
+      'https://locked-in-561ee2a901c9.herokuapp.com'; // Replace with your API base URL
+  final String endpoint = '/api/task/markDone/$taskId';
+
+  try {
+    final response = await http.put(
+      Uri.parse(baseUrl + endpoint),
+    );
+
+    if (response.statusCode == 200) {
+      throw ('Task marked as done successfully');
+    } else if (response.statusCode == 404) {
+      throw ('Task not found or already marked as done');
+    } else {
+      print('Error marking task as done: ${response.statusCode}');
+    }
+  } catch (error) {
+    print('$error');
+  }
+}
