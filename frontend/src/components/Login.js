@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useJwt } from "react-jwt";
+import { jwtDecode } from "jwt-decode";
 import LoginUI from './LoginUI'; // Import the LoginUI component
 var bp = require('./Path.js');
 
 function Login() {
+    const storage = require('../tokenStorage.js');
 
     const [loginEmail, setLoginEmail] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
@@ -34,11 +36,16 @@ function Login() {
                 //If email verified, navigate to Planner page
                 console.log(res);
                 if(res.verified === true) {
+                    storage.storeToken(res);
+
+                    // Decode the token without using jsonwebtoken library
+                    const ud = jwtDecode(storage.retrieveToken());
+
                     var user =
                     { 
-                        FirstName: res.FirstName, 
-                        LastName: res.LastName, 
-                        UserID: res.UserID 
+                        FirstName: ud.FirstName, 
+                        LastName: ud.LastName, 
+                        UserID: ud.UserID 
                     };
                     localStorage.setItem('user_data', JSON.stringify(user));
 
