@@ -19,7 +19,6 @@ class HomePageScreen extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => HomePageState(),
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
         title: 'Locked In',
         theme: ThemeData(
           useMaterial3: true,
@@ -173,21 +172,26 @@ class _ToDoPageState extends State<ToDoPage> {
     _updateToDoItem();
   }
 
+  bool isButtonPressed = false;
+
   @override
   Widget build(BuildContext context) {
-    //var appState = context.watch<HomePageState>();
+    bool isHintVisible = _todoController.text.trim().isEmpty && isButtonPressed;
+    Color borderColor = isHintVisible ? Colors.red : Colors.grey;
+
     return Scaffold(
-        body: Stack(
-      children: [
-        Container(
+      body: Stack(
+        children: [
+          Container(
             padding: EdgeInsets.symmetric(horizontal: 15),
             child: Column(
               children: [
                 Container(
-                    padding: EdgeInsets.only(top: 20), child: searchBox()),
+                  padding: EdgeInsets.only(top: 20),
+                  child: searchBox(),
+                ),
                 Expanded(
                   child: ListView(
-                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 80),
                     children: [
                       Container(
                         margin: const EdgeInsets.only(
@@ -199,7 +203,8 @@ class _ToDoPageState extends State<ToDoPage> {
                           "Today's Tasks:",
                           style: TextStyle(
                             fontSize: 25,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w700,
+                            fontStyle: FontStyle.italic,
                           ),
                         ),
                       ),
@@ -214,43 +219,81 @@ class _ToDoPageState extends State<ToDoPage> {
                   ),
                 )
               ],
-            )),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Row(children: [
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.only(
-                  bottom: 20,
-                  right: 20,
-                  left: 20,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color.fromARGB(255, 161, 50, 111),
-                      offset: Offset(0.0, 0.0),
-                      blurRadius: 2.0,
-                      spreadRadius: 0.0,
-                    ),
-                  ],
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: TextField(
-                  controller: _todoController,
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(left: 15),
-                      hintText: 'Add a new todo item',
-                      border: InputBorder.none),
-                ),
-              ),
             ),
-            Container(
-                margin: EdgeInsets.only(bottom: 20, right: 20),
-                child: ElevatedButton(
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      bottom: 20,
+                      right: 20,
+                      left: 20,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color.fromARGB(255, 161, 50, 111),
+                          offset: Offset(0.0, 0.0),
+                          blurRadius: 2.0,
+                          spreadRadius: 0.0,
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: TextField(
+                      controller: _todoController,
+                      onChanged: (value) {
+                        setState(() {
+                          isHintVisible = _todoController.text.trim().isEmpty &&
+                              isButtonPressed;
+                          borderColor =
+                              isHintVisible ? Colors.red : Colors.grey;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(left: 15),
+                        hintText: isHintVisible
+                            ? 'Enter a Non-Empty Task' // Display issue if the entered text is blank and the button has been pressed
+                            : 'Add a new todo item',
+                        hintStyle: TextStyle(
+                          color: isHintVisible
+                              ? Colors.red // Change hint text color to red
+                              : Colors.grey, // Use default hint text color
+                        ),
+                        border: InputBorder.none,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: borderColor), // Change border color to red
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: borderColor), // Change border color to red
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 20, right: 20),
+                  child: ElevatedButton(
                     onPressed: () {
-                      _addToDoItem(_todoController.text);
+                      if (_todoController.text.trim().isNotEmpty) {
+                        _addToDoItem(_todoController.text);
+                        _todoController.clear(); // Clear the text field
+                        setState(() {
+                          isButtonPressed = false; // Reset the flag
+                        });
+                      } else {
+                        setState(() {
+                          isButtonPressed = true;
+                        });
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange[250],
@@ -260,11 +303,15 @@ class _ToDoPageState extends State<ToDoPage> {
                     child: const Text(
                       '+',
                       style: TextStyle(fontSize: 40),
-                    )))
-          ]),
-        ),
-      ],
-    ));
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget searchBox() {
@@ -302,7 +349,18 @@ class _ToDoPageState extends State<ToDoPage> {
 
   void _handleToDoChange(ToDo todo) {
     setState(() {
-      todo.isDone = !todo.isDone;
+      if (!todo.isDone) {
+        todo.isDone = !todo.isDone;
+        final todoId = todo
+            .id!; // Use the null-aware operator to assert that todo.id is not null
+        markDone(todoId).then((_) {
+          print('Task marked as done successfully');
+        }).catchError((error) {
+          print('Error marking task as done: $error');
+          // Optionally, you can revert the changes made to the todo object if the marking process fails.
+          todo.isDone = !todo.isDone;
+        });
+      }
     });
   }
 
@@ -762,13 +820,13 @@ class ToDoItem extends StatelessWidget {
   final onDeleteItem;
   final onRenameItem;
 
-  const ToDoItem(
-      {Key? key,
-      required this.todo,
-      required this.onToDoChanged,
-      required this.onDeleteItem,
-      required this.onRenameItem})
-      : super(key: key);
+  const ToDoItem({
+    Key? key,
+    required this.todo,
+    required this.onToDoChanged,
+    required this.onDeleteItem,
+    required this.onRenameItem,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -817,29 +875,45 @@ class ToDoItem extends StatelessWidget {
                   color: const Color.fromARGB(255, 94, 94, 94),
                 ),
                 onPressed: () {
-                  print('Pressed Edit button');
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      TextEditingController controller =
-                          TextEditingController(text: todo.todoText);
-                      return AlertDialog(
-                        content: TextField(
-                          controller: controller,
-                        ),
-                        actions: [
-                          TextButton(
-                            child: Text('Rename'),
-                            onPressed: () {
-                              String enteredText = controller.text;
-                              onRenameItem(todo.id, enteredText);
-                              Navigator.pop(context); // Close the dialog
-                            },
+                  if (!todo.isDone) {
+                    print('Pressed Edit button');
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        TextEditingController controller =
+                            TextEditingController(text: todo.todoText);
+                        return AlertDialog(
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextField(
+                                controller: controller,
+                              ),
+                              if (controller.text.trim().isEmpty)
+                                Text(
+                                  'Please enter a valid task',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                            ],
                           ),
-                        ],
-                      );
-                    },
-                  );
+                          actions: [
+                            TextButton(
+                              child: const Text('Rename'),
+                              onPressed: () {
+                                String enteredText = controller.text;
+                                if (enteredText.trim().isNotEmpty) {
+                                  onRenameItem(todo.id, enteredText);
+                                  Navigator.pop(context); // Close the dialog
+                                }
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
               ),
             ),
