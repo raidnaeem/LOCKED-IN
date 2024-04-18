@@ -7,7 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'main.dart';
+import 'token.dart';
 import 'todo.dart';
+import 'utils.dart';
 
 List<dynamic> userTodos = [];
 
@@ -461,36 +463,71 @@ class CalendarPage extends StatefulWidget {
 
 class _CalendarPageState extends State<CalendarPage> {
   late final ValueNotifier<List<Event>> _selectedEvents;
-  late final Map<DateTime, List<Event>> _events;
-  late final TextEditingController _eventController;
-  late final CalendarFormat _calendarFormat;
-  late final DateTime _focusedDay;
-  late final DateTime _firstDay;
-  late final DateTime _lastDay;
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
+      .toggledOff; // Can be toggled on/off by longpressing a date
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+  DateTime? _rangeStart;
+  DateTime? _rangeEnd;
 
   @override
   void initState() {
     super.initState();
-    _focusedDay = DateTime.now();
-    _firstDay = DateTime.utc(2010, 10, 16);
-    _lastDay = DateTime.utc(2030, 3, 14);
-    _calendarFormat = CalendarFormat.month;
-    _events = {};
-    _selectedEvents = ValueNotifier([]);
-    _eventController = TextEditingController();
+
+    _selectedDay = _focusedDay;
+    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
   }
 
   @override
   void dispose() {
-    _eventController.dispose();
     _selectedEvents.dispose();
     super.dispose();
   }
 
+  List<Event> _getEventsForDay(DateTime day) {
+    return Events[day] ?? [];
+  }
+
+  List<Event> _getEventsForRange(DateTime start, DateTime end) {
+    final days = daysInRange(start, end);
+
+    return [
+      for (final d in days) ..._getEventsForDay(d),
+    ];
+  }
+
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    if (!isSameDay(_selectedDay, selectedDay)) {
+      setState(() {
+        _selectedDay = selectedDay;
+        _focusedDay = focusedDay;
+        _rangeStart = null;
+        _rangeEnd = null;
+        _rangeSelectionMode = RangeSelectionMode.toggledOff;
+      });
+
+      _selectedEvents.value = _getEventsForDay(selectedDay);
+    }
+  }
+
+  void _onRangeSelected(DateTime? start, DateTime? end, DateTime focusedDay) {
     setState(() {
-      _selectedEvents.value = _events[selectedDay] ?? [];
+      _selectedDay = null;
+      _focusedDay = focusedDay;
+      _rangeStart = start;
+      _rangeEnd = end;
+      _rangeSelectionMode = RangeSelectionMode.toggledOn;
     });
+
+    // `start` or `end` could be null
+    if (start != null && end != null) {
+      _selectedEvents.value = _getEventsForRange(start, end);
+    } else if (start != null) {
+      _selectedEvents.value = _getEventsForDay(start);
+    } else if (end != null) {
+      _selectedEvents.value = _getEventsForDay(end);
+    }
   }
 
   @override
@@ -499,95 +536,63 @@ class _CalendarPageState extends State<CalendarPage> {
       appBar: AppBar(
         title: Text('Calendar'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TableCalendar(
-              firstDay: _firstDay,
-              lastDay: _lastDay,
-              focusedDay: _focusedDay,
-              calendarFormat: _calendarFormat,
-              onFormatChanged: (format) {
+      body: Column(
+        children: [
+          TableCalendar<Event>(
+            firstDay: FirstDay,
+            lastDay: LastDay,
+            focusedDay: _focusedDay,
+            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+            rangeStartDay: _rangeStart,
+            rangeEndDay: _rangeEnd,
+            calendarFormat: _calendarFormat,
+            rangeSelectionMode: _rangeSelectionMode,
+            eventLoader: _getEventsForDay,
+            startingDayOfWeek: StartingDayOfWeek.monday,
+            calendarStyle: CalendarStyle(
+              // Use `CalendarStyle` to customize the UI
+              outsideDaysVisible: false,
+            ),
+            onDaySelected: _onDaySelected,
+            onRangeSelected: _onRangeSelected,
+            onFormatChanged: (format) {
+              if (_calendarFormat != format) {
                 setState(() {
                   _calendarFormat = format;
                 });
-              },
-              onDaySelected: _onDaySelected,
-              eventLoader: _getEventsForDay,
-            ),
-            SizedBox(height: 20),
-            _buildEventList(),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: _showAddDialog,
-      ),
-    );
-  }
-
-  List<Event> _getEventsForDay(DateTime day) {
-    return _events[day] ?? [];
-  }
-
-  Widget _buildEventList() {
-    return ValueListenableBuilder<List<Event>>(
-      valueListenable: _selectedEvents,
-      builder: (context, events, _) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: events
-              .map((event) => ListTile(
-                    title: Text(event.title),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        setState(() {
-                          _events[_focusedDay]!.remove(event);
-                          _selectedEvents.value = _events[_focusedDay]!;
-                        });
-                      },
-                    ),
-                  ))
-              .toList(),
-        );
-      },
-    );
-  }
-
-  void _showAddDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Add Event'),
-        content: TextField(
-          controller: _eventController,
-          decoration: InputDecoration(labelText: 'Event Title'),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
+              }
             },
-            child: Text('Cancel'),
+            onPageChanged: (focusedDay) {
+              _focusedDay = focusedDay;
+            },
           ),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                final newEvent = Event(title: _eventController.text);
-                if (_events[_focusedDay] != null) {
-                  _events[_focusedDay]!.add(newEvent);
-                } else {
-                  _events[_focusedDay] = [newEvent];
-                }
-                _selectedEvents.value = _events[_focusedDay]!;
-                _eventController.clear();
-                Navigator.pop(context);
-              });
-            },
-            child: Text('Save'),
+          
+          const SizedBox(height: 8.0),
+          Expanded(
+            child: ValueListenableBuilder<List<Event>>(
+              valueListenable: _selectedEvents,
+              builder: (context, value, _) {
+                return ListView.builder(
+                  itemCount: value.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 12.0,
+                        vertical: 4.0,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      child: ListTile(
+                        onTap: () => print('${value[index]}'),
+                        title: Text('${value[index]}'),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -595,10 +600,7 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 }
 
-class Event {
-  final String title;
-  Event({required this.title});
-}
+
 
 class TimerPage extends StatefulWidget {
   @override
@@ -618,7 +620,7 @@ class _TimerPageState extends State<TimerPage> {
 
   void startTimer() {
     _start = _minutes * 60 + _seconds;
-    if (_start <= 0) return; // Validate input
+    if (_start <= 0) return;
     const oneSec = Duration(seconds: 1);
     _timer = Timer.periodic(
       oneSec,
@@ -627,11 +629,10 @@ class _TimerPageState extends State<TimerPage> {
         setState(() {
           if (_start < 1) {
             timer.cancel();
-            // Timer completed, you can handle it here
           } else {
             _start--;
-            _minutes = _start ~/ 60; // Update minutes
-            _seconds = _start % 60; // Update seconds
+            _minutes = _start ~/ 60;
+            _seconds = _start % 60;
           }
         });
       },
@@ -650,18 +651,10 @@ class _TimerPageState extends State<TimerPage> {
       _start = 0;
       _minutes = 0;
       _seconds = 0;
-      _minutesController.clear(); // Clear minutes text field
-      _secondsController.clear(); // Clear seconds text field
+      _minutesController.clear();
+      _secondsController.clear();
       _isPaused = false;
     });
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    _minutesController.dispose(); // Dispose the minutes controller
-    _secondsController.dispose(); // Dispose the seconds controller
-    super.dispose();
   }
 
   @override
@@ -687,7 +680,7 @@ class _TimerPageState extends State<TimerPage> {
                     ),
                     onChanged: (value) {
                       setState(() {
-                        _minutes = int.tryParse(value) ?? 0; // Parse minutes
+                        _minutes = int.tryParse(value) ?? 0;
                       });
                     },
                   ),
