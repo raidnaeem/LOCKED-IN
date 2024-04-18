@@ -389,7 +389,7 @@ app.post("/api/calendar/create", async (req, res) => {
 
       await createNotification(client, UserID, result.insertedId, `New event added: ${Event}. Don't forget it!`, "EventReminder");
 
-      res.status(200).json({ message: "Event created successfully" });
+      res.status(200).json({ message: "Event created successfully", EventID: result._id });
   } catch (error) {
       console.error("Error creating event:", error);
       res.status(500).json({ error: "An error occurred while creating the event." });

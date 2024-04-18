@@ -17,6 +17,9 @@ const CalendarMonthlyB = () =>  {
   const [currentMonth, setCurrentMonth] = useState(currentDay.getMonth());
   const [currentYear, setCurrentYear] = useState(currentDay.getFullYear());
   const [events, setEvents] = useState([]); // Array of events
+  const [eventName, setEventName] = useState('');
+  const [eventStart, setEventStart] = useState('');
+  const [eventEnd, setEventEnd] = useState('');
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -69,13 +72,22 @@ const CalendarMonthlyB = () =>  {
   };
 
   //Create Event
-  const createTask = async event =>
+  const createEvent = async event =>
   {
       event.preventDefault();
 
+      let eventStartSplit = eventStart.split('T');
+      let eventStartDate = eventStartSplit[0].split('-');
+      let eventEndSplit = eventEnd.split('T');
+      let eventEndDate = eventEndSplit[0].split('-');
+
       var obj_newEvent = 
       {
-          
+          Event: eventName,
+          StartTime: eventStartSplit[1],
+          StartDate: eventStartDate[1] + '/' + eventStartDate[2] + '/' + eventStartDate[0],
+          EndTime: eventEndSplit[1],
+          EndDate: eventEndDate[1] + '/' + eventEndDate[2] + '/' + eventEndDate[0],
           "UserID": ud.UserID
       };
       var js_newEvent = JSON.stringify(obj_newEvent);
@@ -88,13 +100,13 @@ const CalendarMonthlyB = () =>  {
           });
 
           const res = await response.json();
-          //obj_newTask._id = res.TaskID; //return newly created event's _id
+          obj_newEvent._id = res.EventID; //return newly created event's _id
 
           //Success
           if(response.ok){
               console.log(res);
-              //setTasks([...tasks, obj_newTask]); // Add newly created task to tasks state
-              //setTaskName(''); // Clear task name input
+              setEvents([...events, obj_newEvent]); // Add newly created event to tasks state
+              setEventName(''); // Clear event name input
 
           } else {
               console.log(res);
@@ -157,7 +169,7 @@ const CalendarMonthlyB = () =>  {
             </Button>
           </HStack>
       </div>
-      <CalendarAdd isOpen={isOpen} onClose={onClose}/>
+      <CalendarAdd isOpen={isOpen} onClose={onClose} setEventName={setEventName} setEventStart={setEventStart} setEventEnd={setEventEnd} createEvent={createEvent}/>
     </div>
   );
 };

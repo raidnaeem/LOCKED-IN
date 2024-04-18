@@ -28,7 +28,7 @@ function LoggedIn()
   return(
     <div id="loggedInDiv" className='p-3 text-right relative w-full'>
       <div id="userName" className='mb-2 text-lg'>
-        Locked In as, {firstName} {lastName}
+        Locked in as, {firstName} {lastName}
       </div>
       <Button type="button" id="logoutButton" className="right-5" colorScheme='red'
         onClick={doLogout}> Log Out
